@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Deal Engine v2.0</title>
+    <title>Hybrid Deal Engine v3.0 (Production)</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e2f; color: #e0e0e0; margin: 0; padding: 20px; }
         .container { max-width: 900px; margin: auto; background: #2a2a40; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
@@ -25,7 +25,7 @@
 <body>
 
 <div class="container">
-    <h1>Hybrid Deal Engine v2.0</h1>
+    <h1>Hybrid Deal Engine v3.0</h1>
 
     <div class="step-box api-box">
         <h3>⚙️ System Setup</h3>
@@ -72,14 +72,14 @@
         if(savedKey) document.getElementById('apiKey').value = savedKey;
     });
 
-    // --- DICTIONARIES (The JavaScript Brain) ---
+    // --- JAVASCRIPT BRAIN (Dictionaries & Matrices) ---
     const banks = {
         A: { theme: ["🧘","🛀","🛌","🧖","💆","🍵","☕"], prefixes: ["Just", "Down to", "At", "Score it for"], compLabels: ["Regular", "Normally", "Originally", "Previously"], pointers: ["I put it right under here for you!", "You can grab yours right under here!", "I left the exact page right under this!"] },
         B: { theme: ["🌲","🍃","🍂","🌱","🌿","🌻","🌼"], prefixes: ["Only", "Found for", "Marked at", "Sitting at"], compLabels: ["Normally", "Was", "Regular", "List"], pointers: ["It's waiting for you right down there!", "Just scroll down a tiny bit to find it!", "The right spot is waiting just a step down!"] },
         C: { theme: ["📿","👒","💍","👜","🕶️","💄","👠"], prefixes: ["Now", "Fell to", "Yours for", "Spotted at"], compLabels: ["Originally", "Previously", "Was", "Regular"], pointers: ["Find the exact location ready for you in the next section!", "Everything you need is a little further down!", "Catch it just a quick scroll away!"] },
         D: { theme: ["🎨","🖌️","🖍️","🧵","🧶","🖼️","🎭"], prefixes: ["", "Grab it for", "Snag it for", "Down to"], compLabels: ["Was", "List", "Normally", "Originally"], pointers: ["I pinned the exact spot right under this text!", "The location is resting just under this text!", "Look just a little further down for the page!"] },
         E: { theme: ["🛋️","🪑","🕰️","🚪","🛏️","🧱","🏺"], prefixes: ["Spotted at", "Just", "Marked at", "Down to"], compLabels: ["Previously", "Regular", "List", "Was"], pointers: ["I tucked the exact spot right under here!", "You can find it right under here!", "I left the location right under this!"] },
-        F: { theme: ["🏕️","⛺","🪵","🔥"," compass","🗺️","🛶"], prefixes: ["Score it for", "At", "Found for", "Only"], compLabels: ["List", "Originally", "Normally", "Regular"], pointers: ["It's resting for you right down there!", "Just scroll down a bit to see it!", "The exact page is waiting just a step down!"] },
+        F: { theme: ["🏕️","⛺","🪵","🔥","🗺️","🛶","🏔️"], prefixes: ["Score it for", "At", "Found for", "Only"], compLabels: ["List", "Originally", "Normally", "Regular"], pointers: ["It's resting for you right down there!", "Just scroll down a bit to see it!", "The exact page is waiting just a step down!"] },
         G: { theme: ["📱","💻","⌨️","🖱️","🖨️","🎧","🔋"], prefixes: ["Fell to", "Yours for", "Grab it for", "Sitting at"], compLabels: ["Regular", "Was", "Previously", "Normally"], pointers: ["Find the exact spot ready for you in the next section!", "Everything you want is a little further down!", "Catch the location just a quick scroll away!"] }
     };
 
@@ -87,6 +87,7 @@
     const discoveries = ["We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today"];
     const linkLeads = ["Grab it here:", "See it here:", "Find it here:"];
     const dtEmojis = ["🌤️", "🍃", "🌊"];
+    const p3Emojis = ["🔴", "🟦", "🟨", "🟩", "🟪"];
     const faces = ["😀", "😃", "😊", "😎", "🤩"];
 
     function getRoutingBank(day, dealNum) {
@@ -114,9 +115,9 @@
         btn.disabled = true;
         document.getElementById('finalOutput').innerText = "Processing...";
 
-        // The Micro-Prompt (Forces AI to return strict JSON)
+        // The JSON Micro-Prompt
         const prompt = `Analyze this deal: "${rawText}"
-        Return ONLY a valid JSON object with these exact keys:
+        Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting.
         "cleaned_title": (String. Remove banned words. Keep QTY/sizes intact),
         "sale_price": (String. e.g. "$19.99"),
         "reg_price": (String. Strip decimals, e.g. "34 99". If none, write "NONE"),
@@ -128,7 +129,7 @@
         "dt_signoff": (String. 1 short lifestyle sentence),
         "comp_emojis": (Array of 5 emojis that complement the product, e.g. food for pans),
         "product_emoji": (String. 1 literal emoji for the product)
-        Do NOT use banned words: Price, Cost, Sale, Deal, Save, Discount, Buy, Shop, Coupon, Checkout, Promo, Free, Link, Cart.`;
+        RULES: Do NOT use banned words: Price, Cost, Sale, Deal, Save, Discount, Buy, Shop, Coupon, Checkout, Promo, Free, Link, Cart. Do NOT double-dip title features into B8.`;
 
         try {
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`, {
@@ -136,14 +137,17 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { temperature: 0.2, responseMimeType: "application/json" } 
+                    generationConfig: { temperature: 0.2 } 
                 })
             });
 
             const data = await response.json();
             if(data.error) throw new Error(data.error.message);
 
-            const aiData = JSON.parse(data.candidates[0].content.parts[0].text);
+            // Clean JSON response
+            let aiText = data.candidates[0].content.parts[0].text;
+            aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const aiData = JSON.parse(aiText);
             
             // --- JAVASCRIPT ASSEMBLY ENGINE ---
             const isOdd = dealNum % 2 !== 0;
@@ -157,7 +161,7 @@
                 sl.push(isOdd ? `${hook} -- ${aiData.cleaned_title}` : `${aiData.cleaned_title} -- ${hook}`);
             }
 
-            // Build Posts (Space Chaos Hardcoded via \n)
+            // Build Posts (Space Chaos Hardcoded)
             let posts = "";
             for(let i=0; i<3; i++) {
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${aiData.b2_strategies[i]} ` : "";
@@ -167,52 +171,55 @@
                 
                 // Standard Shuffle (1,4,7)
                 if(dealNum === 1 || dealNum === 4 || dealNum === 7) {
-                    l1 = `${discoveries[i]} on Amazon! ${bank.theme[i]}`;
-                    l2 = `${sl[i]} ${bank.theme[i+3]}`;
-                    l3 = `${b2}${bank.pointers[i]} ${aiData.comp_emojis[i]}`;
-                    l4 = `${aiData.inferences[i]} ${aiData.comp_emojis[i+1] || aiData.comp_emojis[0]}`;
-                    l5 = b8 ? `${b8}${faces[i]}` : "";
+                    l1 = `${discoveries[i]} on Amazon! ${aiData.comp_emojis[1] || '📦'}`;
+                    l2 = `${sl[i]} ${aiData.comp_emojis[0] || '🛒'}`;
+                    l3 = `${b2}${bank.pointers[i]} ${aiData.comp_emojis[3] || '👇'}`;
+                    l4 = `${aiData.inferences[i]} ${aiData.comp_emojis[4] || '✨'}`;
+                    l5 = b8 ? `${b8}${bank.theme[i]}` : "";
                 } 
                 // Inference Lead (2,5)
                 else if (dealNum === 2 || dealNum === 5) {
                     l1 = `${aiData.inferences[i]} ${bank.theme[i]}`;
-                    l2 = `${sl[i]} ${bank.theme[i+3]}`;
-                    l3 = `${discoveries[i]} on Amazon! ${aiData.comp_emojis[i]}`;
-                    l4 = `${bank.pointers[i]} ${b2}${aiData.comp_emojis[i+1] || aiData.comp_emojis[0]}`;
-                    l5 = b8 ? `${b8}${faces[i]}` : "";
+                    l2 = `${sl[i]} ${bank.theme[i+1]}`;
+                    l3 = `${discoveries[i]} on Amazon! ${bank.theme[i+2]}`;
+                    l4 = `${bank.pointers[i]} ${b2}${bank.theme[i+3]}`;
+                    l5 = b8 ? `${b8}${bank.theme[i+4]}` : "";
                 }
                 // Discovery Lead (3,6)
                 else {
-                    l1 = `${discoveries[i]} on Amazon! ${bank.theme[i]}`;
-                    l2 = `${aiData.inferences[i]} ${bank.theme[i+3]}`;
-                    l3 = `${sl[i]} ${aiData.comp_emojis[i]}`;
-                    l4 = `${b2}${bank.pointers[i]} ${aiData.comp_emojis[i+1] || aiData.comp_emojis[0]}`;
-                    l5 = b8 ? `${b8}${faces[i]}` : "";
+                    l1 = `${sl[i]} ${p3Emojis[0]} ${p3Emojis[1]}`;
+                    l2 = `${discoveries[i]} on Amazon!`;
+                    l3 = b8 ? `${aiData.inferences[i]} ${b8}${p3Emojis[2]}` : `${aiData.inferences[i]} ${p3Emojis[2]}`;
+                    l4 = b2 ? `${b2}${p3Emojis[3]}` : "";
+                    l5 = `${bank.pointers[i]} ${p3Emojis[4]}`;
                 }
 
                 // Apply Space Chaos
                 let postText = "";
                 if(i === 0) postText = `${l1}\n\n${l2}\n${l3}\n\n${l4}` + (l5 ? `\n\n${l5}` : "");
                 if(i === 1) postText = `${l1}\n\n${l2}\n\n${l3}\n${l4}` + (l5 ? `\n\n${l5}` : "");
-                if(i === 2) postText = `${l1}\n\n${l2}\n\n${l3}\n\n${l4}` + (l5 ? `\n${l5}` : "");
+                if(i === 2) {
+                    postText = `${l1}\n\n${l2}\n\n${l3}`;
+                    if(l4) postText += `\n\n${l4}\n${l5}`;
+                    else postText += `\n\n${l5}`;
+                }
 
                 posts += `=== POST VARIATION ${i+1} ===\n${postText}\n\n`;
             }
 
             // Build Comments
             let comments = "";
+            let url = "https://thecouponboutique.com/link"; // Placeholder
             for(let i=0; i<3; i++) {
                 let cText = "";
-                let url = "https://your-link-here.com"; // Placeholder for actual URL extraction if needed
-                
                 if(isOdd) {
                     if(i===0) cText = `${aiData.praises[i]} ${faces[i]} ${linkLeads[i]} ${url} ${aiData.disclaimers[i]}`;
                     if(i===1) cText = `${aiData.praises[i]} ${faces[i]}\n\n${linkLeads[i]} ${url}\n\n${aiData.disclaimers[i]}`;
-                    if(i===2) cText = `${aiData.praises[i]} ${aiData.product_emoji} ${linkLeads[i]} ${url}\n\n${aiData.disclaimers[i]}`;
+                    if(i===2) cText = `${aiData.praises[i]} ${aiData.product_emoji || '🔥'} ${linkLeads[i]} ${url}\n\n${aiData.disclaimers[i]}`;
                 } else {
                     if(i===0) cText = `${aiData.praises[i]} ${faces[i]}\n\n${linkLeads[i]} ${url}\n\n${aiData.disclaimers[i]}`;
                     if(i===1) cText = `${linkLeads[i]} ${url}\n\n${aiData.disclaimers[i]} ${aiData.praises[i]} ${faces[i]}`;
-                    if(i===2) cText = `${linkLeads[i]} ${url} ${aiData.disclaimers[i]} ${aiData.praises[i]} ${aiData.product_emoji}`;
+                    if(i===2) cText = `${linkLeads[i]} ${url} ${aiData.disclaimers[i]} ${aiData.praises[i]} ${aiData.product_emoji || '🔥'}`;
                 }
                 comments += `=== COMMENT ${i+1} ===\n${cText}\n\n`;
             }
@@ -224,9 +231,16 @@
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? `${aiData.b2_strategies[3]} ${dtEmojis[0]}` : "";
             let dtB8 = aiData.b8_info[3] !== "DEAD" ? `${aiData.b8_info[3]} ${dtEmojis[1]}` : "";
 
-            let dtText = `${dtHeader}\n\nCheck it out right here: https://your-link-here.com\n\n${aiData.dt_signoff} ${dtEmojis[2]}`;
-            if(dtB2) dtText += `\n\n${dtB2}`;
-            if(dtB8) dtText += `\n\n${dtB8}`;
+            let dtText = "";
+            if(isOdd) {
+                dtText = `${dtHeader}\n\nCheck it out right here: ${url}\n\n${aiData.dt_signoff} ${dtEmojis[2]}`;
+                if(dtB2) dtText += `\n\n${dtB2}`;
+                if(dtB8) dtText += `\n\n${dtB8}`;
+            } else {
+                dtText = `${dtEmojis[2]} ${aiData.dt_signoff}\n\n${dtHeader}\n\nCheck it out right here: ${url}`;
+                if(dtB2) dtText += `\n\n${dtB2}`;
+                if(dtB8) dtText += `\n\n${dtB8}`;
+            }
 
             let finalOutput = `${posts}${comments}=== DAILY THREAD COMMENT ===\n${dtText}`;
             
