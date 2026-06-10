@@ -50,13 +50,16 @@
         .api-link { font-size: 12px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        .output-container { max-width: 800px; margin: 0 auto; } 
-        .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 20px; border-radius: 12px; min-height: 80px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 14px; line-height: 1.6; position: relative; padding-bottom: 60px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);}
-        .output-box h4 { margin-top: 0; font-size: 12px; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;}
-        .copy-btn { position: absolute; bottom: 15px; right: 15px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 6px 16px; font-size: 13px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
+        /* V8.3 UI Upgrades: 2-Column Layout & Compact Boxes */
+        .output-container { max-width: 1200px; margin: 0 auto; } 
+        .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-top: 20px; } /* 60/40 Split */
+        @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
+        .output-col { display: flex; flex-direction: column; gap: 15px; }
+
+        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 15px; border-radius: 8px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 13px; line-height: 1.5; position: relative; padding-bottom: 45px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
+        .output-box h4 { margin-top: 0; font-size: 11px; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;}
+        .copy-btn { position: absolute; bottom: 10px; right: 10px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 4px 12px; font-size: 12px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
         .copy-btn:hover { background: #f8f9fa; border-color: var(--primary); }
-        .full-width { grid-column: 1 / -1; }
 
         .history-list { max-height: 500px; overflow-y: auto; padding-right: 5px;}
         .history-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
@@ -152,55 +155,65 @@
     </div>
 </div>
 
-<div class="output-container" id="outputSection" style="display:none; margin-top: 0;">
+<!-- V8.3 BOTTOM SECTION: 2-COLUMN OUTPUTS -->
+<div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
             <h3 style="color: var(--success);">✅ GENERATED SOCIAL POST VARIATIONS</h3>
         </div>
         
-        <div class="output-grid">
-            <div class="output-box full-width" style="border-left: 4px solid var(--primary);">
-                <h4>🎯 PHASE 0: TARGET LOCK</h4>
-                <div id="out-phase0" style="font-family: monospace; font-size: 13px; padding-bottom: 0;"></div>
+        <div class="output-layout">
+            <!-- LEFT COLUMN: POSTS -->
+            <div class="output-col">
+                <div class="output-box" style="border-left: 4px solid var(--primary);">
+                    <h4>🎯 PHASE 0: TARGET LOCK</h4>
+                    <div id="out-phase0" style="font-family: monospace; font-size: 12px; padding-bottom: 0;"></div>
+                </div>
+
+                <div class="output-box">
+                    <h4>📝 POST VARIATION 1</h4>
+                    <div id="out-post1"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
+                </div>
+
+                <div class="output-box">
+                    <h4>📝 POST VARIATION 2</h4>
+                    <div id="out-post2"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
+                </div>
+
+                <div class="output-box">
+                    <h4>📝 POST VARIATION 3</h4>
+                    <div id="out-post3"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
+                </div>
             </div>
 
-            <div class="output-box">
-                <h4>📝 POST VARIATION 1</h4>
-                <div id="out-post1"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
-            </div>
-            <div class="output-box">
-                <h4>💬 COMMENT 1</h4>
-                <div id="out-com1"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy Comment</button>
-            </div>
+            <!-- RIGHT COLUMN: COMMENTS & DT -->
+            <div class="output-col">
+                <div class="output-box">
+                    <h4>💬 COMMENT 1</h4>
+                    <div id="out-com1"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy</button>
+                </div>
 
-            <div class="output-box">
-                <h4>📝 POST VARIATION 2</h4>
-                <div id="out-post2"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
-            </div>
-            <div class="output-box">
-                <h4>💬 COMMENT 2</h4>
-                <div id="out-com2"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy Comment</button>
-            </div>
+                <div class="output-box">
+                    <h4>💬 COMMENT 2</h4>
+                    <div id="out-com2"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy</button>
+                </div>
 
-            <div class="output-box">
-                <h4>📝 POST VARIATION 3</h4>
-                <div id="out-post3"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
-            </div>
-            <div class="output-box">
-                <h4>💬 COMMENT 3</h4>
-                <div id="out-com3"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy Comment</button>
-            </div>
+                <div class="output-box">
+                    <h4>💬 COMMENT 3</h4>
+                    <div id="out-com3"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy</button>
+                </div>
 
-            <div class="output-box full-width" style="border-left: 4px solid #fbbc04;">
-                <h4>🧵 DAILY THREAD COMMENT</h4>
-                <div id="out-dt"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">📄 Copy Thread</button>
+                <div class="output-box" style="border-left: 4px solid #fbbc04;">
+                    <h4>🧵 DAILY THREAD COMMENT</h4>
+                    <div id="out-dt"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">📄 Copy Thread</button>
+                </div>
             </div>
         </div>
     </div>
@@ -262,6 +275,26 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
 
+    // V8.3 Hardcoded B5 & B6 Logic
+    function getB5Perks(rawText) {
+        const r = rawText.toLowerCase();
+        if(r.includes('walmart')) return ["Hitting that thirty-five mark means delivery is completely covered!", "If your total reaches thirty-five, they handle the shipping with nothing extra added.", "Members get this sent right to the door with delivery included.", "Reaching a thirty-five total gets it shipped right to your door."];
+        if(r.includes('walgreens')) return ["Snag it for local pickup with nothing extra added once you hit the ten mark!", "Once your order reaches ten, it's ready for local pickup!", "Get pickup included right now when your total hits ten!", "Score local pickup completely covered once you reach the ten mark!"];
+        if(r.includes('woot')) return ["Sign in with your Amazon account for delivery with nothing extra added!", "Log in using your Amazon account for delivery included!", "Use your Amazon account login so it's shipped completely covered!", "Your delivery is included right now when you sign in with Amazon!"];
+        return ["DEAD", "DEAD", "DEAD", "DEAD"];
+    }
+
+    function getB6Savings(rawText) {
+        const r = rawText.toLowerCase();
+        if(r.includes('code') || r.includes('promo') || r.includes('qpon') || r.includes('qp0n') || r.includes('cp0n')) {
+            return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
+        }
+        if(r.includes('coupon') || r.includes('clippable') || r.includes('voucher') || r.includes('digital box')) {
+            return ["Make sure to check that little box on the page to grab this amount!", "Ensure you select the digital option on the product page to see this total!", "Remember to check the digital box before finishing up!", "Selecting the digital option on the page secures this value!"];
+        }
+        return ["DEAD", "DEAD", "DEAD", "DEAD"];
+    }
+
     async function processDeal() {
         const apiKey = document.getElementById('apiKey').value.trim();
         const rawText = document.getElementById('rawText').value.trim();
@@ -278,7 +311,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.2 Micro-Prompt (ALL BUCKETS RESTORED)
+        // V8.3 Micro-Prompt (B5/B6 removed, handled by JS)
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "cleaned_title": (String. Copy product name exactly. Remove emojis. Do NOT delete 'QTY'),
@@ -288,10 +321,8 @@
         "inferences": (Array of 3 short lifestyle statements. Sound like a real person.),
         "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. Do NOT sound like a robot.),
         "b2_strategies": (Array of 4 UNIQUE sentences. RULE 1: If text has limits, write warnings. RULE 2: If text requires buying multiples (e.g. Add 4), calculate per-item price. RULE 3: If text has specific colors, sizes, or options (e.g. '12lbs', 'Black'), write sentences telling them to select it. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b5_perks": (Array of 4 sentences. If retailer is Walmart, Walgreens, or Woot, write 4 unique sentences about shipping/pickup perks. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b6_savings": (Array of 4 sentences. If text mentions Coupon, Promo, Code, or Voucher, write 4 unique sentences reminding them to clip/use it. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b8_info": (Array of 4 sentences. This is the Overflow Gate. Extract leftover info like S&S, passive features, OR write personal hype like 'This is the cheapest I have seen this!'. Rephrase 4 times. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b8_info": (Array of 4 sentences. Extract leftover info like S&S. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
         "dt_signoff": (String. 1 short lifestyle sentence),
         "comp_emojis": (Array of 5 unique emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧; if kitchen, use 🥩🧅🍳. Do NOT use generic shapes.),
         "product_emoji": (String. 1 literal emoji for the product)
@@ -325,6 +356,10 @@
             const emojis = aiData.comp_emojis && aiData.comp_emojis.length === 5 ? aiData.comp_emojis : ["📦","🛒","👇","✨","🔥"];
             const pEmoji = aiData.product_emoji || "🔥";
 
+            // Fetch Hardcoded B5 and B6
+            const b5Perks = getB5Perks(rawText);
+            const b6Savings = getB6Savings(rawText);
+
             let phase0 = `${rawText}`;
             document.getElementById('out-phase0').innerText = phase0;
 
@@ -340,13 +375,13 @@
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])} ` : "";
                 
                 // Combine B5, B6, B7, B8 into Bottom Line
-                let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
-                let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
+                let b5 = b5Perks[i] !== "DEAD" ? `${b5Perks[i]} ` : "";
+                let b6 = b6Savings[i] !== "DEAD" ? `${b6Savings[i]} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
                 let b8 = aiData.b8_info && aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
                 
                 let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
-                if(bottomLine !== "") bottomLine += " "; // Add trailing space for emoji
+                if(bottomLine !== "") bottomLine += " "; 
 
                 let inf = cleanText(aiData.inferences[i]);
                 
@@ -408,8 +443,8 @@
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? `${cleanText(aiData.b2_strategies[3])} ${dtEmojis[0]}` : "";
             
-            let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
-            let dtB6 = aiData.b6_savings && aiData.b6_savings[3] !== "DEAD" ? `${cleanText(aiData.b6_savings[3])} ` : "";
+            let dtB5 = b5Perks[3] !== "DEAD" ? `${b5Perks[3]} ` : "";
+            let dtB6 = b6Savings[3] !== "DEAD" ? `${b6Savings[3]} ` : "";
             let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
             let dtB8 = aiData.b8_info && aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ` : "";
             
