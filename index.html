@@ -14,8 +14,6 @@
             --text-muted: #5f6368;
             --border: #dadce0;
             --success: #0f9d58;
-            --raw-bg: #1e1e2f;
-            --raw-text: #a5d6ff;
         }
 
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
@@ -52,26 +50,16 @@
         .api-link { font-size: 12px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V9.0 UI Upgrades: Tabs & Raw Output */
+        /* V8.3 UI Upgrades: 2-Column Layout & Compact Boxes */
         .output-container { max-width: 1200px; margin: 0 auto; } 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: flex-end;}
-        .tab-btn { background: #fff; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; font-weight: 600; transition: 0.2s;}
-        .tab-btn.active { background: #e8f0fe; color: var(--primary); border-color: var(--primary); }
-        
-        .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; } 
+        .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-top: 20px; } /* 60/40 Split */
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
         .output-col { display: flex; flex-direction: column; gap: 15px; }
 
-        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 20px; border-radius: 12px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 14px; line-height: 1.6; position: relative; padding-bottom: 50px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);}
-        .output-box h4 { margin-top: 0; font-size: 12px; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;}
-        .copy-btn { position: absolute; bottom: 15px; right: 15px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 6px 16px; font-size: 13px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
+        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 15px; border-radius: 8px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 13px; line-height: 1.5; position: relative; padding-bottom: 45px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
+        .output-box h4 { margin-top: 0; font-size: 11px; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;}
+        .copy-btn { position: absolute; bottom: 10px; right: 10px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 4px 12px; font-size: 12px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
         .copy-btn:hover { background: #f8f9fa; border-color: var(--primary); }
-        .full-width { grid-column: 1 / -1; }
-
-        /* Raw Output Terminal */
-        .raw-terminal { background: var(--raw-bg); color: var(--raw-text); font-family: monospace; font-size: 13px; padding: 20px; border-radius: 12px; white-space: pre-wrap; line-height: 1.5; border: 1px solid #444; position: relative; padding-bottom: 60px; display: none;}
-        .raw-copy-btn { position: absolute; bottom: 15px; right: 15px; background: #4facfe; color: #fff; border: none; padding: 8px 16px; font-size: 13px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;}
-        .raw-copy-btn:hover { background: #00f2fe; }
 
         .history-list { max-height: 500px; overflow-y: auto; padding-right: 5px;}
         .history-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
@@ -167,27 +155,15 @@
     </div>
 </div>
 
-<!-- V9.0 BOTTOM SECTION: TABS & OUTPUTS -->
+<!-- V8.3 BOTTOM SECTION: 2-COLUMN OUTPUTS -->
 <div class="output-container" id="outputSection" style="display:none;">
-    
-    <div class="tabs">
-        <button class="tab-btn active" id="tabFormatted" onclick="switchTab('formatted')">Formatted Layout</button>
-        <button class="tab-btn" id="tabRaw" onclick="switchTab('raw')">Raw Output</button>
-    </div>
-
-    <!-- RAW OUTPUT TERMINAL -->
-    <div id="rawTerminal" class="raw-terminal">
-        <div id="out-rawText"></div>
-        <button class="raw-copy-btn" onclick="copyToClipboard('out-rawText', this)">📄 Copy All Raw Output</button>
-    </div>
-
-    <!-- FORMATTED LAYOUT -->
-    <div class="card" id="formattedLayout">
+    <div class="card">
         <div class="card-header">
             <h3 style="color: var(--success);">✅ GENERATED SOCIAL POST VARIATIONS</h3>
         </div>
         
         <div class="output-layout">
+            <!-- LEFT COLUMN: POSTS -->
             <div class="output-col">
                 <div class="output-box" style="border-left: 4px solid var(--primary);">
                     <h4>🎯 PHASE 0: TARGET LOCK</h4>
@@ -213,6 +189,7 @@
                 </div>
             </div>
 
+            <!-- RIGHT COLUMN: COMMENTS & DT -->
             <div class="output-col">
                 <div class="output-box">
                     <h4>💬 COMMENT 1</h4>
@@ -260,610 +237,306 @@
         document.getElementById('nextTargetText').innerHTML = `Next target: <strong>Deal ${num}</strong>. Output saves automatically to ledger.`;
     }
 
-    function switchTab(tab) {
-        if(tab === 'formatted') {
-            document.getElementById('formattedLayout').style.display = 'block';
-            document.getElementById('rawTerminal').style.display = 'none';
-            document.getElementById('tabFormatted').classList.add('active');
-            document.getElementById('tabRaw').classList.remove('active');
-        } else {
-            document.getElementById('formattedLayout').style.display = 'none';
-            document.getElementById('rawTerminal').style.display = 'block';
-            document.getElementById('tabFormatted').classList.remove('active');
-            document.getElementById('tabRaw').classList.add('active');
+    // --- DICTIONARIES ---
+    const banks = {
+        A: { prefixes: ["Just", "Down to", "At", "Score it for"], compLabels: ["Regular", "Normally", "Originally", "Previously"], pointers: ["I put it right under here for you!", "You can grab yours right under here!", "I left the exact page right under this!"] },
+        B: { prefixes: ["Only", "Found for", "Marked at", "Sitting at"], compLabels: ["Normally", "Was", "Regular", "List"], pointers: ["It's waiting for you right down there!", "Just scroll down a tiny bit to find it!", "The right spot is waiting just a step down!"] },
+        C: { prefixes: ["Now", "Fell to", "Yours for", "Spotted at"], compLabels: ["Originally", "Previously", "Was", "Regular"], pointers: ["Find the exact location ready for you in the next section!", "Everything you need is a little further down!", "Catch it just a quick scroll away!"] },
+        D: { prefixes: ["", "Grab it for", "Snag it for", "Down to"], compLabels: ["Was", "List", "Normally", "Originally"], pointers: ["I pinned the exact spot right under this text!", "The location is resting just under this text!", "Look just a little further down for the page!"] },
+        E: { prefixes: ["Spotted at", "Just", "Marked at", "Down to"], compLabels: ["Previously", "Regular", "List", "Was"], pointers: ["I tucked the exact spot right under here!", "You can find it right under here!", "I left the location right under this!"] },
+        F: { prefixes: ["Score it for", "At", "Found for", "Only"], compLabels: ["List", "Originally", "Normally", "Regular"], pointers: ["It's resting for you right down there!", "Just scroll down a bit to see it!", "The exact page is waiting just a step down!"] },
+        G: { prefixes: ["Fell to", "Yours for", "Grab it for", "Sitting at"], compLabels: ["Regular", "Was", "Previously", "Normally"], pointers: ["Find the exact spot ready for you in the next section!", "Everything you want is a little further down!", "Catch the location just a quick scroll away!"] }
+    };
+
+    const statuses = ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
+    const discoveries = ["We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today"];
+    const linkLeads = ["Grab it here:", "See it here:", "Find it here:"];
+    const dtEmojis = ["🌤️", "🍃", "🌊"];
+    const faces = ["😀", "😃", "😊", "😎", "🤩"];
+
+    function getRoutingBank(day, dealNum) {
+        const matrix = {
+            "Sunday": ["A","B","C","D","E","F","G"], "Monday": ["B","C","D","E","F","G","A"],
+            "Tuesday": ["C","D","E","F","G","A","B"], "Wednesday": ["D","E","F","G","A","B","C"],
+            "Thursday": ["E","F","G","A","B","C","D"], "Friday": ["F","G","A","B","C","D","E"],
+            "Saturday": ["G","A","B","C","D","E","F"]
+        };
+        return matrix[day][dealNum - 1];
+    }
+
+    function cleanText(str) {
+        if (!str) return "";
+        return str.replace(/[^\x00-\x7F]/g, "").trim();
+    }
+
+    function extractURL(text) {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const match = text.match(urlRegex);
+        return match ? match[0] : "https://thecouponboutique.com/";
+    }
+
+    // V8.3 Hardcoded B5 & B6 Logic
+    function getB5Perks(rawText) {
+        const r = rawText.toLowerCase();
+        if(r.includes('walmart')) return ["Hitting that thirty-five mark means delivery is completely covered!", "If your total reaches thirty-five, they handle the shipping with nothing extra added.", "Members get this sent right to the door with delivery included.", "Reaching a thirty-five total gets it shipped right to your door."];
+        if(r.includes('walgreens')) return ["Snag it for local pickup with nothing extra added once you hit the ten mark!", "Once your order reaches ten, it's ready for local pickup!", "Get pickup included right now when your total hits ten!", "Score local pickup completely covered once you reach the ten mark!"];
+        if(r.includes('woot')) return ["Sign in with your Amazon account for delivery with nothing extra added!", "Log in using your Amazon account for delivery included!", "Use your Amazon account login so it's shipped completely covered!", "Your delivery is included right now when you sign in with Amazon!"];
+        return ["DEAD", "DEAD", "DEAD", "DEAD"];
+    }
+
+    function getB6Savings(rawText) {
+        const r = rawText.toLowerCase();
+        if(r.includes('code') || r.includes('promo') || r.includes('qpon') || r.includes('qp0n') || r.includes('cp0n')) {
+            return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
+        }
+        if(r.includes('coupon') || r.includes('clippable') || r.includes('voucher') || r.includes('digital box')) {
+            return ["Make sure to check that little box on the page to grab this amount!", "Ensure you select the digital option on the product page to see this total!", "Remember to check the digital box before finishing up!", "Selecting the digital option on the page secures this value!"];
+        }
+        return ["DEAD", "DEAD", "DEAD", "DEAD"];
+    }
+
+    async function processDeal() {
+        const apiKey = document.getElementById('apiKey').value.trim();
+        const rawText = document.getElementById('rawText').value.trim();
+        const day = document.getElementById('currentDay').value;
+        const selectedModel = document.getElementById('aiModel').value;
+        let dealNumInput = document.getElementById('dealNumber');
+        let dealNum = parseInt(dealNumInput.value);
+        const btn = document.getElementById('apiButton');
+
+        if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
+        localStorage.setItem('geminiApiKey', apiKey);
+
+        btn.innerHTML = "⏳ Generating...";
+        btn.disabled = true;
+        document.getElementById('outputSection').style.display = "block";
+
+        // V8.3 Micro-Prompt (B5/B6 removed, handled by JS)
+        const prompt = `Analyze this deal: "${rawText}"
+        Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
+        "cleaned_title": (String. Copy product name exactly. Remove emojis. Do NOT delete 'QTY'),
+        "sale_price": (String. Extract sale price, e.g. "$19.99"),
+        "reg_price": (String. Extract regular price. Strip decimal, e.g. "34 99". If none, write "NONE"),
+        "praises": (Array of 3 short hype questions ending in '?'. Sound like an excited shopper sharing a find with a friend.),
+        "inferences": (Array of 3 short lifestyle statements. Sound like a real person.),
+        "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. Do NOT sound like a robot.),
+        "b2_strategies": (Array of 4 UNIQUE sentences. RULE 1: If text has limits, write warnings. RULE 2: If text requires buying multiples (e.g. Add 4), calculate per-item price. RULE 3: If text has specific colors, sizes, or options (e.g. '12lbs', 'Black'), write sentences telling them to select it. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b8_info": (Array of 4 sentences. Extract leftover info like S&S. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "dt_signoff": (String. 1 short lifestyle sentence),
+        "comp_emojis": (Array of 5 unique emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧; if kitchen, use 🥩🧅🍳. Do NOT use generic shapes.),
+        "product_emoji": (String. 1 literal emoji for the product)
+        
+        GLOBAL SHIELD: Do NOT use banned words: Price, Cost, Sale, Deal, Save, Discount, Buy, Shop, Coupon, Checkout, Promo, Free, Link, Cart.`;
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { temperature: 0.5 } 
+                })
+            });
+
+            const data = await response.json();
+            if(data.error) throw new Error(data.error.message);
+
+            let aiText = data.candidates[0].content.parts[0].text;
+            aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const aiData = JSON.parse(aiText);
+            
+            // --- JAVASCRIPT ASSEMBLY ENGINE ---
+            const isOdd = dealNum % 2 !== 0;
+            const bank = banks[getRoutingBank(day, dealNum)];
+            const extractedURL = extractURL(rawText);
+            
+            const cleanTitle = cleanText(aiData.cleaned_title);
+            const dtSignoff = cleanText(aiData.dt_signoff);
+            const emojis = aiData.comp_emojis && aiData.comp_emojis.length === 5 ? aiData.comp_emojis : ["📦","🛒","👇","✨","🔥"];
+            const pEmoji = aiData.product_emoji || "🔥";
+
+            // Fetch Hardcoded B5 and B6
+            const b5Perks = getB5Perks(rawText);
+            const b6Savings = getB6Savings(rawText);
+
+            let phase0 = `${rawText}`;
+            document.getElementById('out-phase0').innerText = phase0;
+
+            let sl = [];
+            for(let i=0; i<3; i++) {
+                let hook = `${bank.prefixes[i]} ${cleanText(aiData.sale_price)} ${statuses[i]}`;
+                if(aiData.reg_price !== "NONE") hook += ` (${bank.compLabels[i]} ${cleanText(aiData.reg_price)})`;
+                sl.push(isOdd ? `${hook} -- ${cleanTitle}` : `${cleanTitle} -- ${hook}`);
+            }
+
+            let postOutputs = [];
+            for(let i=0; i<3; i++) {
+                let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])} ` : "";
+                
+                // Combine B5, B6, B7, B8 into Bottom Line
+                let b5 = b5Perks[i] !== "DEAD" ? `${b5Perks[i]} ` : "";
+                let b6 = b6Savings[i] !== "DEAD" ? `${b6Savings[i]} ` : "";
+                let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
+                let b8 = aiData.b8_info && aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
+                
+                let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
+                if(bottomLine !== "") bottomLine += " "; 
+
+                let inf = cleanText(aiData.inferences[i]);
+                
+                let l1, l2, l3, l4, l5;
+                
+                if(dealNum === 1 || dealNum === 4 || dealNum === 7) {
+                    l1 = `${discoveries[i]} on Amazon! ${emojis[1]}`;
+                    l2 = `${sl[i]} ${emojis[0]}`;
+                    l3 = `${b2}${bank.pointers[i]} ${emojis[3]}`;
+                    l4 = `${inf} ${emojis[4]}`;
+                    l5 = bottomLine ? `${bottomLine}${emojis[2]}` : "";
+                } else if (dealNum === 2 || dealNum === 5) {
+                    l1 = `${inf} ${emojis[2]}`;
+                    l2 = `${sl[i]} ${emojis[0]}`;
+                    l3 = `${discoveries[i]} on Amazon! ${emojis[1]}`;
+                    l4 = `${bank.pointers[i]} ${b2}${emojis[3]}`;
+                    l5 = bottomLine ? `${bottomLine}${emojis[4]}` : "";
+                } else {
+                    l1 = `${sl[i]} ${emojis[0]} ${emojis[1]}`;
+                    l2 = `${discoveries[i]} on Amazon!`;
+                    l3 = bottomLine ? `${inf} ${bottomLine}${emojis[2]}` : `${inf} ${emojis[2]}`;
+                    l4 = b2 ? `${b2}${emojis[3]}` : "";
+                    l5 = `${bank.pointers[i]} ${emojis[4]}`;
+                }
+
+                let activeLines = [l1, l2, l3, l4, l5].filter(line => line !== ""); 
+                let touchIndex = Math.floor(Math.random() * (activeLines.length - 1));
+                
+                let postText = activeLines[0];
+                for(let j = 1; j < activeLines.length; j++) {
+                    if (j - 1 === touchIndex) postText += `\n${activeLines[j]}`; 
+                    else postText += `\n\n${activeLines[j]}`; 
+                }
+                postOutputs.push(postText);
+                document.getElementById(`out-post${i+1}`).innerText = postText;
+            }
+
+            let commentOutputs = [];
+            for(let i=0; i<3; i++) {
+                let cText = "";
+                let praise = cleanText(aiData.praises[i]);
+                let disc = cleanText(aiData.disclaimers[i]);
+
+                if(isOdd) {
+                    if(i===0) cText = `${praise} ${faces[i]} ${linkLeads[i]} ${extractedURL} ${disc}`;
+                    if(i===1) cText = `${praise} ${faces[i]}\n\n${linkLeads[i]} ${extractedURL}\n\n${disc}`;
+                    if(i===2) cText = `${praise} ${pEmoji} ${linkLeads[i]} ${extractedURL}\n\n${disc}`;
+                } else {
+                    if(i===0) cText = `${praise} ${faces[i]}\n\n${linkLeads[i]} ${extractedURL}\n\n${disc}`;
+                    if(i===1) cText = `${linkLeads[i]} ${extractedURL}\n\n${disc} ${praise} ${faces[i]}`;
+                    if(i===2) cText = `${linkLeads[i]} ${extractedURL} ${disc} ${praise} ${pEmoji}`;
+                }
+                commentOutputs.push(cText);
+                document.getElementById(`out-com${i+1}`).innerText = cText;
+            }
+
+            let dtHeader = isOdd ? `${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${statuses[3]} on Amazon -- ${cleanTitle}` : `${cleanTitle} -- ${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${statuses[3]} on Amazon`;
+            if(aiData.reg_price !== "NONE") dtHeader += ` (${bank.compLabels[3]} ${cleanText(aiData.reg_price)})`;
+            
+            let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? `${cleanText(aiData.b2_strategies[3])} ${dtEmojis[0]}` : "";
+            
+            let dtB5 = b5Perks[3] !== "DEAD" ? `${b5Perks[3]} ` : "";
+            let dtB6 = b6Savings[3] !== "DEAD" ? `${b6Savings[3]} ` : "";
+            let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
+            let dtB8 = aiData.b8_info && aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ` : "";
+            
+            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}`.trim();
+            if(dtOverflow !== "") dtOverflow += ` ${dtEmojis[1]}`;
+
+            let dtText = "";
+            if(isOdd) {
+                dtText = `${dtHeader}\n\nCheck it out right here: ${extractedURL}\n\n${dtSignoff} ${dtEmojis[2]}`;
+                if(dtB2) dtText += `\n\n${dtB2}`;
+                if(dtOverflow) dtText += `\n\n${dtOverflow}`;
+            } else {
+                dtText = `${dtEmojis[2]} ${dtSignoff}\n\n${dtHeader}\n\nCheck it out right here: ${extractedURL}`;
+                if(dtB2) dtText += `\n\n${dtB2}`;
+                if(dtOverflow) dtText += `\n\n${dtOverflow}`;
+            }
+            document.getElementById('out-dt').innerText = dtText;
+
+            // History Log
+            dealCount++;
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            
+            const dealData = {
+                phase0: phase0,
+                posts: postOutputs,
+                comments: commentOutputs,
+                dt: dtText
+            };
+            sessionHistory.push(dealData);
+            const index = sessionHistory.length - 1;
+
+            const historyLog = document.getElementById('historyLog');
+            const emptyMsg = document.getElementById('emptyHistory');
+            if(emptyMsg) emptyMsg.remove();
+
+            const historyCard = `
+                <div class="history-card" onclick="loadHistory(${index})">
+                    <span class="history-time">${day} • ${timestamp}</span>
+                    <div class="history-title">Deal ${dealNum}: ${cleanTitle}</div>
+                </div>
+            `;
+            
+            historyLog.innerHTML = historyCard + historyLog.innerHTML;
+            document.getElementById('sessionBaseHeader').innerText = `📚 SESSION BASE (${dealCount} / 7)`;
+
+            if(dealNum < 7) dealNumInput.value = dealNum + 1;
+            else dealNumInput.value = 1;
+            updateButtonText();
+
+            document.getElementById('rawText').value = "";
+
+        } catch (error) {
+            alert("Error: " + error.message);
+        } finally {
+            updateButtonText();
+            btn.disabled = false;
         }
     }
 
-    // --- THE AV928 MASTER PROTOCOL PROMPT ---
-    const masterProtocol = `MASTER PROTOCOL AV928
-
-PHASE 1: THE STATE TRACKER & MASTER LEDGER (MANDATORY)
-
-CONTEXT ISOLATION LAW: You are operating in a continuous chat. You MUST anchor your attention to the newest raw input in Phase 0. You MUST completely ignore all products, features, prices, and emojis from previous deals in this chat history. Treat previous outputs as dead tokens.
-
-START AT DEAL_1 MANDATE: Always begin a brand new generation at Deal_1. Do NOT start at Deal_5 or Deal_7 just because you see those numbers in the prompt examples.
-
-You MUST output exactly ONE Phase 0 Target Lock, ONE State Tracker, and ONE Master Ledger at the very top of your response. ECHO FATAL ERROR: When outputting Phase 0, you MUST echo the raw input EXACTLY character-for-character. You are STRICTLY FORBIDDEN from auto-correcting grammar, expanding abbreviations, or changing 'QTY' to 'units'. TOTAL BACKTICK BAN: You are STRICTLY FORBIDDEN from using the backtick symbol anywhere in your entire response. Do NOT use markdown code blocks. Print the ledger as normal plain text.
-
-STATE TRACKER MANDATE: Before generating anything else, you MUST mathematically verify the Deal Number and output the exact System Initialization line below. If it is divisible by 2, it is EVEN. If not, it is ODD. Do NOT print literal brackets around the numbers or words.
-
-ROTATION LEDGER MANDATE: You MUST pre-plan your rotating variables and write them in the ledger using the numbered index format (1:, 2:, 3:, 4:). LEDGER SHUFFLE FATAL ERROR: You MUST randomly shuffle the order of the Prefixes, Statuses, and CompLabels when you pull them from their Banks into this Ledger. Do NOT just copy them in the exact 1-2-3-4 order from the dictionary. Status 4, Prefix 4, and CompLabel 4 MUST be different every time to protect the Daily Thread.
-
-LEDGER TRUNCATION FATAL ERROR: You MUST generate exactly 4 items for Prefixes, Statuses, CompLabels, B2 Strategies, B5 Perks, B6 Savings, B7 Occasions, and B8 Extra Info. Do NOT stop at 3. The 4th item is REQUIRED for the Daily Thread.
-
-NO EMOJI CONTAMINATION FATAL ERROR: Do NOT place emojis inside the Praises, Comment_Link_Leads, Disclaimers, B2 Strategies, or any other text strings in the Ledger. Emojis belong ONLY in the Emoji Bank.
-
-Sync Rule: Order must match generation below. Quantity Rule: Precisely 3 unique praises, 3 unique leads, and 3 unique disclaimers per deal. Depletion Rule: Once used in this ledger, a phrase is "spent" for the entire batch. Context Rule: You MUST dynamically generate 3 highly specific, natural-sounding praises for each item. Every praise MUST be an open-ended question ending in a question mark (?).
-
-=== PHASE 0: TARGET LOCK === Raw Input Detected: {{Raw_Deal_Text}}
-
-=== SYSTEM INITIALIZATION: {{Deal_Index_Number}} | PREVIOUS DEAL: NONE ===
-
-=== MASTER LEDGER AV928 ===
-
-Deal_X: [Item Name]
-
-Batch Memory Check: What was the highest Deal Number generated in the previous response? [None/Deal_2/Deal_4]. Therefore, the first deal I am generating right now MUST be [Deal_1/Deal_3/Deal_5].
-
-Title Sanitization Scratchpad: 
-1. Raw Title: [Extract the exact product title line from Phase 0]
-2. Banned Words Check: [Scan Raw Title against Section 1 Banned Words. List them here. If none, write NONE]
-3. Leetspeak Check: [Scan Raw Title for leetspeak. List fixes here. If none, write NONE]
-
-Cleaned Title: [Apply the fixes from the Scratchpad above to the Raw Title. ABSOLUTE VERBATIM LOCK: You MUST NOT rearrange words, fix grammar, or delete instructions like "ADD 4 QTY". Only remove banned words and fix leetspeak. If Scratchpad 2 & 3 are NONE, print Raw Title exactly AS IS.]
-
-Current Product Focus: I am exclusively generating for [Cleaned Title]. I am blind to all other products in this chat history.
-
-Regular Price Check: [Extract exact regular/comparison price from raw input. Do NOT use prices from previous deals.]
-
-Current Day: {{Current_Day}}
-
-Routing Bank: Today is {{Current_Day}}. This is Deal_{{Deal_Index_Number}}. Based on the Day-Shift Matrix, my Routing Bank is Bank [A, B, C, D, E, F, or G].
-
-Matrix Pre-Compute: This is Deal_{{Deal_Index_Number}} (ODD/EVEN). Comment 1 & 2 Format: [ODD / EVEN]. Post Shuffle: [Standard (1,4,7) / Inference Lead (2,5) / Discovery Lead (3,6)]. Comment 3: [Option 1 (1,4,7) / Option 2 (2,5) / Option 3 (3,6)]. Daily Thread: [Standard (1,5) / Narrative Lead (2,6) / Summary Lead (3,7) / Link Finale (4)].
-
-Emoji Theme Check: My Routing Bank is Bank [A, B, C, D, E, F, or G]. Based on my Bank, I MUST use the following Theme and Sort Order: Bank A = Lifestyle/Relaxation (A-Z). Bank B = Nature/Environment (Z-A). Bank C = Objects/Accessories (A-Z). Bank D = Colors/Symbols (Z-A). Bank E = Home/Decor (Z-A). Bank F = Nature/Environment (A-Z). Bank G = Objects/Accessories (Z-A). Selected Theme: [Print Theme] | Sort Order: [Print Sort Order].
-
-Emojis: [Emoji DYN-A]:[], [Emoji DYN-B]:[], [Emoji DYN-C]:[], [Emoji DYN-D]:[], [Emoji DYN-E]:[] (Generate 5 UNIQUE emojis strictly related to the product. EMOJI SHUFFLE LAW: You MUST scramble the order of these 5 emojis before assigning them to the slots. Do not list them in order of relevance.) | [Emoji P1-A]:[], [Emoji P2-A]:[], [Emoji P2-B]:[], [Emoji P2-C]:[], [Emoji P2-D]:[], [Emoji P2-E]:[], [Emoji P2-F]:[], [Emoji P3-A]:[], [Emoji P3-B]:[], [Emoji P3-C]:[], [Emoji P3-D]:[], [Emoji P3-E]:[], [Emoji DT-A]:[], [Emoji DT-B]:[], [Emoji DT-C]:[] | [Emoji C-A]:[Literal Human Face Emoji], [Emoji C-B]:[Literal Human Face Emoji], [Emoji C-C]:[Literal Product Match], [Emoji C-D]:[Literal Human Face Emoji], [Emoji C-E]:[Literal Human Face Emoji] 
-(EMOJI PARTITION LAWS: To prevent emoji spam, you MUST strictly follow these category assignments. Every single emoji MUST be unique. Do NOT repeat any DYN emojis.
-1. P1-A through P2-F (7 Emojis): MUST strictly match the Selected Theme declared above.
-2. P3-A through P3-E (5 Emojis): COMPLEMENTARY ITEMS. These MUST be objects you would use WITH the product (e.g., if cookware, use food ingredients 🥩🧅; if laundry, use clothes/water 👕💧).
-3. DT-A through DT-C (3 Emojis): TIME OR SEASONS. (e.g., 🕰️, 📅, ❄️, ☀️, 🌙).
-4. BANNED CONCEPTS: sparkles, boxes, pins, rockets, gems, carts, trucks, runners, houses, balloons, stars, targets, bags, bolts, bulbs, arrows, glasses, checkmarks, bubbles, gifts.)
-
-Emoji Audit Scratchpad: 
-1. C-Series Translation: [Physically translate C-A through C-E into English words (e.g., C-A: smiling face, C-E: sparkles)]
-2. Banned Match: [Check your translations against the Banned Concepts list above. If a match exists (like 'sparkles'), list it here. If none, write NONE.]
-3. Duplication Check: [Scan ALL 20 emojis generated above. Are there any exact duplicates (e.g., two grapes)? If yes, list the duplicate here. If no, write NONE.]
-4. Correction: [If a banned match OR a duplicate was found, you MUST change that emoji in the bank above to a safe, unique symbol. If NONE for both, write ALL CLEAR.]
-
-Praises: 1: [Unique A?], 2: [Unique B?], 3: [Unique C?] (ENTHUSIASM MANDATE: Praises MUST be hype-driven and focus on lifestyle benefits. Do NOT sound like a troubleshooting FAQ or customer service. GLOBAL SHIELD ENFORCEMENT: You MUST NOT use the word 'free' or any other banned words from Section 1.)
-
-Dynamic Inferences: 1: [Inference 1], 2: [Inference 2], 3: [Inference 3] (Generate 3 unique, highly relatable lifestyle sentences. Max 15 words each. THE EAGER SHOPPER PERSONA: You MUST sound like a real person excitedly sharing a brilliant find with a friend. THE FRAGMENT BAN: You MUST write complete sentences. You are STRICTLY FORBIDDEN from starting with '-ing' verbs. THE MANUAL BAN: Do NOT describe mechanical operations. TITLE ECHO FATAL ERROR: You are STRICTLY FORBIDDEN from repeating specific nouns, numbers, or descriptors from the product title. Use generic pronouns like 'this' or 'these'. STRICT B2 FIREWALL: Do NOT mention colors, sizes, limits, or transactional instructions here. Those belong ONLY in B2. GLOBAL SHIELD ENFORCEMENT: You MUST NOT use the word 'Free' or any other banned words from Section 1.)
-
-Comment_Link_Leads: 1: [Lead 1], 2: [Lead 2], 3: [Lead 3] (You MUST dynamically generate 3 short, unique call-to-action phrases ending in a colon, e.g., 'Got it here:', 'Check it out here:', 'See it here:'. These are strictly for the comments.)
-
-Disclaimers: 1: [Disc 1], 2: [Disc 2], 3: [Disc 3] (DISCLAIMER FATAL ERROR: Do NOT pull Discoveries or Praises here. You MUST dynamically generate 3 completely unique, casual warnings. BEST FRIEND PERSONA: You MUST sound like a real person texting their best friend about a shopping win. Do NOT sound like a customer service robot. Use highly conversational phrasing (e.g., 'Fingers crossed it hasn't jumped back up!', 'Hope it still shows this amount for you!', 'Always peek at the final number before finishing!', 'These fluctuate a lot so double check!'). GLOBAL SHIELD ENFORCEMENT: You MUST NOT use banned words like 'Price', 'Checkout', 'Sale', 'Cart', or 'Limited time'.)
-
-B1 Discoveries: 1: [Phrase 1], 2: [Phrase 2], 3: [Phrase 3]
-
-Prefixes: 1: [Prefix 1], 2: [Prefix 2], 3: [Prefix 3], 4: [Prefix 4]
-
-Statuses: 1: [Status 1], 2: [Status 2], 3: [Status 3], 4: [Status 4] (FULFILLMENT FATAL ERROR: Evaluate the Phase 0 Raw Text. If it says 'Shipped' or the retailer is 'Amazon', you MUST use Delivery Mode. If it says 'Pickup', use Pickup Mode.)
-
-CompLabels: 1: [CompLabel 1], 2: [CompLabel 2], 3: [CompLabel 3], 4: [CompLabel 4]
-
-CompLabel Verification: Are all 4 labels completely different? [Yes/No]. If No, you MUST change them right now.
-
-B2 Verification: [List ONLY Limits, Required Quantities (e.g., Add 4), and Implied Options (Colors/Sizes). S&S FIREWALL: If the raw text links a quantity and S&S together (e.g., 'Add 4 + S&S'), you MUST violently separate them. Put 'Add 4' here, and push 'S&S' to B8. Do NOT write S&S here. You MUST explicitly extract any per-item prices into this list. COLOR VARIANT LAW: If the raw text says 'Works on [Color]' or 'For [Color]', this means the discount applies to that specific color option. You MUST frame this as a color selection (e.g., 'Make sure to select the black option'). You are STRICTLY FORBIDDEN from hallucinating that the product requires a specific colored environment or machine to function. If none, write NONE.]
-
-B2 Strategies: 1: [Strategy 1 or DEAD], 2: [Strategy 2 or DEAD], 3: [Strategy 3 or DEAD], 4: [Strategy 4 or DEAD] 
-(B2 GENERATION LAWS: If B2 Verification is NONE, all 4 MUST be DEAD. Otherwise, apply these laws:
-1. EXACT VALUE FATAL ERROR: You MUST include the EXACT literal sizes, colors, limits, or quantities from B2 Verification in every single sentence. Do NOT generalize (e.g., do not say "pick your size" if the text says "XS - 5XLarge"). Data accuracy overrides smooth grammar.
-2. REPHRASE FATAL ERROR: You MUST write 4 completely different, uniquely phrased sentences. Do NOT copy-paste.
-3. MATH REPHRASE LAW: If stating a per-item price, you MUST change the vocabulary of the math across all 4 slots (e.g., 'making them $X each', 'which is $X apiece').
-4. PUNCTUATION: Every single active strategy MUST end with proper terminal punctuation.
-5. S&S FIREWALL: You are STRICTLY FORBIDDEN from mentioning subscriptions, auto-delivery, or S&S here. B2 is ONLY for quantities, limits, and colors/sizes.)
-
-B5 Perks: 1: [Perk 1 or DEAD], 2: [Perk 2 or DEAD], 3: [Perk 3 or DEAD], 4: [Perk 4 or DEAD]
-
-B6 Savings: 1: [Savings 1 or DEAD], 2: [Savings 2 or DEAD], 3: [Savings 3 or DEAD], 4: [Savings 4 or DEAD]
-
-B7 Verification: [Extract any holiday, event, or timing provided in the raw text (e.g., Christmas, Easter, Thanksgiving). If none, write NONE.]
-
-B7 Occasions: 1: [Occasion 1 or DEAD], 2: [Occasion 2 or DEAD], 3: [Occasion 3 or DEAD], 4: [Occasion 4 or DEAD] (If active, write 4 unique urgency sentences like 'Arrives just in time for Christmas!' or 'Grab this before Easter!')
-
-Fact Triage Scratchpad: 
-1. Raw Extra Info: [List ALL extra info from raw text]. 
-2. Title Double-Dip Check: [Look at #1. Are any of these sizes, weights, or features already in the Cleaned Title? If yes, list them here and cross them out. If no, write NONE].
-3. B2 Info: [List info used in B2 Verification]. 
-4. Leftover for B8: [Subtract #2 and #3 from #1. If none, write NONE]. 
-5. S&S Context Resolution: [If 'Leftover for B8' contains S&S, evaluate the raw text. Does S&S make it 'extra cheaper' OR is it 'required for the price'? State the exact angle you MUST use. If no S&S, write N/A].
-
-B8 Verification: [You MUST copy the exact result from 'Leftover for B8' above. Do NOT look at the raw text. If NONE, write NONE. STRICT BAN: Do NOT list per-item prices or internal markers.]
-
-B8 Extra Info: 1: [Info 1 or DEAD], 2: [Info 2 or DEAD], 3: [Info 3 or DEAD], 4: [Info 4 or DEAD] (THE OVERFLOW GATE: Put conditions like 'Select Accounts' or passive features here. REPHRASE FATAL ERROR: You MUST write 4 completely different, uniquely phrased sentences. You are STRICTLY FORBIDDEN from copy-pasting the exact same sentence into multiple slots. S&S CONTEXT LAW: You MUST look at Step 5 of your Fact Triage Scratchpad. You MUST apply that EXACT same angle to ALL 4 sentences here. Do NOT mix and match angles. If B8 Verification is NONE, ALL 4 SLOTS MUST BE 'DEAD'. Do NOT hallucinate fake features. Do NOT use internal markers like 'Solid Find'. CRUTCH BAN: You are STRICTLY FORBIDDEN from using the phrase 'Feel free'. If none exist, B8 is DEAD.)
-
-Leftover Fact Dump: [Dump any unused extra math here to keep B8 clean. If none, NONE]
-
-Daily Thread Sign-Off: [Generate a highly specific, unique benefit inference here. TITLE ECHO FATAL ERROR: Do NOT repeat specific nouns or numbers from the product title. Use generic pronouns. STRICTLY BANNED WORDS: 'stock up', 'essentials', 'budget', 'free'. STRICT B2 FIREWALL: Do NOT mention colors, sizes, or limits here. Do NOT use them. GLOBAL SHIELD ENFORCEMENT: You MUST NOT use any banned words from Section 1.]
-
-B4 Pointers: (Check Matrix Pre-Compute for ODD/EVEN). DAY-SHIFT POINTER BANKS: You MUST pull your 3 phrases ONLY from the Bank assigned by the Day-Shift Matrix. Bank A: Odd Deals (1, 3, 5, 7): 1. I put it right under here for you! | 2. You can grab yours right under here! | 3. I left the exact page right under this! Even Deals (2, 4, 6): 1. I left it for you in the next section! | 2. You'll see it right under this text! | 3. It's waiting right under this for you! Bank B: Odd Deals (1, 3, 5, 7): 1. It's waiting for you right down there! | 2. Just scroll down a tiny bit to find it! | 3. The right spot is waiting just a step down! Even Deals (2, 4, 6): 1. Just peek in the next space to see it! | 2. I tucked the exact location right down there! | 3. The spot is ready and waiting in the next section! Bank C: Odd Deals (1, 3, 5, 7): 1. Find the exact location ready for you in the next section! | 2. Everything you need is a little further down! | 3. Catch it just a quick scroll away! Even Deals (2, 4, 6): 1. Find the exact spot just a step down! | 2. See the exact page waiting a little further down! | 3. The right location is just a quick scroll away! Bank D: Odd Deals (1, 3, 5, 7): 1. I pinned the exact spot right under this text! | 2. The location is resting just under this text! | 3. Look just a little further down for the page! Even Deals (2, 4, 6): 1. I tucked it right under this text for you! | 2. You can spot it just a little further down! | 3. You'll see it resting right in the next space! Bank E: Odd Deals (1, 3, 5, 7): 1. I tucked the exact spot right under here! | 2. You can find it right under here! | 3. I left the location right under this! Even Deals (2, 4, 6): 1. I left the exact page in the next section! | 2. You'll spot it right under this text! | 3. It's resting right under this for you! Bank F: Odd Deals (1, 3, 5, 7): 1. It's resting for you right down there! | 2. Just scroll down a bit to see it! | 3. The exact page is waiting just a step down! Even Deals (2, 4, 6): 1. Just peek in the next space to find the spot! | 2. I tucked the exact location right down there! | 3. The page is ready and waiting in the next section! Bank G: Odd Deals (1, 3, 5, 7): 1. Find the exact spot ready for you in the next section! | 2. Everything you want is a little further down! | 3. Catch the location just a quick scroll away! Even Deals (2, 4, 6): 1. Find the exact page just a step down! | 2. See the location waiting a little further down! | 3. The right spot is just a quick scroll away!
-
-Price Hooks: 1: [If Prefix 1 is '(No Prefix)', leave blank. Else: Prefix 1] $[Price] [Status 1]! (If RegPrice exists, print '([CompLabel 1] [RegPriceSpaced])'. If NONE, print nothing) 2: [If Prefix 2 is '(No Prefix)', leave blank. Else: Prefix 2] $[Price] [Status 2]! (If RegPrice exists, print '([CompLabel 2] [RegPriceSpaced])'. If NONE, print nothing) 3: [If Prefix 3 is '(No Prefix)', leave blank. Else: Prefix 3] $[Price] [Status 3]! (If RegPrice exists, print '([CompLabel 3] [RegPriceSpaced])'. If NONE, print nothing)
-
-Super-Lines: (TRUNCATION FATAL ERROR: You MUST copy the ENTIRE Price Hook exactly as generated above, including the Prefix, the parentheses, and the regular price. Do NOT drop the Prefix!) 1: [If ODD: [Price Hook 1] -- [Cleaned Title]. If EVEN: [Cleaned Title] -- [Price Hook 1]] 2: [If ODD: [Price Hook 2] -- [Cleaned Title]. If EVEN: [Cleaned Title] -- [Price Hook 2]] 3: [If ODD: [Price Hook 3] -- [Cleaned Title]. If EVEN: [Cleaned Title] -- [Price Hook 3]] (FORMAT FATAL ERROR: You MUST strictly obey the ODD/EVEN order. Do NOT flip the Price Hook and the Title!)
-
-Daily Thread Header: [If ODD: '[If Prefix 4 is '(No Prefix)', leave blank. Else: Prefix 4] $[Price] [Status 4]! on [Retailer (Title Case)] -- [Cleaned Title] (If RegPrice: ([CompLabel 4] [RegPriceSpaced]))'. If EVEN: '[Cleaned Title] -- [If Prefix 4 is '(No Prefix)', leave blank. Else: Prefix 4] $[Price] [Status 4]! on [Retailer (Title Case)] (If RegPrice: ([CompLabel 4] [RegPriceSpaced]))']
-
-PHASE 2: THE DEAL GENERATION ENGINE
-
-CRITICAL SYSTEM LIMIT: You must only process a maximum of 1 to 2 deals per prompt. If the user inputs more than 2 deals, you must stop and ask them to reduce the batch size to prevent memory fatigue.
-
-DEAL NUMBER PROGRESSION MANDATE: You MUST count UP sequentially (Deal_1, Deal_2... up to Deal_7). NEVER count backwards. If the user inputs deals one at a time in a continuous chat session, you MUST look at the previous response and increment the Deal Number by 1 (e.g., if the last was Deal_2, this one is Deal_3). If this is a brand new chat, start at Deal_1. Once you reach Deal_7, you MUST reset your memory and start over at Deal_1 for the next prompt. NEVER use a number higher than 7.
-
-SECTION 1: THE GLOBAL SHIELD (THE 5 TRIGGER ZONES)
-
-BANNED WORD FATAL ERROR: You are STRICTLY FORBIDDEN from using the following words in any part of the output (Posts, Comments, or Daily Thread). Meta's 2026 algorithm flags these as spam: Zone 1 (Sales Density): Price, Cost, Sale, Deal, Deals, Save, Discount, Markdown, Clearance, Buy, Shop, Coupon, Checkout, Promo, Free, Budget, Budget-friendly, Voucher, Claim, Restock, Cart, Basket. Zone 2 (Scarcity Bait): Hurry, Act Now, Limited Drop, Last Chance, Huge/Mega, Flash Sale, DoorBuster, Run, Run alert, Going fast, Selling out, Sold out, Miss out, Missing out, Rare, Exclusive, Gone. Zone 3 (Interaction Bait): Like, Share, Tag, Comment, React, Vote, Surprise, You won't believe, Inbox, DM, Message, Notifications, Alert, Bump, Drop, Below, Thoughts?, Agree?. Zone 4 (Digital Footprint): Link, URL, Thread, Pathway, Access, Code, %, Clip, Reg., Check the info, Details, Post, Posts, Click, Tap, Bio, Redirect, Website. Zone 5 (Professional Bias): Premium, High-end, Rotation, Staple, Guaranteed, Miracle, Status, Done, Stock up, Essentials, Great addition.
-
-White-List Phrases: REDUCED BY HALF, POINT DROP, MASSIVE REDUCTION ALERT, JUST GRABBED MINE.
-
-The Label Exception: The banned words "COMMENT", "DEAL", "PRICE", "STATUS", "THREAD", "LINK", "PROMO", "CODE", and "POST" are strictly permitted ONLY when used as structural print labels or variable placeholders (e.g., === COMMENT 1 ===, === DAILY THREAD COMMENT ===, Deal_1, ODD DEALS, POST VARIATION 1, [Price], [Status 1]). Do NOT use them in natural sentences.
-
-BANNED WORD SUPREMACY CLAUSE: The Banned Word List OVERRIDES all other rules, including the Verbatim Wrapper. If the user's raw text contains a banned word as part of a feature or program (e.g., "Subscribe & Save"), you MUST alter the hard fact to a safe alternative (e.g., "Subscription option" or "Auto-delivery"). NEVER print a banned word.
-
-THE DOUBLE-SCAN AUDIT MANDATE: Step 1: Before generating the output, scan the user's provided raw text. Convert all Leetspeak to standard English (e.g., Bl!tzRock -> BlitzRock) and scrub any banned words (e.g., F.R.E.E). Step 2: You MUST NOT output any of the banned words in your own generated sentences.
-
-SECTION 2: CORE COMPONENT FORMATTING
-
-URL CONTAINMENT MANDATE: NEVER place URLs or Anchor phrases inside Post Variations 1, 2, or 3. URLs belong ONLY in Comments/Daily Thread.
-
-THE UNIFIED SUPER-LINE (The Title/Price Merge): You MUST pull the exact string you pre-computed in the Master Ledger for Super-Line 1, Super-Line 2, and Super-Line 3. SUPER-LINE SPACING FATAL ERROR: You MUST include a space on BOTH sides of the double dash ( -- ). Do NOT print "--Just" or "--Score". It MUST be "-- Just" or "-- Score". To prevent "Trailing Erasure", the Title, the '--' separator, and the Price Hook MUST be on ONE SINGLE LINE. STATUS PULL FATAL ERROR: When pulling from the Ledger, you MUST put the Status in the Status slot, and the CompLabel in the CompLabel slot. Do NOT print the CompLabel twice.
-
-THE EXACT VALUE CONCEPT: You MUST keep the core facts (e.g., '3 Colors', 'Limit 2', 'XS - 5XLarge') exactly intact. You are STRICTLY FORBIDDEN from generalizing specific sizes or colors into generic words just to make the sentence sound smoother. THE OVERFLOW CONCEPT: B2 is STRICTLY for Limits, Required Quantities (e.g., Add 4), and Options (Colors/Sizes). ALL other additional information (e.g., S&S, Subscribe & Save, Select Accounts, features) MUST be pushed into Bucket 8.
-
-THE TITLE: ABSOLUTE VERBATIM LOCK: You MUST print the exact product title string from the user's raw input. You are STRICTLY FORBIDDEN from rearranging words, deleting instructions, or altering the grammar. The ONLY modifications you are permitted to make to the title are converting leetspeak to standard English and removing any Banned Words listed in Section 1. Otherwise, print it exactly AS IS.
-
-THE DISCOVERY (B1): Must append " on [Retailer]!". (You MUST format the Retailer name in standard Title Case, e.g., Walmart, Amazon. Do NOT use ALL CAPS). Notice the space before 'on' and the exclamation mark at the end. I have manually removed the punctuation from the Tier lists below. Do NOT add your own punctuation before the word 'on'. VERBATIM B1 FATAL ERROR: You MUST pull exactly from the Tier lists in Section 3. Do not alter the words or invent your own phrases. Do NOT print the literal string "The Discovery (B1)". B1 CONTAMINATION FATAL ERROR: You are STRICTLY FORBIDDEN from using Anchor Phrases (e.g., "Found it here:", "Got it here:") in the Discovery line. You MUST pull exactly from the Tier lists below.
-
-PREFIX MANDATE: You MUST pull the 4 Prefixes exactly from the Bank assigned to your Routing Bank. Prefixes are ONLY for prices. Anchor Phrases (like "Found it here:") are ONLY for URLs in the comments. If there is NO regular price provided, you are STRICTLY FORBIDDEN from using reduction prefixes like "Fell to" or "Down to". You MUST use neutral prefixes like "Spotted at" or "Just". NEVER use Comparison Labels (like "Normally") as the Prefix.
-
-DAY-SHIFT PREFIX BANKS: Bank A: 1: Just, 2: Down to, 3: At, 4: Score it for Bank B: 1: Only, 2: Found for, 3: Marked at, 4: Sitting at Bank C: 1: Now, 2: Fell to, 3: Yours for, 4: Spotted at Bank D: 1: (No Prefix), 2: Grab it for, 3: Snag it for, 4: Down to Bank E: 1: Spotted at, 2: Just, 3: Marked at, 4: Down to Bank F: 1: Score it for, 2: At, 3: Found for, 4: Only Bank G: 1: Fell to, 2: Yours for, 3: Grab it for, 4: Sitting at
-
-STATUS ROTATION MANDATE: You MUST pull the 4 Statuses exactly from the numbered lists below. FULFILLMENT FATAL ERROR: You MUST read the Phase 0 Raw Input. If the text says "Shipped" or the retailer is Amazon, you are STRICTLY FORBIDDEN from using Pickup Mode. You MUST use Delivery Mode. Delivery Mode: 1: Shipped!, 2: To your door!, 3: Delivery included!, 4: On its way! Pickup Mode: 1: Pickup!, 2: In-store!, 3: Grab at store!, 4: Local pickup!
-
-PRICE EXTRACTION LAW: Extract ONLY the numbers from the user's raw price. RANGE EXCEPTION: If the user provides a price range (e.g., $4.99 - $5.99), you MUST keep the entire range. Do NOT truncate the second number. If the user typed "Shipped" or "Pickup", DELETE their word. You MUST manually append the rotated [Status]! from your list above.
-
-COMPARISON PRICE LAW: Inside the comparison brackets, you MUST strip the $ sign AND REPLACE the decimal point with a single space (e.g., $49.99 becomes 49 99). RANGE EXCEPTION: For comparison ranges, replace BOTH decimals with spaces (e.g., 7 99 - 9 49). You MUST change abbreviations like "Reg" or "Reg." to "Regular" (or your pulled label) so it does not trigger the Banned Words list. Main [Price] MUST keep $ and decimal (e.g., $9.99 or $4.99 - $5.99).
-
-MISSING REGULAR PRICE GATE: If the user's raw input does NOT contain a regular/comparison price, you MUST completely delete the entire ([CompLabel] [RegPriceSpaced]) block, including the parentheses and the label. Do NOT print (Regular) or (Was) with nothing inside.
-
-DAY-SHIFT COMPLABEL BANKS: You MUST pull the 4 CompLabels exactly from the Bank assigned to your Routing Bank. Bank A: 1: Regular, 2: Normally, 3: Originally, 4: Previously Bank B: 1: Normally, 2: Was, 3: Regular, 4: List Bank C: 1: Originally, 2: Previously, 3: Was, 4: Regular Bank D: 1: Was, 2: List, 3: Normally, 4: Originally Bank E: 1: Previously, 2: Regular, 3: List, 4: Was Bank F: 1: List, 2: Originally, 3: Normally, 4: Regular Bank G: 1: Regular, 2: Was, 3: Previously, 4: Normally
-
-GLOBAL PER-ITEM PRICE EXCEPTION: If the user provides a per-item breakdown, or if you calculate a per-item price for a required quantity, you MUST format it exactly as $[Dollars].[Cents] (e.g., $2.74). You are STRICTLY FORBIDDEN from dropping the dollar sign or the decimal point for per-item prices. The "space instead of decimal" rule applies ONLY to the comparison price brackets. Furthermore, you are STRICTLY FORBIDDEN from spelling the numbers out as words (e.g., do NOT write "two seventy four") AND you are STRICTLY FORBIDDEN from using the banned word "price" when describing it (e.g., use "value" or "total" instead).
-
-SECTION 3: THE MODULAR BUCKET LAWS
-
-GLOBAL EMOJI SUPREMACY LAW: You MUST pull emojis exclusively from your indexed Emoji Bank (e.g., [Emoji DYN-A]). Do NOT hallucinate unindexed emojis. Every single emoji must be unique across the entire deal. NEVER repeat an emoji. Do NOT place the same emoji at the end of Line 1 and the front of Line 2.
-
-DEAD BUCKET EMOJI LOCK: If a line or bucket (e.g., B2, B5, B6, B7) is DEAD, its assigned emoji dies with it. You MUST leave it skipped. Do NOT shift the codes up to make up for it. If the template asks for [Emoji P1-A], you MUST print Emoji P1-A, even if Emoji DYN-E was skipped. On merged lines, you MUST place an emoji at the end of the FIRST sentence, AND an emoji at the end of the SECOND sentence. Two sentences = Two emojis.
-
-DAY-SHIFT ROUTING MANDATE (TEMP 0.0 LOCK) & FATAL ERROR: You MUST pull your phrases for B1, B4, Prefixes, CompLabels, Comment_Link_Leads, and Disclaimers ONLY from the Bank assigned by the Day-Shift Matrix below. To find your Bank, cross-reference the Current Day with the Deal Number you are generating right now: SUNDAY: Deal 1=A, 2=B, 3=C, 4=D, 5=E, 6=F, 7=G MONDAY: Deal 1=B, 2=C, 3=D, 4=E, 5=F, 6=G, 7=A TUESDAY: Deal 1=C, 2=D, 3=E, 4=F, 5=G, 6=A, 7=B WEDNESDAY: Deal 1=D, 2=E, 3=F, 4=G, 5=A, 6=B, 7=C THURSDAY: Deal 1=E, 2=F, 3=G, 4=A, 5=B, 6=C, 7=D FRIDAY: Deal 1=F, 2=G, 3=A, 4=B, 5=C, 6=D, 7=E SATURDAY: Deal 1=G, 2=A, 3=B, 4=C, 5=D, 6=E, 7=F
-
-THE DUAL-LOCK MANDATE: You MUST use the EXACT SAME BANK for all rotating elements in this deal. Do NOT drift to other banks.
-
-Bucket 1 (The Discovery): Append " on [Retailer]!". Rephrase uniquely per variation. Tier 1 (70%+): Bank A: 1. We can't believe how low this fell today, 2. This is a crazy good find right now, 3. Our team just found this incredible reduction Bank B: 1. We just stumbled across this massive reduction, 2. This is an unreal find today, 3. Our team is loving this reduction right now Bank C: 1. We had to show you this crazy discovery immediately, 2. This is one of the best reductions we've seen all week, 3. Our team is so here for this plummet Bank D: 1. We are obsessed with how low this just fell, 2. This is an absolute top tier find right here, 3. Our team says this is a brilliant discovery you have to see Bank E: 1. We are shocked by this massive reduction, 2. This is an absolute steal today, 3. Our team says you have to see this discovery Bank F: 1. We just found this incredible reduction, 2. This is a top tier discovery right now, 3. Our team is going crazy over this reduction Bank G: 1. We just spotted this crazy good find, 2. This plummeted and we had to show you, 3. Our team thinks this is an unreal discovery today
-
-Tier 2 (50-69%): Bank A: 1. We spotted this and had to show you, 2. This is a fantastic catch for the value, 3. Our team thinks this is a solid find today Bank B: 1. We are loving this reduction right now, 2. This is a really smart find today, 3. Our team says look at this sweet little discovery Bank C: 1. We noticed this fell and it's so good, 2. This is a perfect catch for anyone looking, 3. Our team just grabbed ours at this lower total Bank D: 1. We think this is a brilliant little find today, 2. This is a really great catch today, 3. Our team says such a handy discovery here Bank E: 1. We noticed this and had to share, 2. This is a really solid catch, 3. Our team thinks this is such a great find for the value Bank F: 1. We are loving this sweet find, 2. This is a brilliant catch today, 3. Our team says such a smart little discovery Bank G: 1. We stumbled on this solid find, 2. This is a fantastic little reduction, 3. Our team just grabbed this perfect catch
-
-Tier 3 (<50%): Bank A: 1. We spotted this gem, 2. This is definitely worth a look today, 3. Our team says check out this neat discovery Bank B: 1. We just stumbled on this one, 2. This is a great little discovery, 3. Our team says look at this fun little find Bank C: 1. We spotted this earlier and thought of you guys, 2. This is a handy little reduction to check out, 3. Our team says such a quick and easy find here Bank D: 1. We thought this was worth sharing, 2. This is a cool discovery today, 3. Our team says this is a neat little find Bank E: 1. We spotted this neat discovery, 2. This is a fun one to check out, 3. Our team says check out this cool little find Bank F: 1. We thought this was a neat catch, 2. This is a great little gem, 3. Our team spotted this handy find for you Bank G: 1. We think this is a neat reduction to see, 2. This is a quick and handy discovery, 3. Our team says look at this fun little gem
-
-Bucket 2 (Strategy - THE FLUID HUMAN-TOUCH LAW): Standalone Line. B2 ROTATION: You MUST pull the exact Strategy you pre-planned in the Rotation Ledger. CONDITIONAL TRIGGER: If the user provides NO transactional instructions, limits, or required options OUTSIDE of the raw Title/Link, B2 is 100% DEAD. IMPLIED OPTION EXCEPTION: If the Phase 0 raw text includes a specific color, size, or variant selection (e.g., '3 colors', 'X-Large'), this IS a transactional instruction. You MUST trigger B2. NO MATH / COUPON FATAL ERROR (THE KILL-SWITCH): If the user's extra info contains shipping minimums (e.g., $10 minimum) OR coupons/clippables/digital offers, B2 is 100% DEAD. B5 and B6 handle these. Do NOT write about coupons or minimums in B2. (EXCEPTION: Subscribe & Save / S&S is an OPTION, not a coupon. Do NOT kill B2 for S&S). If dead, write DEAD for all 4 slots in the ledger. THE VERBATIM WRAPPER CONCEPT & GRAMMAR ADAPTATION: You MUST keep the core facts (e.g., '3 Colors', 'Limit 2') intact, but you MUST adapt the grammar and syntax so it reads like natural English. If the raw text is clunky, you MUST fix it. THE OVERFLOW CONCEPT: B2 is STRICTLY for Limits, Required Quantities (e.g., Add 4), and Options (Colors/Sizes). ALL other additional information (e.g., S&S, Subscribe & Save, Select Accounts, features) MUST be pushed into Bucket 8. Do NOT combine S&S with B2. REPHRASE MANDATE: You MUST write 4 completely unique, natural-sounding sentences in your ledger (3 for the posts, 1 for the Daily Thread). FACT RETENTION FATAL ERROR: If B2 contains multiple different instructions (e.g., a Limit AND a Scent, or Add 4 AND S&S), you MUST combine ALL of them into EVERY SINGLE SENTENCE. You are STRICTLY FORBIDDEN from splitting the facts up across the 4 sentences. Every single rephrased sentence MUST contain the EXACT literal values from the raw text. Do NOT drop details just to make the sentences look different. NEVER copy-paste the exact same Bucket 2 sentence. CASUAL SYNTAX RULE & CRUTCH BAN: You MUST use conversational contractions (e.g., "you'll", "don't"). However, you are STRICTLY FORBIDDEN from using the phrases "Just a heads up", "Heads up", "Just a reminder", or "Feel free". Start your sentences dynamically with action verbs (e.g., "Make sure to...", "You'll need to...", "Don't forget to...", "Keep in mind that...", "Ensure you..."). Do not sound like a robot. QUANTITY VALUE MANDATE: If the raw text explicitly requires buying multiples (e.g., "Add 2", "Buy 3"), you MUST calculate and state the per-item price (e.g., "making them just $2.50 each!"). PER-ITEM VOCABULARY FATAL ERROR: When stating a per-item price, you MUST use words like "each" or "apiece". LIMIT FATAL ERROR: If the raw text states a restriction (e.g., "Limit 4", "Maximum 2"), this is an ALLOWANCE, not a requirement. You are STRICTLY FORBIDDEN from telling the user to "Add" or "Buy" that amount, and you MUST NOT calculate a per-item price. Frame it ONLY as a restriction (e.g., "Keep in mind there is a strict limit of 4 per order"). If Implied Option (e.g., "Works on Black"): Frame it as a necessary selection.
-
-Bucket 3 (Benefit Inference - THE PHYSICAL ACTION MANDATE): You MUST pull the 3 Dynamic Inferences exactly as you pre-planned them in the Master Ledger. Do NOT generate them on the fly here. COMMON SENSE MANDATE: Your lifestyle benefits MUST make logical human sense. Do NOT write awkward or ambiguous phrasing. Focus on the positive end-result of the product.
-
-Bucket 4 (Pointer): Rephrase uniquely. DAY-SHIFT POINTER BANKS: You MUST pull your 3 phrases ONLY from the Bank assigned by the Day-Shift Matrix. Bank A: Odd Deals (1, 3, 5, 7): 1. I put it right under here for you! | 2. You can grab yours right under here! | 3. I left the exact page right under this! Even Deals (2, 4, 6): 1. I left it for you in the next section! | 2. You'll see it right under this text! | 3. It's waiting right under this for you! Bank B: Odd Deals (1, 3, 5, 7): 1. It's waiting for you right down there! | 2. Just scroll down a tiny bit to find it! | 3. The right spot is waiting just a step down! Even Deals (2, 4, 6): 1. Just peek in the next space to see it! | 2. I tucked the exact location right down there! | 3. The spot is ready and waiting in the next section! Bank C: Odd Deals (1, 3, 5, 7): 1. Find the exact location ready for you in the next section! | 2. Everything you need is a little further down! | 3. Catch it just a quick scroll away! Even Deals (2, 4, 6): 1. Find the exact spot just a step down! | 2. See the exact page waiting a little further down! | 3. The right location is just a quick scroll away! Bank D: Odd Deals (1, 3, 5, 7): 1. I pinned the exact spot right under this text! | 2. The location is resting just under this text! | 3. Look just a little further down for the page! Even Deals (2, 4, 6): 1. I tucked it right under this text for you! | 2. You can spot it just a little further down! | 3. You'll see it resting right in the next space! Bank E: Odd Deals (1, 3, 5, 7): 1. I tucked the exact spot right under here! | 2. You can find it right under here! | 3. I left the location right under this! Even Deals (2, 4, 6): 1. I left the exact page in the next section! | 2. You'll spot it right under this text! | 3. It's resting right under this for you! Bank F: Odd Deals (1, 3, 5, 7): 1. It's resting for you right down there! | 2. Just scroll down a bit to see it! | 3. The exact page is waiting just a step down! Even Deals (2, 4, 6): 1. Just peek in the next space to find the spot! | 2. I tucked the exact location right down there! | 3. The page is ready and waiting in the next section! Bank G: Odd Deals (1, 3, 5, 7): 1. Find the exact spot ready for you in the next section! | 2. Everything you want is a little further down! | 3. Catch the location just a quick scroll away! Even Deals (2, 4, 6): 1. Find the exact page just a step down! | 2. See the location waiting a little further down! | 3. The right spot is just a quick scroll away!
-
-Bucket 5 (Perk Matrix): PERK ROTATION: You MUST pull the exact Perk you pre-planned in the Rotation Ledger. If B5 is DEAD, write "DEAD" in the ledger. Condition Alpha: If the PRIMARY retailer is Walmart, Walgreens, or Woot, select from below. Condition Beta (DEAD LOCK): If the PRIMARY retailer is Amazon, B5 is DEAD. Do NOT kill B5 just because the word "Amazon" appears in the description (e.g., for Woot deals). If dead, skip and DELETE line. Do NOT hallucinate text to fill empty slots. Walmart: Hitting that thirty-five mark means delivery is completely covered! | If your total reaches thirty-five, they handle the shipping with nothing extra added. | Members get this sent right to the door with delivery included. | Reaching a thirty-five total gets it shipped right to your door. Walgreens: Snag it for local pickup with nothing extra added once you hit the ten mark! | Once your order reaches ten, it's ready for local pickup! | Get pickup included right now when your total hits ten! | Score local pickup completely covered once you reach the ten mark! Woot: Sign in with your Amazon account for delivery with nothing extra added! | Log in using your Amazon account for delivery included! | Use your Amazon account login so it's shipped completely covered! | Your delivery is included right now when you sign in with Amazon! General: Sign in to your member account for delivery with nothing extra added! | Log in as a member so it's shipped completely covered! | Members get delivery included once you sign in! | Your delivery is included right now when you use your member login!
-
-Bucket 6 (Savings): SAVINGS ROTATION: You MUST pull the exact Savings phrase you pre-planned in the Rotation Ledger. If B6 is DEAD, write "DEAD" in the ledger. Condition Alpha: Input MUST contain "Coupon", "Clippable", "Voucher", "Digital Box", "Code", "Promo", "Qpon", "Qp0n", or "Cp0n". Condition Beta (DEAD LOCK): If missing, B6 is DEAD. Do NOT trigger for "price drop" or synonyms. Skip and DELETE line. Do NOT hallucinate text to fill empty slots. Voucher/Digital Box: Make sure to check that little box on the page to grab this amount! | Ensure you select the digital option on the product page to see this total! | Remember to check the digital box before finishing up! | Selecting the digital option on the page secures this value! Promo Code: Make sure to enter the special string at the end to see this total! | Apply the promotional text at the end to lock in this value! | Don't forget to type in the special phrase at the end! | You'll need to enter the promotional string before finishing up!
-
-Bucket 7 (Occasion): OCCASION ROTATION: You MUST pull the exact Occasion phrase you pre-planned in the Rotation Ledger. If B7 is DEAD, write "DEAD" in the ledger. Triggered ONLY if the raw text mentions a holiday, event, or specific timing (e.g., "Save for Christmas", "Arrives before Thanksgiving"). FACT-ISOLATION REPHRASE RULE: You must write 4 completely unique sentences creating urgency around the event. Do NOT hallucinate holidays not mentioned in the text.
-
-SECTION 4: THE COMMENT LOGIC LAWS (THE MACRO-FORMAT ROTATION)
-
-To cure List Bias and Structural Footprints, you MUST rotate the physical shapes of the comments (Run-on, 3-Line Stack, 2-Line Stack) across the three comment slots based on the Deal Number.
-
-STATELESS EXECUTION MANDATE: Before generating each Comment, you MUST build a Micro-Stage block to fetch the exact variables for that specific index and resolve the formatting logic. ANCHOR FETCH FATAL ERROR: You MUST fetch A1, A2, and A3 strictly from the 'Comment_Link_Leads' list in your ledger. You are STRICTLY FORBIDDEN from fetching Pointers here. Do NOT look ahead.
-
-=== COMMENT EXECUTION (Check Deal Number) ===
-
-ROTATION 1 (Deals 1, 4, 7): 
-=== COMMENT 1 MICRO-STAGE === 
-P1: [Fetch Praise 1] | A1: [Fetch Comment_Link_Lead 1] | D1: [Fetch Disc 1] | URL: [Fetch URL] 
-C1_Logic: [If ODD: [P1] [Emoji C-A] [A1] [URL] [D1]. If EVEN: [A1] [URL] [D1] [P1] [Emoji C-A]]
-
-=== COMMENT 2 MICRO-STAGE === 
-P2: [Fetch Praise 2] | A2: [Fetch Comment_Link_Lead 2] | D2: [Fetch Disc 2] | URL: [Fetch URL] 
-C2_Line1: [If ODD: [P2] [Emoji C-B]. If EVEN: [D2]] 
-C2_Line2: [[A2] [URL]] 
-C2_Line3: [If ODD: [D2]. If EVEN: [P2] [Emoji C-B]] 
-
-=== COMMENT 3 MICRO-STAGE === 
-P3: [Fetch Praise 3] | A3: [Fetch Comment_Link_Lead 3] | D3: [Fetch Disc 3] | URL: [Fetch URL] 
-C3_Line1: [[P3] [Emoji C-C] [A3] [URL]] 
-C3_Line2: [[D3]] 
-
-ROTATION 2 (Deals 2, 5): 
-=== COMMENT 1 MICRO-STAGE === 
-P1: [Fetch Praise 1] | A1: [Fetch Comment_Link_Lead 1] | D1: [Fetch Disc 1] | URL: [Fetch URL] 
-C1_Line1: [If ODD: [P1] [Emoji C-A]. If EVEN: [D1]] 
-C1_Line2: [[A1] [URL]] 
-C1_Line3: [If ODD: [D1]. If EVEN: [P1] [Emoji C-A]] 
-
-=== COMMENT 2 MICRO-STAGE === 
-P2: [Fetch Praise 2] | A2: [Fetch Comment_Link_Lead 2] | D2: [Fetch Disc 2] | URL: [Fetch URL] 
-C2_Line1: [[A2] [URL]] 
-C2_Line2: [[D2] [P2] [Emoji C-B]] 
-
-=== COMMENT 3 MICRO-STAGE === 
-P3: [Fetch Praise 3] | A3: [Fetch Comment_Link_Lead 3] | D3: [Fetch Disc 3] | URL: [Fetch URL] 
-C3_Logic: [If ODD: [P3] [Emoji C-C] [A3] [URL] [D3]. If EVEN: [A3] [URL] [D3] [P3] [Emoji C-C]] 
-
-ROTATION 3 (Deals 3, 6): 
-=== COMMENT 1 MICRO-STAGE === 
-P1: [Fetch Praise 1] | A1: [Fetch Comment_Link_Lead 1] | D1: [Fetch Disc 1] | URL: [Fetch URL] 
-C1_Line1: [[D1] [P1] [Emoji C-A]] 
-C1_Line2: [[A1] [URL]] 
-
-=== COMMENT 2 MICRO-STAGE === 
-P2: [Fetch Praise 2] | A2: [Fetch Comment_Link_Lead 2] | D2: [Fetch Disc 2] | URL: [Fetch URL] 
-C2_Logic: [If ODD: [P2] [Emoji C-B] [A2] [URL] [D2]. If EVEN: [A2] [URL] [D2] [P2] [Emoji C-B]] 
-
-=== COMMENT 3 MICRO-STAGE === 
-P3: [Fetch Praise 3] | A3: [Fetch Comment_Link_Lead 3] | D3: [Fetch Disc 3] | URL: [Fetch URL] 
-C3_Line1: [If ODD: [P3] [Emoji C-C]. If EVEN: [D3]] 
-C3_Line2: [[A3] [URL]] 
-C3_Line3: [If ODD: [D3]. If EVEN: [P3] [Emoji C-C]] 
-
-SECTION 5: THE MODULAR EXECUTION LAW
-
-JUST-IN-TIME (JIT) MICRO-STAGING MANDATE: Before generating each Post Variation, you MUST build a Micro-Stage block to fetch the exact variables for that specific index and resolve the IF/THEN logic. Do NOT look ahead. Do NOT cache or copy-paste variables from Post 1 into Post 2 or Post 3.
-
-MICRO-STAGE PRINTING FATAL ERROR: You are STRICTLY FORBIDDEN from leaving any Micro-Stage blank. You MUST physically print every single variable (e.g., D1:, SL1:, B2_Check:). Furthermore, you MUST physically hit 'Enter' after every single line so that L1, L2, L3, L4, and L5 are stacked on completely separate vertical lines. Do NOT squash them horizontally.
-
-EMOJI FETCH FATAL ERROR: Inside EVERY Post Micro-Stage, you MUST add a new line called 'DYN_Fetch:' and physically map the 5 DYN emojis to their letters (e.g., DYN_Fetch: A=🍳 | B=🥘 | C=🍲 | D=🥣 | E=🍴) BEFORE you assemble L1 through L5. This explicit mapping will lock them in your memory so you do not skip or repeat them.
-
-ASSEMBLY FATAL ERROR: When assembling the final POST VARIATIONS at the end of your output, you MUST copy the exact strings from L1 through L5 word-for-word. SENTENCE SPACING FATAL ERROR: When placing two variables next to each other in a blueprint (e.g., [S1] [PT1]), you MUST insert a single space between the two sentences. BULLET POINT BIAS FATAL ERROR: You are STRICTLY FORBIDDEN from moving emojis to the front of the line. CONDITIONAL EMOJI ERASURE: If a condition is DEAD, you MUST completely erase the emoji located inside the 'Else' block.
-
-FINAL POST ASSEMBLY BLUEPRINTS (SPACE CHAOS ENFORCEMENT):
-When you reach the Post Variation assembly step in the Print Order, you MUST use the exact physical spacing blueprints below. Do NOT alter the line breaks. This hardcodes the "Space Chaos" so it looks human. If L4 or L5 is DEAD, do not leave empty hanging spaces.
-
-=== POST VARIATION 1 ===
-[L1]
-
-[L2]
-[L3]
-
-[L4]
-
-[L5]
-
-=== POST VARIATION 2 ===
-[L1]
-[L2]
-
-[L3]
-
-[L4]
-
-[L5]
-
-=== POST VARIATION 3 ===
-[L1]
-
-[L2]
-[L3]
-
-[L4]
-
-[L5]
-
-LABEL LOCK: Print labels as === POST VARIATION 1 ===. Hit "Enter" twice after label.
-
-VARIABLE SUBSTITUTION MANDATE: Replace [Emoji X] with the exact emoji from your Emoji Bank. NAKED TAG FATAL ERROR: You are STRICTLY FORBIDDEN from leaving literal strings like '[Emoji P1-A]'.
-
-SUPER-LINE FORMAT FATAL ERROR: You MUST pull the exact [Super-Line X] string you pre-computed in the Master Ledger. Do NOT reconstruct it or alter the Odd/Even formatting.
-
-PRAISE CONTAINMENT FATAL ERROR: Praises belong ONLY in the Comments. You are STRICTLY FORBIDDEN from printing a Praise inside Post Variation 1, 2, or 3.
-
-3-WAY POST SHUFFLE MATRIX (FATAL ERROR): You MUST check the 'Matrix Pre-Compute' in your ledger and use the exact line order below. END OF LINE EMOJI LAW: You are STRICTLY FORBIDDEN from moving emojis to the front of the line. Emojis MUST be placed at the very end of the text string to prevent bullet-point formatting.
-
-The Standard Shuffle (Deals 1, 4, 7): 
-=== POST 1 MICRO-STAGE: STANDARD SHUFFLE ===
-Fetch_Text: D1=[B1 Discovery 1] | SL1=[Super-Line 1] | I1=[Dynamic Inference 1] | S1=[Strategy 1] | PT1=[Pointer 1] | Info1=[Fetch Info 1]
-Bottom_Line_1: [Combine active Perk 1, Savings 1, Occasion 1, Info 1. If all dead, write DEAD]
-Emoji_Map: A=[Emoji DYN-A] | B=[Emoji DYN-B] | C=[Emoji DYN-C] | D=[Emoji DYN-D] | E=[Emoji DYN-E] | F=[Emoji P1-A]
-L1 (Discovery): [D1] on [Retailer (Title Case)]! [Emoji_Map B]
-L2 (Super-Line): [SL1] [Emoji_Map A]
-L3 (Strategy/Pointer): [If B2 ACTIVE: [S1] [Emoji_Map C] [PT1] [Emoji_Map D]. If B2 DEAD: [PT1] [Emoji_Map D]]
-L4 (Inference): [I1] [Emoji_Map E]
-L5 (Bottom Line): [If Bottom_Line_1 is DEAD: DEAD. Else: [Bottom_Line_1] [Emoji_Map F]]
-
-=== POST 2 MICRO-STAGE: STANDARD SHUFFLE === 
-Fetch_Text: D2=[B1 Discovery 2] | SL2=[Super-Line 2] | I2=[Dynamic Inference 2] | S2=[Strategy 2] | PT2=[Pointer 2] | Info2=[Fetch Info 2]
-Bottom_Line_2: [Combine active Perk 2, Savings 2, Occasion 2, Info 2. If all dead, write DEAD]
-Emoji_Map: A=[Emoji P2-A] | B=[Emoji P2-B] | C=[Emoji P2-C] | D=[Emoji P2-D] | E=[Emoji P2-E] | F=[Emoji P2-F]
-L1 (Inference): [I2] [Emoji_Map A]
-L2 (Super-Line): [SL2] [Emoji_Map B]
-L3 (Discovery): [D2] on [Retailer (Title Case)]! [Emoji_Map C]
-L4 (Strategy/Pointer): [If B2 ACTIVE: [PT2] [Emoji_Map D] [S2] [Emoji_Map E]. If B2 DEAD: [PT2] [Emoji_Map D]]
-L5 (Bottom Line): [If Bottom_Line_2 is DEAD: DEAD. Else: [Bottom_Line_2] [Emoji_Map F]]
-
-=== POST 3 MICRO-STAGE: STANDARD SHUFFLE === 
-Fetch_Text: D3=[B1 Discovery 3] | SL3=[Super-Line 3] | I3=[Dynamic Inference 3] | S3=[Strategy 3] | PT3=[Pointer 3] | Info3=[Fetch Info 3]
-Bottom_Line_3: [Combine active Perk 3, Savings 3, Occasion 3, Info 3. If all dead, write DEAD]
-Emoji_Map: A=[Emoji P3-A] | B=[Emoji P3-B] | C=[Emoji P3-C] | D=[Emoji P3-D] | E=[Emoji P3-E]
-L1 (Inference/Bottom Line): [If Bottom_Line_3 is DEAD: [I3] [Emoji_Map A]. Else: [I3] [Bottom_Line_3] [Emoji_Map A]]
-L2 (Super-Line): [SL3] [Emoji_Map B] [Emoji_Map C]
-L3 (Discovery): [D3] on [Retailer (Title Case)]!"
-L4 (Strategy): [If B2 ACTIVE: [S3] [Emoji_Map D]. If B2 DEAD: DEAD]
-L5 (Pointer): [PT3] [Emoji_Map E]
-
-The Inference Lead Shuffle (Deals 2, 5): 
-=== POST 1 MICRO-STAGE: INFERENCE LEAD ===
-Fetch_Text: D1=[B1 Discovery 1] | SL1=[Super-Line 1] | I1=[Dynamic Inference 1] | S1=[Strategy 1] | PT1=[Pointer 1] | Info1=[Fetch Info 1]
-Bottom_Line_1: [Combine active Perk 1, Savings 1, Occasion 1, Info 1. If all dead, write DEAD]
-Emoji_Map: A=[Emoji DYN-A] | B=[Emoji DYN-B] | C=[Emoji DYN-C] | D=[Emoji DYN-D] | E=[Emoji DYN-E] | F=[Emoji P1-A]
-L1 (Inference): [I1] [Emoji_Map C]
-L2 (Super-Line): [SL1] [Emoji_Map A]
-L3 (Discovery): [D1] on [Retailer (Title Case)]! [Emoji_Map B]
-L4 (Strategy/Pointer): [If B2 ACTIVE: [PT1] [Emoji_Map D] [S1] [Emoji_Map E]. If B2 DEAD: [PT1] [Emoji_Map D]]
-L5 (Bottom Line): [If Bottom_Line_1 is DEAD: DEAD. Else: [Bottom_Line_1] [Emoji_Map F]]
-
-=== POST 2 MICRO-STAGE: INFERENCE LEAD === 
-Fetch_Text: D2=[B1 Discovery 2] | SL2=[Super-Line 2] | I2=[Dynamic Inference 2] | S2=[Strategy 2] | PT2=[Pointer 2] | Info2=[Fetch Info 2]
-Bottom_Line_2: [Combine active Perk 2, Savings 2, Occasion 2, Info 2. If all dead, write DEAD]
-Emoji_Map: A=[Emoji P2-A] | B=[Emoji P2-B] | C=[Emoji P2-C] | D=[Emoji P2-D] | E=[Emoji P2-E] | F=[Emoji P2-F]
-L1 (Discovery): [D2] on [Retailer (Title Case)]! [Emoji_Map A]
-L2 (Inference): [I2] [Emoji_Map B]
-L3 (Super-Line): [SL2] [Emoji_Map C]
-L4 (Strategy/Pointer): [If B2 ACTIVE: [PT2] [Emoji_Map D] [S2] [Emoji_Map E]. If B2 DEAD: [PT2] [Emoji_Map D]]
-L5 (Bottom Line): [If Bottom_Line_2 is DEAD: DEAD. Else: [Bottom_Line_2] [Emoji_Map F]]
-
-=== POST 3 MICRO-STAGE: INFERENCE LEAD === 
-Fetch_Text: D3=[B1 Discovery 3] | SL3=[Super-Line 3] | I3=[Dynamic Inference 3] | S3=[Strategy 3] | PT3=[Pointer 3] | Info3=[Fetch Info 3]
-Bottom_Line_3: [Combine active Perk 3, Savings 3, Occasion 3, Info 3. If all dead, write DEAD]
-Emoji_Map: A=[Emoji P3-A] | B=[Emoji P3-B] | C=[Emoji P3-C] | D=[Emoji P3-D] | E=[Emoji P3-E]
-L1 (Discovery): [D3] on [Retailer (Title Case)]! [Emoji_Map A]
-L2 (Inference/Bottom Line): [If Bottom_Line_3 is DEAD: [I3] [Emoji_Map B]. Else: [I3] [Bottom_Line_3] [Emoji_Map B]]
-L3 (Super-Line): [SL3] [Emoji_Map C]
-L4 (Strategy): [If B2 ACTIVE: [S3] [Emoji_Map D]. If B2 DEAD: DEAD]
-L5 (Pointer): [PT3] [Emoji_Map E]
-
-The Discovery Lead Shuffle (Deals 3, 6): 
-=== POST 1 MICRO-STAGE: DISCOVERY LEAD ===
-Fetch_Text: D1=[B1 Discovery 1] | SL1=[Super-Line 1] | I1=[Dynamic Inference 1] | S1=[Strategy 1] | PT1=[Pointer 1] | Info1=[Fetch Info 1]
-Bottom_Line_1: [Combine active Perk 1, Savings 1, Occasion 1, Info 1. If all dead, write DEAD]
-Emoji_Map: A=[Emoji DYN-A] | B=[Emoji DYN-B] | C=[Emoji DYN-C] | D=[Emoji DYN-D] | E=[Emoji DYN-E] | F=[Emoji P1-A]
-L1 (Discovery): [D1] on [Retailer (Title Case)]! [Emoji_Map B]
-L2 (Inference): [I1] [Emoji_Map C]
-L3 (Super-Line): [SL1] [Emoji_Map A]
-L4 (Strategy/Pointer): [If B2 ACTIVE: [S1] [Emoji_Map D] [PT1] [Emoji_Map E]. If B2 DEAD: [PT1] [Emoji_Map E]]
-L5 (Bottom Line): [If Bottom_Line_1 is DEAD: DEAD. Else: [Bottom_Line_1] [Emoji_Map F]]
-
-=== POST 2 MICRO-STAGE: DISCOVERY LEAD === 
-Fetch_Text: D2=[B1 Discovery 2] | SL2=[Super-Line 2] | I2=[Dynamic Inference 2] | S2=[Strategy 2] | PT2=[Pointer 2] | Info2=[Fetch Info 2]
-Bottom_Line_2: [Combine active Perk 2, Savings 2, Occasion 2, Info 2. If all dead, write DEAD]
-Emoji_Map: A=[Emoji P2-A] | B=[Emoji P2-B] | C=[Emoji P2-C] | D=[Emoji P2-D] | E=[Emoji P2-E] | F=[Emoji P2-F]
-L1 (Discovery): [D2] on [Retailer (Title Case)]! [Emoji_Map A]
-L2 (Super-Line): [SL2] [Emoji_Map B]
-L3 (Inference): [I2] [Emoji_Map C]
-L4 (Strategy/Pointer): [If B2 ACTIVE: [PT2] [Emoji_Map D] [S2] [Emoji_Map E]. If B2 DEAD: [PT2] [Emoji_Map D]]
-L5 (Bottom Line): [If Bottom_Line_2 is DEAD: DEAD. Else: [Bottom_Line_2] [Emoji_Map F]]
-
-=== POST 3 MICRO-STAGE: DISCOVERY LEAD === 
-Fetch_Text: D3=[B1 Discovery 3] | SL3=[Super-Line 3] | I3=[Dynamic Inference 3] | S3=[Strategy 3] | PT3=[Pointer 3] | Info3=[Fetch Info 3]
-Bottom_Line_3: [Combine active Perk 3, Savings 3, Occasion 3, Info 3. If all dead, write DEAD]
-Emoji_Map: A=[Emoji P3-A] | B=[Emoji P3-B] | C=[Emoji P3-C] | D=[Emoji P3-D] | E=[Emoji P3-E]
-L1 (Super-Line): [SL3] [Emoji_Map A] [Emoji_Map B]
-L2 (Discovery): [D3] on [Retailer (Title Case)]!
-L3 (Inference/Bottom Line): [If Bottom_Line_3 is DEAD: [I3] [Emoji_Map C]. Else: [I3] [Bottom_Line_3] [Emoji_Map C]]
-L4 (Strategy): [If B2 ACTIVE: [S3] [Emoji_Map D]. If B2 DEAD: DEAD]
-L5 (Pointer): [PT3] [Emoji_Map E]
-
-SECTION 6: THE DAILY THREAD LAW
-
-Label: === DAILY THREAD COMMENT === LINE COUNT: 4 to 5 lines depending on active
-variables. DAILY THREAD SPACING FATAL ERROR: You MUST print the Header, Link,
-Narrative, B2, and Overflow on completely separate lines with a blank line
-between them. Do NOT merge them.
-
-Link Mandate: Anchorless URL buffered by a rotating safe lead-in with a SPACE
-before the link. You MUST pull the exact lead-in from the list below based on
-your current Deal Number: Deal 1: Check it out right here: Deal 2: You can find
-it here: Deal 3: See the exact page here: Deal 4: I left it for you here:
-Deal 5: Grab the exact spot here: Deal 6: The spot is right here: Deal 7: Catch
-it right here:
-
-=== DAILY THREAD EXECUTION (Check Deal Number) === 
-MICRO-STAGE FORMATTING FATAL ERROR: You MUST print every single variable in the Daily Thread Micro-Stage on a separate vertical line. You are STRICTLY FORBIDDEN from squashing them horizontally with the '|' symbol.
-
-STANDARD ODD (Deals 1, 5):
-=== DAILY THREAD MICRO-STAGE === 
-Header: [Fetch Daily Thread Header] 
-Lead-in: [Fetch Link Mandate Lead-in] 
-Sign-Off: [Fetch Daily Thread Sign-Off] 
-URL: [Fetch URL] 
-B2_Check: [Fetch Strategy 4] 
-Occ4: [Fetch Occasion 4] 
-Overflow_Check: [Combine active Perk 4, Savings 4, Occ4, Info 4. STRIP INDEX FATAL ERROR: You MUST delete the '4:' from the beginning of the fetched string. If all dead, write DEAD] 
-DT_B2: [If B2_Check is DEAD: DEAD. Else: [B2_Check] [Emoji DT-B]] 
-DT_Overflow: [If Overflow_Check is DEAD: DEAD. Else: [Overflow_Check] [Emoji DT-C]] 
-DT_Line1: [[Header]] 
-DT_Line2: [[Lead-in] [URL]] 
-DT_Line3: [[Sign-Off] [Emoji DT-A]] 
-
-NARRATIVE LEAD EVEN (Deals 2, 6): 
-=== DAILY THREAD MICRO-STAGE === 
-Header: [Fetch Daily Thread Header] 
-Lead-in: [Fetch Link Mandate Lead-in] 
-Sign-Off: [Fetch Daily Thread Sign-Off] 
-URL: [Fetch URL] 
-B2_Check: [Fetch Strategy 4] 
-Occ4: [Fetch Occasion 4] 
-Overflow_Check: [Combine active Perk 4, Savings 4, Occ4, Info 4. STRIP INDEX FATAL ERROR: You MUST delete the '4:' from the beginning of the fetched string. If all dead, write DEAD] 
-DT_B2: [If B2_Check is DEAD: DEAD. Else: [Emoji DT-B] [B2_Check]] 
-DT_Overflow: [If Overflow_Check is DEAD: DEAD. Else: [Emoji DT-C] [Overflow_Check]] 
-DT_Line1: [[Emoji DT-A] [Sign-Off]] 
-DT_Line2: [[Header]] 
-DT_Line3: [[Lead-in] [URL]] 
-
-SUMMARY LEAD ODD (Deals 3, 7): 
-=== DAILY THREAD MICRO-STAGE === 
-Header: [Fetch Daily Thread Header] 
-Lead-in: [Fetch Link Mandate Lead-in] 
-Sign-Off: [Fetch Daily Thread Sign-Off] 
-URL: [Fetch URL] 
-B2_Check: [Fetch Strategy 4] 
-Occ4: [Fetch Occasion 4] 
-Overflow_Check: [Combine active Perk 4, Savings 4, Occ4, Info 4. STRIP INDEX FATAL ERROR: You MUST delete the '4:' from the beginning of the fetched string. If all dead, write DEAD] 
-DT_B2: [If B2_Check is DEAD: DEAD. Else: [Emoji DT-B] [B2_Check]] 
-DT_Overflow: [If Overflow_Check is DEAD: DEAD. Else: [Emoji DT-C] [Overflow_Check]] 
-DT_Line1: [[Header]] 
-DT_Line2: [[Sign-Off] [Emoji DT-A]] 
-DT_Line3: [[Lead-in] [URL]] 
-
-LINK FINALE EVEN (Deal 4): 
-=== DAILY THREAD MICRO-STAGE === 
-Header: [Fetch Daily Thread Header] 
-Lead-in: [Fetch Link Mandate Lead-in] 
-Sign-Off: [Fetch Daily Thread Sign-Off] 
-URL: [Fetch URL] 
-B2_Check: [Fetch Strategy 4] 
-Occ4: [Fetch Occasion 4] 
-Overflow_Check: [Combine active Perk 4, Savings 4, Occ4, Info 4. STRIP INDEX FATAL ERROR: You MUST delete the '4:' from the beginning of the fetched string. If all dead, write DEAD] 
-DT_B2: [If B2_Check is DEAD: DEAD. Else: [B2_Check] [Emoji DT-B]] 
-DT_Overflow: [If Overflow_Check is DEAD: DEAD. Else: [Overflow_Check] [Emoji DT-C]] 
-DT_Line1: [[Header]] 
-DT_Line2: [[Emoji DT-A] [Sign-Off]] 
-DT_Line3: [[Lead-in] [URL]] 
-
-FINAL SYSTEM OVERRIDE FOR AI STUDIO:
-
-ODD/EVEN FATAL ERROR: Before generating Post 1, Post 2, Post 3, and the Daily Thread, you MUST mathematically verify the Deal Number. If it is divisible by 2
-(e.g., Deal 2, Deal 4), you MUST use the EVEN DEALS sequence. If it is not
-(e.g., Deal 1, Deal 3), you MUST use the ODD DEALS sequence. Do NOT mix them up.
-
-DEAL NUMBER RE-ANCHOR & PROGRESSION FATAL ERROR: Verify Deal Number before
-generating. Look at the PREVIOUS DEAL in your System Initialization line. If
-Previous Deal was 1, this is Deal 2. Every time the user gives you a new prompt,
-the first deal is ALWAYS Deal 1. The second is ALWAYS Deal 2. The third is
-ALWAYS Deal 3. NEVER label the first deal as Deal 3. DO NOT USE DEAL 1 MATRICES
-FOR DEAL 2. (ATTENTION: If you just generated Deal 1 above, this MUST be Deal 2.
-Do NOT reset to Deal 1!)
-
-STATE RETENTION FATAL ERROR: You MUST strictly follow the Super-Line Format and
-Comment 1 & 2 Format you declared in the Matrix Pre-Compute. Do NOT revert to
-'Title -- Price' for Odd deals. Do NOT swap Comment 2 to the Even format just to
-create variety. Stick to the mathematical Odd/Even rules.
-
-DAY-SHIFT DUAL-LOCK FATAL ERROR: You MUST verify the Current Day and Deal Number
-in the Day-Shift Matrix and print it in the 'Routing Bank' slot of the ledger
-before pulling B1, B4, Prefixes, CompLabels, Comment_Link_Leads, and Disclaimers. You MUST
-pull all of these from the exact same bank. Do not pull B1 from Bank B and B4
-from Bank A.
-
-PRICE RANGE FATAL ERROR: If the raw input contains a price range (e.g., $4.99 -
-$5.99), you MUST print the full range. Do NOT truncate it to a single number.
-
-MISSING REGULAR PRICE FATAL ERROR: If there is no regular price, you MUST delete
-the entire ([CompLabel] [RegPriceSpaced]) block. Do NOT leave empty labels like
-(Regular) or (Was) hanging in the text.
-
-STRICT EMOJI MAPPING LAW: You MUST map the exact alphanumeric code. Do not shift
-codes or hallucinate context-appropriate emojis. If a line is deleted (e.g.,
-B5/B6/B8 are dead), its emoji dies with it. Do NOT just grab the next emoji in
-the list. You MUST look at the exact code inside the [Emoji P2-A] bracket and
-print that specific symbol. Do not confuse P-series codes with DYN-series codes.
-
-B2 VERIFICATION FATAL ERROR: You MUST complete the 'B2 Verification' step in the
-ledger. If the user provided no transactional info, you MUST answer 'No' and
-make all 4 B2 Strategies DEAD. Do NOT hallucinate features from previous deals.
-
-CONTEXT BLEED FATAL ERROR: You MUST explicitly acknowledge the new product name
-and Regular Price Check in the ledger. Do NOT hallucinate features, colors,
-sizes, or prices from previous deals (e.g., do not say "Black Brown Khaki" for
-Ziploc bags, and do not use a previous deal's price).
-
-VARIABLE INDEX LOCK FATAL ERROR: You MUST strictly map [B1 Discovery 1] to
-Post 1, [B1 Discovery 2] to Post 2, etc. The exact same rule applies to
-Super-Lines, Strategies, and Inferences. Do NOT copy-paste Super-Line 1 into
-Post 2 or Post 3. Pay strict attention to the index numbers (1, 2, 3).
-
-COMMENT INDEX FATAL ERROR: Comment 1 MUST use Praise 1, Anchor 1, Disc 1.
-Comment 2 MUST use Praise 2, Anchor 2, Disc 2. Comment 3 MUST use Praise 3,
-Anchor 3, Disc 3. You MUST fetch these exactly from the Pre-Compute block. Do
-NOT let recency bias cause you to reuse Comment 1 or 2 variables in Comment 3.
-
-GENERIC FLUFF FATAL ERROR: The phrases "stock up", "essentials", and "great
-addition" are strictly banned. You MUST describe a physical action.
-
-PRINT ORDER: Phase 0 Target Lock -> State Tracker -> Master Ledger -> === POST 1 MICRO-STAGE: [SHUFFLE] === -> === POST 2 MICRO-STAGE: [SHUFFLE] === -> === POST 3 MICRO-STAGE: [SHUFFLE] === -> === COMMENT 1 MICRO-STAGE === -> === COMMENT 2 MICRO-STAGE === -> === COMMENT 3 MICRO-STAGE === -> === DAILY THREAD MICRO-STAGE === -> === POST VARIATION 1 === -> === POST VARIATION 2 === -> === POST VARIATION 3 === -> === COMMENT 1 === -> === COMMENT 2 === -> === COMMENT 3 === -> === DAILY THREAD COMMENT === -> (If Deal 7: === CYCLE RESET WARNING ===). 
-
-UI PARSING FATAL ERROR: You MUST group all Micro-Stages together at the top, followed by all final outputs at the bottom. Do NOT use markdown code blocks. You are STRICTLY FORBIDDEN from using the backtick symbol (```).
-
-STRICT FORMATTING LAW: Hit "Enter" twice after EVERY label (e.g., === COMMENT 1
-===). Text on the same line as a label is a fatal failure. NO URLs or Anchor
-phrases inside Post Variations 1, 2, or 3. URLs belong ONLY in Comments/Daily
-Thread. Pointers (e.g., "The exact spot is...") go in Posts. Anchors (e.g., "Got
-it here:") go in Comments. NEVER mix them up.
-
-BUCKET 5 & 6 HALLUCINATION FATAL ERROR: Do NOT invent B5/B6 phrases to fill
-empty slots. If Amazon (B5 dead) or missing trigger words (B6 dead), DELETE the
-slot. Do NOT dump raw text.
-
-VERBATIM PULL FATAL ERROR: You MUST pull the Bucket 5 and Bucket 6 phrases
-EXACTLY word-for-word from the dictionary. Do not paraphrase them.
-
-CROSS-DEAL BAN: You MUST pull the 3 Dynamic Inferences exactly as you
-pre-planned them in the Master Ledger. DAILY THREAD ECHO FATAL ERROR: Do NOT
-reuse inferences across deals or copy-paste Post 3's inference into the Daily
-Thread. REVERSE ECHO FATAL ERROR: Do NOT use the pre-planned 'Daily Thread
-Sign-Off' inside Post 1, Post 2, or Post 3. You MUST pull the pre-planned 'Daily
-Thread Sign-Off' from the ledger ONLY for the Daily Thread.
-
-B3 RELEVANCE FATAL ERROR: Benefit Inference MUST logically match the product and
-describe a physical action.
-
-PRAISE SYNC FATAL ERROR: Pull the 3 praises exactly as written in the Master
-Ledger. Do NOT reuse praises.
-
-ANCHOR DEPLETION FATAL ERROR: You MUST use 3 completely different anchors per
-deal. NEVER repeat an anchor.
-
-EMOJI TRACKING FATAL ERROR: You MUST maintain a mental checklist of emojis used.
-Every single emoji must be unique across the ENTIRE deal generation (Posts,
-Comments, and Daily Thread).
-
-No Placeholders: Replace [Prefix], [Status], [Retailer], [Price], [Cleaned
-Title], [Emoji X], [Unique A?], [Anchor 1], [Dynamic Benefit Inference X],
-[Daily Thread Sign-Off], and brackets with literal text/emojis. Replace [Dynamic
-Benefit Inference X] with your dynamically generated sentence. Do NOT print
-literal brackets around the product name.
-
-DECIMAL MANDATE: You MUST keep the decimal point in the main price (e.g.,
-$15.96). Inside the comparison brackets, REPLACE the decimal with a space
-(e.g., 49 99).
-
-Spacing Mandate: Blank line space between EVERY line in Post Variations.
-
-CYCLE RESET WARNING FATAL ERROR: If you are generating Deal 7, you MUST print
-the following exact block at the very bottom of your response, two lines below
-the Daily Thread Comment: === CYCLE RESET WARNING === STOP! 7-DEAL CYCLE
-COMPLETE. DO NOT PASTE ANOTHER DEAL HERE. YOU MUST HIT REFRESH (F5) ON YOUR
-BROWSER NOW TO WIPE THE CHAT CLEAN. START OVER AT DEAL 1.
-
-If you are generating Deals 1 through 6, do NOT print this warning.
-
-=== END OF TEMPLATE ===
+    function loadHistory(index) {
+        const data = sessionHistory[index];
+        document.getElementById('outputSection').style.display = "block";
+        document.getElementById('out-phase0').innerText = data.phase0;
+        
+        for(let i=0; i<3; i++) {
+            document.getElementById(`out-post${i+1}`).innerText = data.posts[i];
+            document.getElementById(`out-com${i+1}`).innerText = data.comments[i];
+        }
+        document.getElementById('out-dt').innerText = data.dt;
+        
+        document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyToClipboard(elementId, btnElement) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "✅ Copied!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#0f9d58";
+            btnElement.style.borderColor = "#0f9d58";
+            setTimeout(() => { 
+                btnElement.innerText = originalText; 
+                btnElement.style.background = "#fff"; 
+                btnElement.style.color = "var(--primary)";
+                btnElement.style.borderColor = "var(--border)";
+            }, 2000);
+        }).catch(err => {
+            alert("Failed to copy text: " + err);
+        });
+    }
+</script>
+
+</body>
+</html>
