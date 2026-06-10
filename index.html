@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.5</title>
+    <title>The CB Regular Deal Generator v9.0</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,17 +51,18 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.5 UI Upgrades: Tighter Padding & Top-Right Copy Buttons */
+        /* V9.0 UI Upgrades: Compact Boxes & Header Copy Buttons */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
         .output-col { display: flex; flex-direction: column; gap: 15px; }
 
-        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 12px; border-radius: 8px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 15px; line-height: 1.5; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
-        .output-box h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;}
+        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 12px 15px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #f1f3f4; padding-bottom: 8px;}
+        .box-header h4 { margin: 0; font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;}
+        .output-text { white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 14px; line-height: 1.5; }
         
-        /* Moved Copy Button to Top Right */
-        .copy-btn { position: absolute; top: 8px; right: 8px; background: #f8f9fa; color: var(--text-muted); border: 1px solid var(--border); padding: 4px 8px; font-size: 11px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px;}
+        .copy-btn { background: #f8f9fa; color: var(--text-muted); border: 1px solid var(--border); padding: 4px 10px; font-size: 11px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px; margin: 0;}
         .copy-btn:hover { background: #e8eaed; color: var(--primary); border-color: var(--primary); }
         
         .raw-output-btn { background: #f8f9fa; color: var(--text-main); border: 1px solid var(--border); padding: 6px 12px; font-size: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
@@ -81,7 +82,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.5</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v9.0</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -163,7 +164,7 @@
     </div>
 </div>
 
-<!-- V8.5 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V9.0 BOTTOM SECTION: COMPACT UI -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -175,53 +176,69 @@
             <!-- LEFT COLUMN: POSTS -->
             <div class="output-col">
                 <div class="output-box" style="border-left: 4px solid var(--primary);">
-                    <h4>🎯 PHASE 0: TARGET LOCK</h4>
-                    <div id="out-phase0" style="font-family: monospace; font-size: 12px;"></div>
+                    <div class="box-header">
+                        <h4>🎯 PHASE 0: TARGET LOCK</h4>
+                    </div>
+                    <div id="out-phase0" class="output-text" style="font-family: monospace; font-size: 12px;"></div>
                 </div>
 
                 <div class="output-box">
-                    <h4>📝 POST VARIATION 1</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
-                    <div id="out-post1" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>📝 POST VARIATION 1</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-post1" class="output-text"></div>
                 </div>
 
                 <div class="output-box">
-                    <h4>📝 POST VARIATION 2</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
-                    <div id="out-post2" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>📝 POST VARIATION 2</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-post2" class="output-text"></div>
                 </div>
 
                 <div class="output-box">
-                    <h4>📝 POST VARIATION 3</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
-                    <div id="out-post3" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>📝 POST VARIATION 3</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-post3" class="output-text"></div>
                 </div>
             </div>
 
             <!-- RIGHT COLUMN: COMMENTS & DT -->
             <div class="output-col">
                 <div class="output-box">
-                    <h4>💬 COMMENT 1</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy</button>
-                    <div id="out-com1" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>💬 COMMENT 1</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-com1" class="output-text"></div>
                 </div>
 
                 <div class="output-box">
-                    <h4>💬 COMMENT 2</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy</button>
-                    <div id="out-com2" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>💬 COMMENT 2</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-com2" class="output-text"></div>
                 </div>
 
                 <div class="output-box">
-                    <h4>💬 COMMENT 3</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy</button>
-                    <div id="out-com3" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>💬 COMMENT 3</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-com3" class="output-text"></div>
                 </div>
 
                 <div class="output-box" style="border-left: 4px solid #fbbc04;">
-                    <h4>🧵 DAILY THREAD COMMENT</h4>
-                    <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">📄 Copy</button>
-                    <div id="out-dt" style="margin-top: 10px;"></div>
+                    <div class="box-header">
+                        <h4>🧵 DAILY THREAD COMMENT</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">📄 Copy Thread</button>
+                    </div>
+                    <div id="out-dt" class="output-text"></div>
                 </div>
             </div>
         </div>
@@ -274,17 +291,39 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.5 Ultimate Emoji Assassin
+    // V9.0 Nuclear Emoji Stripper (Catches ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
-        // Replaces all emojis, zero-width joiners, and variation selectors with nothing.
-        return str.replace(/[\u1000-\uFFFF]+/g, '').replace(/[\u200D\uFE0F]/g, '').trim();
+        return str.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\u200d\uFE0F\u2640-\u2642]/gu, '').trim();
     }
 
     function extractURL(text) {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const match = text.match(urlRegex);
         return match ? match[0] : "https://thecouponboutique.com/";
+    }
+
+    // V9.0 Hardcoded B5 & B6 Logic
+    function getB5Perks(rawText) {
+        const r = rawText.toLowerCase();
+        if(r.includes('walmart') || r.includes('w@lm@rt')) return ["Hitting that thirty-five mark means delivery is completely covered!", "If your total reaches thirty-five, they handle the shipping with nothing extra added.", "Members get this sent right to the door with delivery included.", "Reaching a thirty-five total gets it shipped right to your door."];
+        if(r.includes('walgreens')) return ["Snag it for local pickup with nothing extra added once you hit the ten mark!", "Once your order reaches ten, it's ready for local pickup!", "Get pickup included right now when your total hits ten!", "Score local pickup completely covered once you reach the ten mark!"];
+        if(r.includes('woot')) return ["Sign in with your Amazon account for delivery with nothing extra added!", "Log in using your Amazon account for delivery included!", "Use your Amazon account login so it's shipped completely covered!", "Your delivery is included right now when you sign in with Amazon!"];
+        return ["DEAD", "DEAD", "DEAD", "DEAD"];
+    }
+
+    function getB6Savings(rawText) {
+        const r = rawText.toLowerCase();
+        // Strip URL before checking for 'coupon' to prevent false positives
+        const textWithoutUrl = r.replace(/(https?:\/\/[^\s]+)/g, '');
+        
+        if(textWithoutUrl.includes('code') || textWithoutUrl.includes('promo') || textWithoutUrl.includes('qpon') || textWithoutUrl.includes('qp0n') || textWithoutUrl.includes('cp0n')) {
+            return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
+        }
+        if(textWithoutUrl.includes('coupon') || textWithoutUrl.includes('clippable') || textWithoutUrl.includes('voucher') || textWithoutUrl.includes('digital box')) {
+            return ["Make sure to check that little box on the page to grab this amount!", "Ensure you select the digital option on the product page to see this total!", "Remember to check the digital box before finishing up!", "Selecting the digital option on the page secures this value!"];
+        }
+        return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
     async function processDeal() {
@@ -303,21 +342,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.5 Conditional Prompt Injection
-        const rTextLower = rawText.toLowerCase();
-        let b5Instruction = `If text mentions Walmart, Walgreens, or Woot, write 4 unique sentences about shipping/pickup perks. If not, write ["DEAD","DEAD","DEAD","DEAD"]`;
-        let b6Instruction = `If text mentions Coupon, Promo, Code, or Voucher, write 4 unique sentences reminding them to clip/use it. If not, write ["DEAD","DEAD","DEAD","DEAD"]`;
-        
-        if(rTextLower.includes('walmart')) b5Instruction = `You MUST write 4 unique sentences reminding them that Walmart+ members get free shipping or free shipping on $35+.`;
-        if(rTextLower.includes('walgreens')) b5Instruction = `You MUST write 4 unique sentences reminding them that free store pickup requires a $10 minimum order.`;
-        if(rTextLower.includes('woot')) b5Instruction = `You MUST write 4 unique sentences reminding them to log in with Amazon Prime for free shipping.`;
-        
-        if(rTextLower.includes('code') || rTextLower.includes('promo') || rTextLower.includes('qpon') || rTextLower.includes('qp0n') || rTextLower.includes('cp0n')) {
-            b6Instruction = `You MUST write 4 unique sentences reminding them to enter the promo code at checkout.`;
-        } else if(rTextLower.includes('coupon') || rTextLower.includes('clippable') || rTextLower.includes('voucher') || rTextLower.includes('digital box')) {
-            b6Instruction = `You MUST write 4 unique sentences reminding them to check the digital coupon box on the page.`;
-        }
-
+        // V9.0 Micro-Prompt (15 Emojis requested for true variety)
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -328,13 +353,13 @@
         "inferences": (Array of 3 short lifestyle statements. Sound like a real person.),
         "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. Do NOT sound like a robot.),
         "b2_strategies": (Array of 4 UNIQUE sentences. RULE 1: If text has limits, write warnings. RULE 2: If text requires buying multiples (e.g. Add 4), calculate per-item price. RULE 3: If text has specific colors, sizes, or options (e.g. '12lbs', 'Black'), write sentences telling them to select it. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b5_perks": (Array of 4 sentences. ${b5Instruction}),
-        "b6_savings": (Array of 4 sentences. ${b6Instruction}),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
         "b8_info": (Array of 4 sentences. Extract leftover info like S&S. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
         "b9_random_info": (Array of 4 sentences. Extract any other random facts or write personal hype like 'This is the cheapest I have seen this!'. Rephrase 4 times. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
         "dt_signoff": (String. 1 short lifestyle sentence),
-        "comp_emojis": (Array of 5 unique emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧; if kitchen, use 🥩🧅🍳. Do NOT use generic shapes.),
+        "emojis_post1": (Array of 5 unique emojis that logically complement the product. e.g., if fitness, use 👟🏋️‍♂️💧; if kitchen, use 🥩🧅🍳),
+        "emojis_post2": (Array of 5 DIFFERENT unique emojis that complement the product),
+        "emojis_post3": (Array of 5 DIFFERENT unique emojis that complement the product),
         "product_emoji": (String. 1 literal emoji for the product)
         
         GLOBAL SHIELD: Do NOT use banned words: Price, Cost, Sale, Deal, Save, Discount, Buy, Shop, Coupon, Checkout, Promo, Free, Link, Cart.`;
@@ -356,7 +381,7 @@
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             const aiData = JSON.parse(aiText);
             
-            // --- JAVASCRIPT ASSEMBLY ENGINE ---
+            // --- JAVASCRIPT ASSEMBLY ENGINE (V9.0 AV928 REPLICA) ---
             const isOdd = dealNum % 2 !== 0;
             const bank = banks[getRoutingBank(day, dealNum)];
             const extractedURL = extractURL(rawText);
@@ -364,8 +389,10 @@
             const cleanTitle = cleanText(aiData.cleaned_title);
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
-            const emojis = aiData.comp_emojis && aiData.comp_emojis.length === 5 ? aiData.comp_emojis : ["📦","🛒","👇","✨","🔥"];
             const pEmoji = aiData.product_emoji || "🔥";
+
+            const b5Perks = getB5Perks(rawText);
+            const b6Savings = getB6Savings(rawText);
 
             let phase0 = `${rawText}`;
             document.getElementById('out-phase0').innerText = phase0;
@@ -379,11 +406,17 @@
             }
 
             let postOutputs = [];
+            let emojiArrays = [
+                aiData.emojis_post1 || ["📦","🛒","👇","✨","🔥"],
+                aiData.emojis_post2 || ["📦","🛒","👇","✨","🔥"],
+                aiData.emojis_post3 || ["📦","🛒","👇","✨","🔥"]
+            ];
+
             for(let i=0; i<3; i++) {
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])} ` : "";
                 
-                let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
-                let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
+                let b5 = b5Perks[i] !== "DEAD" ? `${b5Perks[i]} ` : "";
+                let b6 = b6Savings[i] !== "DEAD" ? `${b6Savings[i]} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
                 let b8 = aiData.b8_info && aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
                 let b9 = aiData.b9_random_info && aiData.b9_random_info[i] !== "DEAD" ? `${cleanText(aiData.b9_random_info[i])} ` : "";
@@ -392,27 +425,29 @@
                 if(bottomLine !== "") bottomLine += " "; 
 
                 let inf = cleanText(aiData.inferences[i]);
+                let em = emojiArrays[i];
                 
                 let l1, l2, l3, l4, l5;
                 
+                // V9.0 AV928 Shuffle Logic
                 if(dealNum === 1 || dealNum === 4 || dealNum === 7) {
-                    l1 = `${discoveries[i]} on ${retailer}! ${emojis[1]}`;
-                    l2 = `${sl[i]} ${emojis[0]}`;
-                    l3 = `${b2}${bank.pointers[i]} ${emojis[3]}`;
-                    l4 = `${inf} ${emojis[4]}`;
-                    l5 = bottomLine ? `${bottomLine}${emojis[2]}` : "";
+                    l1 = `${discoveries[i]} on ${retailer}! ${em[1]}`;
+                    l2 = `${sl[i]} ${em[0]}`;
+                    l3 = b2 ? `${b2}${bank.pointers[i]} ${em[3]}` : `${bank.pointers[i]} ${em[3]}`;
+                    l4 = `${inf} ${em[4]}`;
+                    l5 = bottomLine ? `${bottomLine}${em[2]}` : "";
                 } else if (dealNum === 2 || dealNum === 5) {
-                    l1 = `${inf} ${emojis[2]}`;
-                    l2 = `${sl[i]} ${emojis[0]}`;
-                    l3 = `${discoveries[i]} on ${retailer}! ${emojis[1]}`;
-                    l4 = `${bank.pointers[i]} ${b2}${emojis[3]}`;
-                    l5 = bottomLine ? `${bottomLine}${emojis[4]}` : "";
+                    l1 = `${inf} ${em[0]}`;
+                    l2 = `${sl[i]} ${em[1]}`;
+                    l3 = `${discoveries[i]} on ${retailer}! ${em[2]}`;
+                    l4 = b2 ? `${bank.pointers[i]} ${b2}${em[3]}` : `${bank.pointers[i]} ${em[3]}`;
+                    l5 = bottomLine ? `${bottomLine}${em[4]}` : "";
                 } else {
-                    l1 = `${sl[i]} ${emojis[0]} ${emojis[1]}`;
-                    l2 = `${discoveries[i]} on ${retailer}!`;
-                    l3 = bottomLine ? `${inf} ${bottomLine}${emojis[2]}` : `${inf} ${emojis[2]}`;
-                    l4 = b2 ? `${b2}${emojis[3]}` : "";
-                    l5 = `${bank.pointers[i]} ${emojis[4]}`;
+                    l1 = bottomLine ? `${inf} ${bottomLine}${em[0]}` : `${inf} ${em[0]}`;
+                    l2 = `${sl[i]} ${em[1]} ${em[2]}`;
+                    l3 = `${discoveries[i]} on ${retailer}!`;
+                    l4 = b2 ? `${b2}${em[3]}` : "";
+                    l5 = `${bank.pointers[i]} ${em[4]}`;
                 }
 
                 let activeLines = [l1, l2, l3, l4, l5].filter(line => line !== ""); 
@@ -453,8 +488,8 @@
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? `${cleanText(aiData.b2_strategies[3])} ${dtEmojis[0]}` : "";
             
-            let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
-            let dtB6 = aiData.b6_savings && aiData.b6_savings[3] !== "DEAD" ? `${cleanText(aiData.b6_savings[3])} ` : "";
+            let dtB5 = b5Perks[3] !== "DEAD" ? `${b5Perks[3]} ` : "";
+            let dtB6 = b6Savings[3] !== "DEAD" ? `${b6Savings[3]} ` : "";
             let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
             let dtB8 = aiData.b8_info && aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ` : "";
             let dtB9 = aiData.b9_random_info && aiData.b9_random_info[3] !== "DEAD" ? `${cleanText(aiData.b9_random_info[3])} ` : "";
