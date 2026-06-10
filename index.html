@@ -6,7 +6,7 @@
     <title>The CB Regular Deal Generator</title>
     <style>
         :root {
-            --primary: #1a73e8; /* Google Studio Blue */
+            --primary: #1a73e8; 
             --primary-hover: #1557b0;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
@@ -45,17 +45,24 @@
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
         
+        .api-box { background: #fff8e1; border: 1px solid #fbbc04; border-radius: 8px; padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;}
+        .api-box input { margin-top: 0; flex: 1; padding: 8px 12px;}
+        .api-link { font-size: 12px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
+        .api-link:hover { text-decoration: underline; }
+
+        .output-container { max-width: 800px; margin: 0 auto; } 
         .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 20px; border-radius: 12px; min-height: 80px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 14px; line-height: 1.6; position: relative; padding-bottom: 50px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);}
+        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 20px; border-radius: 12px; min-height: 80px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 14px; line-height: 1.6; position: relative; padding-bottom: 60px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);}
         .output-box h4 { margin-top: 0; font-size: 12px; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;}
-        .copy-btn { position: absolute; bottom: 15px; right: 15px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 6px 16px; font-size: 13px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;}
+        .copy-btn { position: absolute; bottom: 15px; right: 15px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 6px 16px; font-size: 13px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
         .copy-btn:hover { background: #f8f9fa; border-color: var(--primary); }
         .full-width { grid-column: 1 / -1; }
 
-        .history-list { font-family: inherit; font-size: 13px; color: var(--text-main); max-height: 400px; overflow-y: auto; }
-        .history-item { padding: 12px 0; border-bottom: 1px solid var(--border); line-height: 1.5;}
-        .history-item:last-child { border-bottom: none; }
-        .history-time { color: var(--text-muted); font-size: 11px; display: block; margin-bottom: 4px;}
+        .history-list { max-height: 500px; overflow-y: auto; padding-right: 5px;}
+        .history-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .history-card:hover { border-color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .history-time { color: var(--text-muted); font-size: 11px; display: block; margin-bottom: 4px; text-transform: uppercase;}
+        .history-title { font-size: 13px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     </style>
 </head>
 <body>
@@ -69,19 +76,13 @@
 </div>
 
 <div class="main-grid">
-    <!-- LEFT COLUMN: INPUT WORKSPACE -->
     <div class="left-col">
         
-        <!-- API SETUP CARD -->
-        <div class="card" style="background: #fff8e1; border-color: #fbbc04;">
-            <div class="card-header" style="border-bottom-color: #fde293; padding-bottom: 10px; margin-bottom: 10px;">
-                <h3 style="color: #b06000;">⚙️ System Setup</h3>
-            </div>
-            <label style="color: #b06000; margin-top: 0;">Google Gemini API Key:</label>
-            <input type="password" id="apiKey" placeholder="Paste your AIzaSy... key here" style="background: #fff; border-color: #fde293;">
+        <div class="api-box">
+            <a href="https://aistudio.google.com/u/1/api-keys" target="_blank" class="api-link">🔗 Get your Gemini API Key through this LINK</a>
+            <input type="password" id="apiKey" placeholder="Paste your AIzaSy... key here">
         </div>
 
-        <!-- MAIN INPUT CARD -->
         <div class="card">
             <div class="card-header">
                 <h3 style="color: var(--primary);">🔵 RAW INPUT WORKSPACE</h3>
@@ -134,7 +135,6 @@
 
     </div>
 
-    <!-- RIGHT COLUMN: HISTORY -->
     <div class="right-col">
         <div class="card">
             <div class="card-header">
@@ -142,7 +142,7 @@
             </div>
             <p style="font-size: 12px; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px;">History saves on device automatically</p>
             <div id="historyLog" class="history-list">
-                <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);" id="emptyHistory">
                     <div style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;">📄</div>
                     <strong>No deals tracked yet</strong><br>
                     <span style="font-size: 12px;">Add or generate deals to populate active sequence saves.</span>
@@ -152,8 +152,7 @@
     </div>
 </div>
 
-<!-- BOTTOM SECTION: OUTPUTS -->
-<div class="container" id="outputSection" style="display:none; margin-top: 0; max-width: 1200px; background: transparent; box-shadow: none; padding: 0;">
+<div class="output-container" id="outputSection" style="display:none; margin-top: 0;">
     <div class="card">
         <div class="card-header">
             <h3 style="color: var(--success);">✅ GENERATED SOCIAL POST VARIATIONS</h3>
@@ -162,46 +161,46 @@
         <div class="output-grid">
             <div class="output-box full-width" style="border-left: 4px solid var(--primary);">
                 <h4>🎯 PHASE 0: TARGET LOCK</h4>
-                <div id="out-phase0" style="font-family: monospace; font-size: 13px;"></div>
+                <div id="out-phase0" style="font-family: monospace; font-size: 13px; padding-bottom: 0;"></div>
             </div>
 
             <div class="output-box">
                 <h4>📝 POST VARIATION 1</h4>
                 <div id="out-post1"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">Copy</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
             </div>
             <div class="output-box">
                 <h4>💬 COMMENT 1</h4>
                 <div id="out-com1"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">Copy</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy Comment</button>
             </div>
 
             <div class="output-box">
                 <h4>📝 POST VARIATION 2</h4>
                 <div id="out-post2"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">Copy</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
             </div>
             <div class="output-box">
                 <h4>💬 COMMENT 2</h4>
                 <div id="out-com2"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">Copy</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy Comment</button>
             </div>
 
             <div class="output-box">
                 <h4>📝 POST VARIATION 3</h4>
                 <div id="out-post3"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">Copy</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
             </div>
             <div class="output-box">
                 <h4>💬 COMMENT 3</h4>
                 <div id="out-com3"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">Copy</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy Comment</button>
             </div>
 
             <div class="output-box full-width" style="border-left: 4px solid #fbbc04;">
                 <h4>🧵 DAILY THREAD COMMENT</h4>
                 <div id="out-dt"></div>
-                <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">Copy Thread</button>
+                <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">📄 Copy Thread</button>
             </div>
         </div>
     </div>
@@ -209,6 +208,7 @@
 
 <script>
     let dealCount = 0;
+    let sessionHistory = []; 
 
     document.addEventListener("DOMContentLoaded", () => {
         const savedKey = localStorage.getItem('geminiApiKey');
@@ -278,7 +278,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.0 Micro-Prompt (B2 Options Trigger Added)
+        // V8.2 Micro-Prompt (ALL BUCKETS RESTORED)
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "cleaned_title": (String. Copy product name exactly. Remove emojis. Do NOT delete 'QTY'),
@@ -288,7 +288,10 @@
         "inferences": (Array of 3 short lifestyle statements. Sound like a real person.),
         "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. Do NOT sound like a robot.),
         "b2_strategies": (Array of 4 UNIQUE sentences. RULE 1: If text has limits, write warnings. RULE 2: If text requires buying multiples (e.g. Add 4), calculate per-item price. RULE 3: If text has specific colors, sizes, or options (e.g. '12lbs', 'Black'), write sentences telling them to select it. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b8_info": (Array of 4 sentences. Extract leftover info like S&S. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b5_perks": (Array of 4 sentences. If retailer is Walmart, Walgreens, or Woot, write 4 unique sentences about shipping/pickup perks. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b6_savings": (Array of 4 sentences. If text mentions Coupon, Promo, Code, or Voucher, write 4 unique sentences reminding them to clip/use it. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b8_info": (Array of 4 sentences. This is the Overflow Gate. Extract leftover info like S&S, passive features, OR write personal hype like 'This is the cheapest I have seen this!'. Rephrase 4 times. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
         "dt_signoff": (String. 1 short lifestyle sentence),
         "comp_emojis": (Array of 5 unique emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧; if kitchen, use 🥩🧅🍳. Do NOT use generic shapes.),
         "product_emoji": (String. 1 literal emoji for the product)
@@ -322,7 +325,8 @@
             const emojis = aiData.comp_emojis && aiData.comp_emojis.length === 5 ? aiData.comp_emojis : ["📦","🛒","👇","✨","🔥"];
             const pEmoji = aiData.product_emoji || "🔥";
 
-            document.getElementById('out-phase0').innerText = rawText;
+            let phase0 = `${rawText}`;
+            document.getElementById('out-phase0').innerText = phase0;
 
             let sl = [];
             for(let i=0; i<3; i++) {
@@ -331,9 +335,19 @@
                 sl.push(isOdd ? `${hook} -- ${cleanTitle}` : `${cleanTitle} -- ${hook}`);
             }
 
+            let postOutputs = [];
             for(let i=0; i<3; i++) {
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])} ` : "";
-                let b8 = aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
+                
+                // Combine B5, B6, B7, B8 into Bottom Line
+                let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
+                let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
+                let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
+                let b8 = aiData.b8_info && aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
+                
+                let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
+                if(bottomLine !== "") bottomLine += " "; // Add trailing space for emoji
+
                 let inf = cleanText(aiData.inferences[i]);
                 
                 let l1, l2, l3, l4, l5;
@@ -343,17 +357,17 @@
                     l2 = `${sl[i]} ${emojis[0]}`;
                     l3 = `${b2}${bank.pointers[i]} ${emojis[3]}`;
                     l4 = `${inf} ${emojis[4]}`;
-                    l5 = b8 ? `${b8}${emojis[2]}` : "";
+                    l5 = bottomLine ? `${bottomLine}${emojis[2]}` : "";
                 } else if (dealNum === 2 || dealNum === 5) {
                     l1 = `${inf} ${emojis[2]}`;
                     l2 = `${sl[i]} ${emojis[0]}`;
                     l3 = `${discoveries[i]} on Amazon! ${emojis[1]}`;
                     l4 = `${bank.pointers[i]} ${b2}${emojis[3]}`;
-                    l5 = b8 ? `${b8}${emojis[4]}` : "";
+                    l5 = bottomLine ? `${bottomLine}${emojis[4]}` : "";
                 } else {
                     l1 = `${sl[i]} ${emojis[0]} ${emojis[1]}`;
                     l2 = `${discoveries[i]} on Amazon!`;
-                    l3 = b8 ? `${inf} ${b8}${emojis[2]}` : `${inf} ${emojis[2]}`;
+                    l3 = bottomLine ? `${inf} ${bottomLine}${emojis[2]}` : `${inf} ${emojis[2]}`;
                     l4 = b2 ? `${b2}${emojis[3]}` : "";
                     l5 = `${bank.pointers[i]} ${emojis[4]}`;
                 }
@@ -366,9 +380,11 @@
                     if (j - 1 === touchIndex) postText += `\n${activeLines[j]}`; 
                     else postText += `\n\n${activeLines[j]}`; 
                 }
+                postOutputs.push(postText);
                 document.getElementById(`out-post${i+1}`).innerText = postText;
             }
 
+            let commentOutputs = [];
             for(let i=0; i<3; i++) {
                 let cText = "";
                 let praise = cleanText(aiData.praises[i]);
@@ -383,6 +399,7 @@
                     if(i===1) cText = `${linkLeads[i]} ${extractedURL}\n\n${disc} ${praise} ${faces[i]}`;
                     if(i===2) cText = `${linkLeads[i]} ${extractedURL} ${disc} ${praise} ${pEmoji}`;
                 }
+                commentOutputs.push(cText);
                 document.getElementById(`out-com${i+1}`).innerText = cText;
             }
 
@@ -390,29 +407,52 @@
             if(aiData.reg_price !== "NONE") dtHeader += ` (${bank.compLabels[3]} ${cleanText(aiData.reg_price)})`;
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? `${cleanText(aiData.b2_strategies[3])} ${dtEmojis[0]}` : "";
-            let dtB8 = aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ${dtEmojis[1]}` : "";
+            
+            let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
+            let dtB6 = aiData.b6_savings && aiData.b6_savings[3] !== "DEAD" ? `${cleanText(aiData.b6_savings[3])} ` : "";
+            let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
+            let dtB8 = aiData.b8_info && aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ` : "";
+            
+            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}`.trim();
+            if(dtOverflow !== "") dtOverflow += ` ${dtEmojis[1]}`;
 
             let dtText = "";
             if(isOdd) {
                 dtText = `${dtHeader}\n\nCheck it out right here: ${extractedURL}\n\n${dtSignoff} ${dtEmojis[2]}`;
                 if(dtB2) dtText += `\n\n${dtB2}`;
-                if(dtB8) dtText += `\n\n${dtB8}`;
+                if(dtOverflow) dtText += `\n\n${dtOverflow}`;
             } else {
                 dtText = `${dtEmojis[2]} ${dtSignoff}\n\n${dtHeader}\n\nCheck it out right here: ${extractedURL}`;
                 if(dtB2) dtText += `\n\n${dtB2}`;
-                if(dtB8) dtText += `\n\n${dtB8}`;
+                if(dtOverflow) dtText += `\n\n${dtOverflow}`;
             }
             document.getElementById('out-dt').innerText = dtText;
 
             // History Log
             dealCount++;
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            
+            const dealData = {
+                phase0: phase0,
+                posts: postOutputs,
+                comments: commentOutputs,
+                dt: dtText
+            };
+            sessionHistory.push(dealData);
+            const index = sessionHistory.length - 1;
+
             const historyLog = document.getElementById('historyLog');
-            const timestamp = new Date().toLocaleTimeString();
-            const historyEntry = `<div class="history-item"><span class="history-time">${timestamp}</span><strong>Deal ${dealNum}:</strong> ${cleanTitle}</div>`;
+            const emptyMsg = document.getElementById('emptyHistory');
+            if(emptyMsg) emptyMsg.remove();
+
+            const historyCard = `
+                <div class="history-card" onclick="loadHistory(${index})">
+                    <span class="history-time">${day} • ${timestamp}</span>
+                    <div class="history-title">Deal ${dealNum}: ${cleanTitle}</div>
+                </div>
+            `;
             
-            if(dealCount === 1) historyLog.innerHTML = historyEntry;
-            else historyLog.innerHTML = historyEntry + historyLog.innerHTML;
-            
+            historyLog.innerHTML = historyCard + historyLog.innerHTML;
             document.getElementById('sessionBaseHeader').innerText = `📚 SESSION BASE (${dealCount} / 7)`;
 
             if(dealNum < 7) dealNumInput.value = dealNum + 1;
@@ -429,11 +469,25 @@
         }
     }
 
+    function loadHistory(index) {
+        const data = sessionHistory[index];
+        document.getElementById('outputSection').style.display = "block";
+        document.getElementById('out-phase0').innerText = data.phase0;
+        
+        for(let i=0; i<3; i++) {
+            document.getElementById(`out-post${i+1}`).innerText = data.posts[i];
+            document.getElementById(`out-com${i+1}`).innerText = data.comments[i];
+        }
+        document.getElementById('out-dt').innerText = data.dt;
+        
+        document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
     function copyToClipboard(elementId, btnElement) {
         const textToCopy = document.getElementById(elementId).innerText;
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalText = btnElement.innerText;
-            btnElement.innerText = "Copied!";
+            btnElement.innerText = "✅ Copied!";
             btnElement.style.background = "#e6f4ea";
             btnElement.style.color = "#0f9d58";
             btnElement.style.borderColor = "#0f9d58";
