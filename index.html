@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator</title>
+    <title>The CB Regular Deal Generator v8.4</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -16,60 +16,57 @@
             --success: #0f9d58;
         }
 
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 15px; }
         
-        .header-container { max-width: 1200px; margin: 0 auto 20px auto; display: flex; align-items: center; gap: 15px; }
-        .header-icon { background: #fff; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
-        .header-title h1 { margin: 0; font-size: 20px; color: var(--text-main); font-weight: 600;}
-        .header-title p { margin: 0; font-size: 13px; color: var(--text-muted); }
+        .header-container { max-width: 1200px; margin: 0 auto 15px auto; display: flex; align-items: center; gap: 15px; }
+        .header-icon { background: #fff; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .header-title h1 { margin: 0; font-size: 18px; color: var(--text-main); font-weight: 600;}
+        .header-title p { margin: 0; font-size: 12px; color: var(--text-muted); }
+        .version-tag { font-size: 11px; background: #e8f0fe; color: var(--primary); padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle;}
 
-        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; max-width: 1200px; margin: auto; }
+        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; max-width: 1200px; margin: auto; }
         @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 20px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
-        .card-header h3 { margin: 0; font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 15px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px; }
+        .card-header h3 { margin: 0; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        label { font-weight: 600; display: block; margin-top: 15px; margin-bottom: 8px; font-size: 13px; color: var(--text-main); }
-        textarea, input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #fff; color: var(--text-main); font-family: inherit; box-sizing: border-box; font-size: 14px; transition: border 0.2s; }
+        label { font-weight: 600; display: block; margin-top: 10px; margin-bottom: 5px; font-size: 12px; color: var(--text-main); }
+        textarea, input, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #fff; color: var(--text-main); font-family: inherit; box-sizing: border-box; font-size: 13px; transition: border 0.2s; }
         textarea:focus, input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
-        textarea { height: 120px; resize: vertical; }
+        textarea { height: 100px; resize: vertical; }
         
-        button { background: var(--primary); color: white; border: none; padding: 12px 24px; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 14px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        button { background: var(--primary); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
         button:hover { background: var(--primary-hover); box-shadow: 0 1px 3px rgba(0,0,0,0.15);}
         button:disabled { background: #ccc; cursor: not-allowed; box-shadow: none;}
         
-        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 8px 16px; font-size: 13px;}
+        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 6px 12px; font-size: 12px;}
         .btn-outline:hover { background: #f1f3f4; }
 
-        .row { display: flex; gap: 15px; }
+        .row { display: flex; gap: 10px; }
         .col { flex: 1; }
         
-        .api-box { background: #fff8e1; border: 1px solid #fbbc04; border-radius: 8px; padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;}
-        .api-box input { margin-top: 0; flex: 1; padding: 8px 12px;}
-        .api-link { font-size: 12px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
+        .api-box { background: #fff8e1; border: 1px solid #fbbc04; border-radius: 8px; padding: 10px 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        .api-box input { margin-top: 0; flex: 1; padding: 6px 10px;}
+        .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.4 UI Upgrades: Compact Boxes & Raw Output Button */
+        /* V8.4 UI Upgrades: Compact Boxes & 15px Font */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
         .output-col { display: flex; flex-direction: column; gap: 15px; }
 
-        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 15px; border-radius: 8px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 13px; line-height: 1.5; position: relative; padding-bottom: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
-        .output-box h4 { margin-top: 0; font-size: 11px; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;}
-        .copy-btn { position: absolute; bottom: 10px; right: 10px; background: #fff; color: var(--text-muted); border: 1px solid var(--border); padding: 4px 12px; font-size: 12px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
-        .copy-btn:hover { background: #f8f9fa; color: var(--primary); border-color: var(--primary); }
-        .full-width { grid-column: 1 / -1; }
+        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 12px 15px; border-radius: 8px; white-space: pre-wrap; font-family: inherit; color: var(--text-main); font-size: 15px; line-height: 1.5; position: relative; padding-bottom: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
+        .output-box h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;}
+        .copy-btn { position: absolute; bottom: 8px; right: 8px; background: #fff; color: var(--primary); border: 1px solid var(--border); padding: 4px 10px; font-size: 11px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px;}
+        .copy-btn:hover { background: #f8f9fa; border-color: var(--primary); }
 
-        .raw-output-btn { background: #f8f9fa; color: var(--text-main); border: 1px solid var(--border); padding: 6px 12px; font-size: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .raw-output-btn:hover { background: #e8eaed; }
-
-        .history-list { max-height: 500px; overflow-y: auto; padding-right: 5px;}
-        .history-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .history-list { max-height: 400px; overflow-y: auto; padding-right: 5px;}
+        .history-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
         .history-card:hover { border-color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
-        .history-time { color: var(--text-muted); font-size: 11px; display: block; margin-bottom: 4px; text-transform: uppercase;}
-        .history-title { font-size: 13px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .history-time { color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 2px; text-transform: uppercase;}
+        .history-title { font-size: 12px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     </style>
 </head>
 <body>
@@ -77,7 +74,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator</h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.4</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -99,7 +96,7 @@
             <label>Raw Deal Context Text</label>
             <textarea id="rawText" placeholder="Paste or type raw deals information verbatim here..."></textarea>
             
-            <div class="row" style="margin-top: 20px;">
+            <div class="row" style="margin-top: 15px;">
                 <div class="col">
                     <label>📅 Day of Week Reference</label>
                     <select id="currentDay">
@@ -134,8 +131,8 @@
                 </div>
             </div>
             
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <span style="font-size: 13px; color: var(--text-muted);" id="nextTargetText">Next target: <strong>Deal 1</strong>. Output saves automatically to ledger.</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+                <span style="font-size: 12px; color: var(--text-muted);" id="nextTargetText">Next target: <strong>Deal 1</strong>. Output saves automatically to ledger.</span>
                 <button id="apiButton" onclick="processDeal()">✨ Generate Deal 1</button>
             </div>
         </div>
@@ -147,24 +144,23 @@
             <div class="card-header" id="sessionBaseHeaderContainer">
                 <h3 id="sessionBaseHeader">📚 SESSION BASE (0 / 7)</h3>
             </div>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px;">History saves on device automatically</p>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: -5px; margin-bottom: 10px;">History saves on device automatically</p>
             <div id="historyLog" class="history-list">
-                <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);" id="emptyHistory">
-                    <div style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;">📄</div>
+                <div style="text-align: center; padding: 30px 20px; color: var(--text-muted);" id="emptyHistory">
+                    <div style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;">📄</div>
                     <strong>No deals tracked yet</strong><br>
-                    <span style="font-size: 12px;">Add or generate deals to populate active sequence saves.</span>
+                    <span style="font-size: 11px;">Add or generate deals to populate active sequence saves.</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- V8.4 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.4 BOTTOM SECTION: COMPACT UI -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
             <h3 style="color: var(--success);">✅ GENERATED SOCIAL POST VARIATIONS</h3>
-            <button class="raw-output-btn" onclick="copyRawOutput(this)">📄 Copy Raw Output</button>
         </div>
         
         <div class="output-layout">
@@ -227,7 +223,6 @@
 <script>
     let dealCount = 0;
     let sessionHistory = []; 
-    let currentRawOutput = ""; // Stores the full raw text for the QA button
 
     document.addEventListener("DOMContentLoaded", () => {
         const savedKey = localStorage.getItem('geminiApiKey');
@@ -270,34 +265,17 @@
         return matrix[day][dealNum - 1];
     }
 
+    // V8.4 Nuclear Emoji Stripper
     function cleanText(str) {
         if (!str) return "";
-        return str.replace(/[^\x00-\x7F]/g, "").trim();
+        // Strips all extended pictographics (emojis) and zero-width joiners
+        return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}]/gu, "").trim();
     }
 
     function extractURL(text) {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const match = text.match(urlRegex);
         return match ? match[0] : "https://thecouponboutique.com/";
-    }
-
-    function getB5Perks(rawText) {
-        const r = rawText.toLowerCase();
-        if(r.includes('walmart')) return ["Hitting that thirty-five mark means delivery is completely covered!", "If your total reaches thirty-five, they handle the shipping with nothing extra added.", "Members get this sent right to the door with delivery included.", "Reaching a thirty-five total gets it shipped right to your door."];
-        if(r.includes('walgreens')) return ["Snag it for local pickup with nothing extra added once you hit the ten mark!", "Once your order reaches ten, it's ready for local pickup!", "Get pickup included right now when your total hits ten!", "Score local pickup completely covered once you reach the ten mark!"];
-        if(r.includes('woot')) return ["Sign in with your Amazon account for delivery with nothing extra added!", "Log in using your Amazon account for delivery included!", "Use your Amazon account login so it's shipped completely covered!", "Your delivery is included right now when you sign in with Amazon!"];
-        return ["DEAD", "DEAD", "DEAD", "DEAD"];
-    }
-
-    function getB6Savings(rawText) {
-        const r = rawText.toLowerCase();
-        if(r.includes('code') || r.includes('promo') || r.includes('qpon') || r.includes('qp0n') || r.includes('cp0n')) {
-            return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
-        }
-        if(r.includes('coupon') || r.includes('clippable') || r.includes('voucher') || r.includes('digital box')) {
-            return ["Make sure to check that little box on the page to grab this amount!", "Ensure you select the digital option on the product page to see this total!", "Remember to check the digital box before finishing up!", "Selecting the digital option on the page secures this value!"];
-        }
-        return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
     async function processDeal() {
@@ -316,8 +294,10 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
+        // V8.4 Micro-Prompt (Retailer, B5, B6, B7, B9 Restored)
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
+        "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
         "cleaned_title": (String. Copy product name exactly. Remove emojis. Do NOT delete 'QTY'),
         "sale_price": (String. Extract sale price, e.g. "$19.99"),
         "reg_price": (String. Extract regular price. Strip decimal, e.g. "34 99". If none, write "NONE"),
@@ -325,8 +305,11 @@
         "inferences": (Array of 3 short lifestyle statements. Sound like a real person.),
         "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. Do NOT sound like a robot.),
         "b2_strategies": (Array of 4 UNIQUE sentences. RULE 1: If text has limits, write warnings. RULE 2: If text requires buying multiples (e.g. Add 4), calculate per-item price. RULE 3: If text has specific colors, sizes, or options (e.g. '12lbs', 'Black'), write sentences telling them to select it. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b5_perks": (Array of 4 sentences. If retailer is Walmart, Walgreens, or Woot, write 4 unique sentences about shipping/pickup perks. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b6_savings": (Array of 4 sentences. If text mentions Coupon, Promo, Code, or Voucher, write 4 unique sentences reminding them to clip/use it. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
         "b8_info": (Array of 4 sentences. Extract leftover info like S&S. Do NOT extract sizes already in title. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
+        "b9_random_info": (Array of 4 sentences. Extract any other random facts or write personal hype like 'This is the cheapest I have seen this!'. Rephrase 4 times. If none, write ["DEAD","DEAD","DEAD","DEAD"]),
         "dt_signoff": (String. 1 short lifestyle sentence),
         "comp_emojis": (Array of 5 unique emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧; if kitchen, use 🥩🧅🍳. Do NOT use generic shapes.),
         "product_emoji": (String. 1 literal emoji for the product)
@@ -356,16 +339,13 @@
             const extractedURL = extractURL(rawText);
             
             const cleanTitle = cleanText(aiData.cleaned_title);
+            const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
             const emojis = aiData.comp_emojis && aiData.comp_emojis.length === 5 ? aiData.comp_emojis : ["📦","🛒","👇","✨","🔥"];
             const pEmoji = aiData.product_emoji || "🔥";
 
-            const b5Perks = getB5Perks(rawText);
-            const b6Savings = getB6Savings(rawText);
-
             let phase0 = `${rawText}`;
             document.getElementById('out-phase0').innerText = phase0;
-            currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
 
             let sl = [];
             for(let i=0; i<3; i++) {
@@ -378,12 +358,14 @@
             for(let i=0; i<3; i++) {
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])} ` : "";
                 
-                let b5 = b5Perks[i] !== "DEAD" ? `${b5Perks[i]} ` : "";
-                let b6 = b6Savings[i] !== "DEAD" ? `${b6Savings[i]} ` : "";
+                // Combine B5, B6, B7, B8, B9 into Bottom Line
+                let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
+                let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
                 let b8 = aiData.b8_info && aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
+                let b9 = aiData.b9_random_info && aiData.b9_random_info[i] !== "DEAD" ? `${cleanText(aiData.b9_random_info[i])} ` : "";
                 
-                let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
+                let bottomLine = `${b5}${b6}${b7}${b8}${b9}`.trim();
                 if(bottomLine !== "") bottomLine += " "; 
 
                 let inf = cleanText(aiData.inferences[i]);
@@ -391,7 +373,7 @@
                 let l1, l2, l3, l4, l5;
                 
                 if(dealNum === 1 || dealNum === 4 || dealNum === 7) {
-                    l1 = `${discoveries[i]} on Amazon! ${emojis[1]}`;
+                    l1 = `${discoveries[i]} on ${retailer}! ${emojis[1]}`;
                     l2 = `${sl[i]} ${emojis[0]}`;
                     l3 = `${b2}${bank.pointers[i]} ${emojis[3]}`;
                     l4 = `${inf} ${emojis[4]}`;
@@ -399,12 +381,12 @@
                 } else if (dealNum === 2 || dealNum === 5) {
                     l1 = `${inf} ${emojis[2]}`;
                     l2 = `${sl[i]} ${emojis[0]}`;
-                    l3 = `${discoveries[i]} on Amazon! ${emojis[1]}`;
+                    l3 = `${discoveries[i]} on ${retailer}! ${emojis[1]}`;
                     l4 = `${bank.pointers[i]} ${b2}${emojis[3]}`;
                     l5 = bottomLine ? `${bottomLine}${emojis[4]}` : "";
                 } else {
                     l1 = `${sl[i]} ${emojis[0]} ${emojis[1]}`;
-                    l2 = `${discoveries[i]} on Amazon!`;
+                    l2 = `${discoveries[i]} on ${retailer}!`;
                     l3 = bottomLine ? `${inf} ${bottomLine}${emojis[2]}` : `${inf} ${emojis[2]}`;
                     l4 = b2 ? `${b2}${emojis[3]}` : "";
                     l5 = `${bank.pointers[i]} ${emojis[4]}`;
@@ -420,7 +402,6 @@
                 }
                 postOutputs.push(postText);
                 document.getElementById(`out-post${i+1}`).innerText = postText;
-                currentRawOutput += `=== POST VARIATION ${i+1} ===\n${postText}\n\n`;
             }
 
             let commentOutputs = [];
@@ -440,20 +421,20 @@
                 }
                 commentOutputs.push(cText);
                 document.getElementById(`out-com${i+1}`).innerText = cText;
-                currentRawOutput += `=== COMMENT ${i+1} ===\n${cText}\n\n`;
             }
 
-            let dtHeader = isOdd ? `${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${statuses[3]} on Amazon -- ${cleanTitle}` : `${cleanTitle} -- ${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${statuses[3]} on Amazon`;
+            let dtHeader = isOdd ? `${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${statuses[3]} on ${retailer} -- ${cleanTitle}` : `${cleanTitle} -- ${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${statuses[3]} on ${retailer}`;
             if(aiData.reg_price !== "NONE") dtHeader += ` (${bank.compLabels[3]} ${cleanText(aiData.reg_price)})`;
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? `${cleanText(aiData.b2_strategies[3])} ${dtEmojis[0]}` : "";
             
-            let dtB5 = b5Perks[3] !== "DEAD" ? `${b5Perks[3]} ` : "";
-            let dtB6 = b6Savings[3] !== "DEAD" ? `${b6Savings[3]} ` : "";
+            let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
+            let dtB6 = aiData.b6_savings && aiData.b6_savings[3] !== "DEAD" ? `${cleanText(aiData.b6_savings[3])} ` : "";
             let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
             let dtB8 = aiData.b8_info && aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ` : "";
+            let dtB9 = aiData.b9_random_info && aiData.b9_random_info[3] !== "DEAD" ? `${cleanText(aiData.b9_random_info[3])} ` : "";
             
-            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}`.trim();
+            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
             if(dtOverflow !== "") dtOverflow += ` ${dtEmojis[1]}`;
 
             let dtText = "";
@@ -467,7 +448,6 @@
                 if(dtOverflow) dtText += `\n\n${dtOverflow}`;
             }
             document.getElementById('out-dt').innerText = dtText;
-            currentRawOutput += `=== DAILY THREAD COMMENT ===\n${dtText}`;
 
             // History Log
             dealCount++;
@@ -477,8 +457,7 @@
                 phase0: phase0,
                 posts: postOutputs,
                 comments: commentOutputs,
-                dt: dtText,
-                raw: currentRawOutput
+                dt: dtText
             };
             sessionHistory.push(dealData);
             const index = sessionHistory.length - 1;
@@ -515,7 +494,6 @@
         const data = sessionHistory[index];
         document.getElementById('outputSection').style.display = "block";
         document.getElementById('out-phase0').innerText = data.phase0;
-        currentRawOutput = data.raw; // Restore raw output for the button
         
         for(let i=0; i<3; i++) {
             document.getElementById(`out-post${i+1}`).innerText = data.posts[i];
@@ -538,25 +516,6 @@
                 btnElement.innerText = originalText; 
                 btnElement.style.background = "#fff"; 
                 btnElement.style.color = "var(--primary)";
-                btnElement.style.borderColor = "var(--border)";
-            }, 2000);
-        }).catch(err => {
-            alert("Failed to copy text: " + err);
-        });
-    }
-
-    function copyRawOutput(btnElement) {
-        if(!currentRawOutput) { alert("No output generated yet!"); return; }
-        navigator.clipboard.writeText(currentRawOutput).then(() => {
-            const originalText = btnElement.innerText;
-            btnElement.innerText = "✅ Copied Raw Output!";
-            btnElement.style.background = "#e6f4ea";
-            btnElement.style.color = "#0f9d58";
-            btnElement.style.borderColor = "#0f9d58";
-            setTimeout(() => { 
-                btnElement.innerText = originalText; 
-                btnElement.style.background = "#f8f9fa"; 
-                btnElement.style.color = "var(--text-main)";
                 btnElement.style.borderColor = "var(--border)";
             }, 2000);
         }).catch(err => {
