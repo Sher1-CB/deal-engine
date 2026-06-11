@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.7</title>
+    <title>The CB Regular Deal Generator v8.9</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -374,7 +374,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.8 ROOT CAUSE FIX: JSON Chain of Thought (CoT) & Anti-Hallucination Locks
+        // V8.9 ROOT CAUSE FIX: Negative Fact Extraction & Leetspeak Decoding
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -387,8 +387,8 @@
         "b2_verification": (String. Extract ONLY limits, required quantities, minimum orders, or explicit options like '12lbs' or 'Black'. If none, write "NONE"),
         "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits from verification. Do NOT invent scents, colors, or generic words like 'threshold'.),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b8_b9_verification": (String. Extract leftover factual info like S&S or Select Accounts. Do NOT extract sizes already in title. If none, write "NONE"),
-        "b8_info": (Array of 4 sentences. DEPENDENCY LOCK: If b8_b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the verification fact 4 times.),
+        "b8_b9_verification": (String. Decode all leetspeak first (e.g. C0de -> Code). Extract leftover factual info. You MUST explicitly extract "Negative Facts" like 'No code needed' or 'No minimum'. If none, write "NONE"),
+        "b8_info": (Array of 4 sentences. DEPENDENCY LOCK: If b8_b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. If the fact is 'No code needed', frame it as a positive perk like 'You don't even need a special string for this!'),
         "b9_random_info": (Array of 4 sentences. DEPENDENCY LOCK: If b8_b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. ANTI-HALLUCINATION LOCK: Do NOT invent personal hype, scarcity, or fake features.),
         "dt_signoff": (String. 1 short lifestyle sentence),
         "emoji_pool": (Array of 12 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. Do NOT use generic shapes.)
@@ -422,7 +422,6 @@
             const dtSignoff = cleanText(aiData.dt_signoff);
             const emojiPool = aiData.emoji_pool && aiData.emoji_pool.length >= 5 ? aiData.emoji_pool : ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️"];
 
-            // V8.8 JS LOGIC FIXES: Leetspeak bypass, Qpon routing, and Dynamic Statuses
             const rLower = rawText.toLowerCase();
             const isPickup = rLower.includes('pickup') || rLower.includes('pick up') || rLower.includes('walgreens') || rLower.includes('w@lgreens');
             const dynamicStatuses = isPickup ? ["Pickup!", "In-store!", "Grab at store!", "Local pickup!"] : ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
@@ -434,9 +433,15 @@
                 return ["DEAD", "DEAD", "DEAD", "DEAD"];
             };
 
+            // V8.9 JS LOGIC FIX: The Negative Lookahead for "No Code"
             const getB6SavingsFixed = (r) => {
                 const textWithoutUrl = r.replace(/(https?:\/\/[^\s]+)/g, '');
-                if(textWithoutUrl.includes('code') || textWithoutUrl.includes('promo')) {
+                
+                // Check if the text explicitly says NO code is needed
+                const noCode = textWithoutUrl.includes('no code') || textWithoutUrl.includes('no c0de') || textWithoutUrl.includes('no promo');
+                
+                // Only trigger B6 if a code IS needed
+                if(!noCode && (textWithoutUrl.includes('code') || textWithoutUrl.includes('c0de') || textWithoutUrl.includes('promo'))) {
                     return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
                 }
                 if(textWithoutUrl.includes('coupon') || textWithoutUrl.includes('clippable') || textWithoutUrl.includes('voucher') || textWithoutUrl.includes('digital box') || textWithoutUrl.includes('qpon') || textWithoutUrl.includes('qp0n') || textWithoutUrl.includes('cp0n')) {
