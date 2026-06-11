@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.11</title>
+    <title>The CB Regular Deal Generator v8.12</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.11 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* V8.12 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.11</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.12</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.11 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.12 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -287,7 +287,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.11 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // V8.12 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -320,7 +320,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.11 The Emoji Enforcer Algorithm
+    // V8.12 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -374,7 +374,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.11 ROOT CAUSE FIX: Dynamic B5/B6 Generation & Avid Shopper Persona
+        // V8.12 ROOT CAUSE FIX: Avid Shopper Vocabulary & Pronoun Flexibility
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -382,18 +382,18 @@
         "sale_price": (String. Extract sale price, e.g. "$19.99"),
         "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". If none, write "NONE"),
         "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend.),
-        "inferences": (Array of 3 short lifestyle statements. AVID SHOPPER PERSONA: You MUST use 'I' or 'My' statements like 'I love using this...'. Do NOT sound robotic.),
+        "inferences": (Array of 3 short lifestyle statements. AVID SHOPPER PERSONA: Use 'I', 'My', or 'We' statements (e.g., 'We love how this fits', 'I love how fresh this smells'). Make it highly specific to the product. Do NOT write generic fluff like 'My routine is better'.),
         "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. SCARCITY BAN: Do NOT use words like 'hurry', 'vanishing', 'stock up', or 'running out'.),
         "b2_verification": (String. Extract ONLY limits, required quantities, or explicit options like '12lbs' or 'Black'. Do NOT extract shipping/pickup minimums like $10 or $35. If none, write "NONE"),
         "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits from verification. Do NOT invent scents or colors.),
         "b5_verification": (String. Evaluate retailer. If Walmart, note $35 delivery. If Walgreens, note $10 pickup. If Woot, note Amazon login. If none, write "NONE"),
         "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. AVID SHOPPER PERSONA: Sound like a human sharing a tip. BANNED WORD LOCK: Never use the word 'Free'. Use 'covered' or 'included'.),
         "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
-        "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to use the code/coupon.),
+        "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. AVID SHOPPER PERSONA: Use natural phrasing like 'Make sure to clip the coupon on the page!' or 'Don't forget to check the little coupon box!'. Do NOT use robotic words like 'digital adjustment' or 'selection'.),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
         "b8_verification": (String. Decode all leetspeak first. Extract leftover factual info. You MUST explicitly extract "Negative Facts" like 'No code needed'. Do NOT extract sizes/features already in the title. If none, write "NONE"),
-        "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. If it is a negative requirement, frame it as a positive perk. Do NOT copy prompt examples. Do NOT spell out prices in words.),
-        "dt_signoff": (String. 1 short lifestyle sentence using 'I' or 'My'),
+        "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. AVID SHOPPER PERSONA: If the fact is 'No code needed', use natural shopper phrasing like 'The discount drops automatically in the cart!', 'No promo code needed for this one!', or 'It applies automatically at checkout!'. Do NOT use robotic words like 'sequence', 'entry', or 'positive benefit'. Do NOT spell out prices in words.),
+        "dt_signoff": (String. 1 short lifestyle sentence using 'I', 'My', or 'We'),
         "emoji_pool": (Array of 12 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. Do NOT use generic shapes.)
         
         GLOBAL SHIELD: Do NOT use banned words: Price, Cost, Sale, Deal, Save, Discount, Buy, Shop, Coupon, Checkout, Promo, Free, Link, Cart.`;
@@ -445,7 +445,7 @@
             for(let i=0; i<3; i++) {
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])}` : "";
                 
-                // V8.11: Pulling B5 and B6 dynamically from the LLM JSON
+                // V8.12: Pulling B5 and B6 dynamically from the LLM JSON
                 let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
                 let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
