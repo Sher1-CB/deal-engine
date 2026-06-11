@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.25</title>
+    <title>The CB Regular Deal Generator v8.26</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.25 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* V8.26 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.25</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.26</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.25 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.26 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -310,7 +310,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.25 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // V8.26 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -343,7 +343,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.25 The Emoji Enforcer Algorithm
+    // V8.26 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -393,7 +393,7 @@
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
         localStorage.setItem('geminiApiKey', apiKey);
 
-        // V8.25 AUTO-RESET LOGIC: 14-Deal Cycle
+        // V8.26 AUTO-RESET LOGIC: 14-Deal Cycle
         if (dealCount >= 14) {
             sessionHistory = [];
             dealCount = 0;
@@ -406,18 +406,18 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.25 THE MASTER PAYLOAD: Verb Independence (B2) & Emoji Escape Hatch
+        // V8.26 THE MASTER PAYLOAD: Comment Leak Ban, B2 Variety Fix, & Hyphen Fix
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
         "cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
         "sale_price": (String. Extract sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
-        "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". If none, write "NONE"),
+        "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
         "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
         "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own using 'I', 'My', or 'We'. Make it highly specific to the product.),
-        "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the amount fluctuating.),
+        "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here. Those belong ONLY in b2_strategies.),
         "b2_verification": (String. Extract ONLY limits, required quantities, sizes, size ranges, colors, or scents. Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS: Do NOT extract sizes/quantities ALREADY in the title. VERB INDEPENDENCE: If the raw text lists a standalone color/size without a verb (e.g., 'Dark Cherry color'), you MUST extract it. If none, write "NONE"),
-        "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits. COMPOUND LOCK: Do NOT split compound options. INSTRUCTIONAL PERSONA: If it is a LIMIT, frame it as a casual heads-up (e.g., 'Keep in mind you can only grab 3 of these!'). Do NOT use robotic words like 'adhere' or 'mandates'. If it is a REQUIREMENT or a STANDALONE COLOR/SIZE, frame as a necessary action (e.g., 'Make sure to select the Dark Cherry option!'). Do NOT use vague pronouns like 'them'. MATH LOCK: ONLY include a per-item price if the raw text explicitly calculates it for you.),
+        "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits. COMPOUND LOCK: Do NOT split compound options. INSTRUCTIONAL PERSONA: If it is a LIMIT, frame it as a casual heads-up (e.g., 'Keep in mind you can only grab 3 of these!'). Do NOT use robotic words like 'adhere' or 'mandates'. If it is a REQUIREMENT or a STANDALONE COLOR/SIZE, frame as a necessary action. VARIETY FIX: If the text says '3 Colors' or 'several colors', say 'Make sure to pick your favorite color!' Do NOT say 'select the 3 Colors option'. Do NOT use vague pronouns like 'them'. MATH LOCK: ONLY include a per-item price if the raw text explicitly calculates it for you.),
         "b5_verification": (String. Evaluate retailer. If Walmart, note $35 delivery. If Walgreens, note $10 pickup. If Woot, note Amazon Prime login. If none, write "NONE"),
         "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
         "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
@@ -458,7 +458,7 @@
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
             
-            // V8.25 EMOJI ENGINE REWRITE: Lowered threshold to 8, cleaned fallback array
+            // V8.26 EMOJI ENGINE
             const rawEmojiPool = aiData.emoji_pool || [];
             const uniqueEmojiPool = [...new Set(rawEmojiPool)]; 
             const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","💫","🌟","🌿","🤎","🤍","✅","👀","💡"];
