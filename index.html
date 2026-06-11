@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.9</title>
+    <title>The CB Regular Deal Generator v8.10</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.7 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* v8.10 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.7</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.10</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.7 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- v8.10 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -287,7 +287,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.7 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // v8.10 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -320,7 +320,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.7 The Emoji Enforcer Algorithm
+    // v8.10 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -374,7 +374,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.9 ROOT CAUSE FIX: Negative Fact Extraction & Leetspeak Decoding
+        // V8.10 ROOT CAUSE FIX: Eradicated B9 to prevent Fact Starvation Cannibalization
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -387,9 +387,8 @@
         "b2_verification": (String. Extract ONLY limits, required quantities, minimum orders, or explicit options like '12lbs' or 'Black'. If none, write "NONE"),
         "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits from verification. Do NOT invent scents, colors, or generic words like 'threshold'.),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b8_b9_verification": (String. Decode all leetspeak first (e.g. C0de -> Code). Extract leftover factual info. You MUST explicitly extract "Negative Facts" like 'No code needed' or 'No minimum'. If none, write "NONE"),
-        "b8_info": (Array of 4 sentences. DEPENDENCY LOCK: If b8_b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. If the fact is 'No code needed', frame it as a positive perk like 'You don't even need a special string for this!'),
-        "b9_random_info": (Array of 4 sentences. DEPENDENCY LOCK: If b8_b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. ANTI-HALLUCINATION LOCK: Do NOT invent personal hype, scarcity, or fake features.),
+        "b8_verification": (String. Decode all leetspeak first. Extract leftover factual info. You MUST explicitly extract "Negative Facts" like 'No code needed' or 'No minimum'. Do NOT extract sizes/features already in the title. If none, write "NONE"),
+        "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. If the fact is 'No code needed', frame it as a positive perk like 'You don't even need a special string for this!'. ANTI-HALLUCINATION LOCK: Do NOT spell out prices in words. Do NOT repeat the title.),
         "dt_signoff": (String. 1 short lifestyle sentence),
         "emoji_pool": (Array of 12 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. Do NOT use generic shapes.)
         
@@ -433,14 +432,10 @@
                 return ["DEAD", "DEAD", "DEAD", "DEAD"];
             };
 
-            // V8.9 JS LOGIC FIX: The Negative Lookahead for "No Code"
             const getB6SavingsFixed = (r) => {
                 const textWithoutUrl = r.replace(/(https?:\/\/[^\s]+)/g, '');
-                
-                // Check if the text explicitly says NO code is needed
                 const noCode = textWithoutUrl.includes('no code') || textWithoutUrl.includes('no c0de') || textWithoutUrl.includes('no promo');
                 
-                // Only trigger B6 if a code IS needed
                 if(!noCode && (textWithoutUrl.includes('code') || textWithoutUrl.includes('c0de') || textWithoutUrl.includes('promo'))) {
                     return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
                 }
@@ -472,10 +467,10 @@
                 let b5 = b5Perks[i] !== "DEAD" ? `${b5Perks[i]} ` : "";
                 let b6 = b6Savings[i] !== "DEAD" ? `${b6Savings[i]} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
-                let b8 = aiData.b8_info && aiData.b8_info[i] !== "DEAD" ? `${cleanText(aiData.b8_info[i])} ` : "";
-                let b9 = aiData.b9_random_info && aiData.b9_random_info[i] !== "DEAD" ? `${cleanText(aiData.b9_random_info[i])} ` : "";
+                let b8 = aiData.b8_overflow && aiData.b8_overflow[i] !== "DEAD" ? `${cleanText(aiData.b8_overflow[i])} ` : "";
                 
-                let bottomLine = `${b5}${b6}${b7}${b8}${b9}`.trim();
+                // V8.10: b9 is completely removed from the bottomLine assembly
+                let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
 
                 let inf = cleanText(aiData.inferences[i]);
                 let discLine = `${discoveries[i]} on ${retailer}!`;
@@ -509,114 +504,7 @@
                 let postText = emojifiedLines[0];
                 for(let j = 1; j < emojifiedLines.length; j++) {
                     if (j - 1 === touchIndex) postText += `\n${emojifiedLines[j]}`; 
-                    else postText += `\n\n${emojifiedLines[j]}`; 
-                }
-                postOutputs.push(postText);
-                document.getElementById(`out-post${i+1}`).innerText = postText;
-                currentRawOutput += `=== POST VARIATION ${i+1} ===\n${postText}\n\n`;
-            }
-
-            let commentOutputs = [];
-            for(let i=0; i<3; i++) {
-                let praise = cleanText(aiData.praises[i]);
-                let disc = cleanText(aiData.disclaimers[i]);
-                let linkLine = `${linkLeads[i]} ${extractedURL}`;
-
-                let rawLines = [];
-                const commentType = (i + dealNum) % 3;
-
-                if(commentType === 0) { 
-                    rawLines.push(`${praise} ${linkLine} ${disc}`);
-                } else if (commentType === 1) { 
-                    rawLines.push(praise, linkLine, disc);
-                } else { 
-                    rawLines.push(linkLine, `${disc} ${praise}`);
-                }
-                
-                let emojifiedLines = injectEmojis(rawLines, 1, 3, emojiPool);
-                
-                let cText = "";
-                if(commentType === 0) cText = emojifiedLines[0];
-                else if (commentType === 1) cText = emojifiedLines.join("\n\n");
-                else cText = emojifiedLines.join("\n\n");
-
-                commentOutputs.push(cText);
-                document.getElementById(`out-com${i+1}`).innerText = cText;
-                currentRawOutput += `=== COMMENT ${i+1} ===\n${cText}\n\n`;
-            }
-
-            let dtHeader = isOdd ? `${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${dynamicStatuses[3]} on ${retailer} -- ${cleanTitle}` : `${cleanTitle} -- ${bank.prefixes[3]} ${cleanText(aiData.sale_price)} ${dynamicStatuses[3]} on ${retailer}`;
-            if(aiData.reg_price !== "NONE") dtHeader += ` (${bank.compLabels[3]} ${cleanText(aiData.reg_price)})`;
-            
-            let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? cleanText(aiData.b2_strategies[3]) : "";
-            
-            let dtB5 = b5Perks[3] !== "DEAD" ? `${b5Perks[3]} ` : "";
-            let dtB6 = b6Savings[3] !== "DEAD" ? `${b6Savings[3]} ` : "";
-            let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
-            let dtB8 = aiData.b8_info && aiData.b8_info[3] !== "DEAD" ? `${cleanText(aiData.b8_info[3])} ` : "";
-            let dtB9 = aiData.b9_random_info && aiData.b9_random_info[3] !== "DEAD" ? `${cleanText(aiData.b9_random_info[3])} ` : "";
-            
-            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
-
-            let rawDtLines = [];
-            if(isOdd) {
-                rawDtLines.push(dtHeader, `Check it out right here: ${extractedURL}`, dtSignoff);
-                if(dtB2) rawDtLines.push(dtB2);
-                if(dtOverflow) rawDtLines.push(dtOverflow);
-            } else {
-                rawDtLines.push(dtSignoff, dtHeader, `Check it out right here: ${extractedURL}`);
-                if(dtB2) rawDtLines.push(dtB2);
-                if(dtOverflow) rawDtLines.push(dtOverflow);
-            }
-
-            let emojifiedDtLines = injectEmojis(rawDtLines, 3, 5, emojiPool);
-            let dtText = emojifiedDtLines.join("\n\n");
-
-            document.getElementById('out-dt').innerText = dtText;
-            currentRawOutput += `=== DAILY THREAD COMMENT ===\n${dtText}`;
-
-            // History Log
-            dealCount++;
-            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-            
-            const dealData = {
-                phase0: phase0,
-                posts: postOutputs,
-                comments: commentOutputs,
-                dt: dtText,
-                raw: currentRawOutput
-            };
-            sessionHistory.push(dealData);
-            const index = sessionHistory.length - 1;
-
-            const historyLog = document.getElementById('historyLog');
-            const emptyMsg = document.getElementById('emptyHistory');
-            if(emptyMsg) emptyMsg.remove();
-
-            const historyCard = `
-                <div class="history-card" onclick="loadHistory(${index})">
-                    <span class="history-time">${day} • ${timestamp}</span>
-                    <div class="history-title">Deal ${dealNum}: ${cleanTitle}</div>
-                </div>
-            `;
-            
-            historyLog.innerHTML = historyCard + historyLog.innerHTML;
-            document.getElementById('sessionBaseHeader').innerText = `📚 SESSION BASE (${dealCount} / 7)`;
-
-            if(dealNum < 7) dealNumInput.value = dealNum + 1;
-            else dealNumInput.value = 1;
-            updateButtonText();
-
-            document.getElementById('rawText').value = "";
-
-        } catch (error) {
-            alert("Error: " + error.message);
-        } finally {
-            updateButtonText();
-            btn.disabled = false;
-        }
-    }
-
+                    else postText += `\n\n${
     function loadHistory(index) {
         const data = sessionHistory[index];
         document.getElementById('outputSection').style.display = "block";
