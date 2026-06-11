@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.18</title>
+    <title>The CB Regular Deal Generator v8.19</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.18 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* V8.19 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.18</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.19</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -96,7 +96,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 style="color: var(--primary);">🔵 RAW INPUT WORKSPACE</h3>
-                <button class="btn-outline" onclick="document.getElementById('rawText').value=''">🗑️ Clear Memory</button>
+                <button class="btn-outline" onclick="clearWorkspace()">🗑️ Clear Memory</button>
             </div>
             
             <label>Raw Deal Context Text</label>
@@ -148,7 +148,7 @@
     <div class="right-col">
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
-                <h3 id="sessionBaseHeader">📚 SESSION BASE (0 / 7)</h3>
+                <h3 id="sessionBaseHeader">📚 SESSION BASE (0 / 14)</h3>
             </div>
             <p style="font-size: 11px; color: var(--text-muted); margin-top: -5px; margin-bottom: 10px;">History saves on device automatically</p>
             <div id="historyLog" class="history-list">
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.18 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.19 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -262,6 +262,29 @@
         document.getElementById('nextTargetText').innerHTML = `Next target: <strong>Deal ${num}</strong>. Output saves automatically to ledger.`;
     }
 
+    function clearWorkspace() {
+        if(!confirm("Are you sure you want to clear all history and reset to Deal 1?")) return;
+        
+        document.getElementById('rawText').value = '';
+        sessionHistory = [];
+        dealCount = 0;
+        
+        const historyLog = document.getElementById('historyLog');
+        historyLog.innerHTML = `
+            <div style="text-align: center; padding: 30px 20px; color: var(--text-muted);" id="emptyHistory">
+                <div style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;">📄</div>
+                <strong>No deals tracked yet</strong><br>
+                <span style="font-size: 11px;">Add or generate deals to populate active sequence saves.</span>
+            </div>
+        `;
+        
+        document.getElementById('sessionBaseHeader').innerText = `📚 SESSION BASE (0 / 14)`;
+        document.getElementById('dealNumber').value = 1;
+        document.getElementById('outputSection').style.display = "none";
+        updateButtonText();
+    }
+
+    
     // --- DICTIONARIES ---
     const banks = {
         A: { prefixes: ["Just", "Down to", "At", "Score it for"], compLabels: ["Regular", "Normally", "Originally", "Previously"], pointers: ["I put it right under here for you!", "You can grab yours right under here!", "I left the exact page right under this!"] },
@@ -287,7 +310,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.18 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // V8.19 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -320,7 +343,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.18 The Emoji Enforcer Algorithm
+    // V8.19 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -370,11 +393,20 @@
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
         localStorage.setItem('geminiApiKey', apiKey);
 
+        // V8.19 AUTO-RESET LOGIC: If 14 deals are reached, wipe history and start at Deal 1
+        if (dealCount >= 14) {
+            sessionHistory = [];
+            dealCount = 0;
+            document.getElementById('historyLog').innerHTML = ''; 
+            dealNum = 1; 
+            dealNumInput.value = 1;
+        }
+
         btn.innerHTML = "⏳ Generating...";
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.18 THE ANDROMEDA SHIELD: 30-Emoji Pool, Persona Split, & Syndication Protection
+        // V8.19 THE ANDROMEDA SHIELD: 30-Emoji Pool, Persona Split, & Syndication Protection
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -424,7 +456,7 @@
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
             
-            // V8.18: Fallback pool increased to 30 just in case the AI fails to generate them
+            // V8.19: Fallback pool increased to 30 just in case the AI fails to generate them
             const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","📱","💻","🎧","👟","👕","👗","🏠","🛋️","🍳","🍽️","🚗","🛠️","📚","✏️","🧸","🎮","⚽","🏀"];
             const emojiPool = aiData.emoji_pool && aiData.emoji_pool.length >= 15 ? aiData.emoji_pool : fallbackEmojis;
 
@@ -578,7 +610,7 @@
             `;
             
             historyLog.innerHTML = historyCard + historyLog.innerHTML;
-            document.getElementById('sessionBaseHeader').innerText = `📚 SESSION BASE (${dealCount} / 7)`;
+            document.getElementById('sessionBaseHeader').innerText = `📚 SESSION BASE (${dealCount} / 14)`;
 
             if(dealNum < 7) dealNumInput.value = dealNum + 1;
             else dealNumInput.value = 1;
