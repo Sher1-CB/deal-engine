@@ -393,7 +393,7 @@
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
         localStorage.setItem('geminiApiKey', apiKey);
 
-        // V8.24 AUTO-RESET LOGIC: 14-Deal Cycle
+        // V8.25 AUTO-RESET LOGIC: 14-Deal Cycle
         if (dealCount >= 14) {
             sessionHistory = [];
             dealCount = 0;
@@ -406,20 +406,20 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.24 THE MASTER PAYLOAD: Rhetorical Hype Lock (Praises) added
+        // V8.25 THE MASTER PAYLOAD: Verb Independence (B2) & Emoji Escape Hatch
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
         "cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
         "sale_price": (String. Extract sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
         "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". If none, write "NONE"),
-        "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?', 'How perfect is this for summer?', 'Isn't this exactly what we needed?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt (e.g., do NOT ask 'Does this work well?' or 'Is it comfortable?').),
+        "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
         "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own using 'I', 'My', or 'We'. Make it highly specific to the product.),
         "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the amount fluctuating.),
-        "b2_verification": (String. Extract ONLY limits, required quantities, sizes, size ranges, colors, or scents. Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS: Do NOT extract sizes/quantities ALREADY in the title. If none, write "NONE"),
-        "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits. COMPOUND LOCK: Do NOT split compound options. INSTRUCTIONAL PERSONA: If it is a LIMIT, frame it as a casual heads-up (e.g., 'Keep in mind you can only grab 3 of these!', 'There is a limit of 3 per order!'). Do NOT use robotic words like 'adhere', 'mandates', 'policy', or 'exceed'. If it is a REQUIREMENT, frame as a necessary action. Do NOT use vague pronouns like 'them'. MATH LOCK: ONLY include a per-item price if the raw text explicitly calculates it for you. Do NOT invent 'per unit' phrasing.),
+        "b2_verification": (String. Extract ONLY limits, required quantities, sizes, size ranges, colors, or scents. Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS: Do NOT extract sizes/quantities ALREADY in the title. VERB INDEPENDENCE: If the raw text lists a standalone color/size without a verb (e.g., 'Dark Cherry color'), you MUST extract it. If none, write "NONE"),
+        "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits. COMPOUND LOCK: Do NOT split compound options. INSTRUCTIONAL PERSONA: If it is a LIMIT, frame it as a casual heads-up (e.g., 'Keep in mind you can only grab 3 of these!'). Do NOT use robotic words like 'adhere' or 'mandates'. If it is a REQUIREMENT or a STANDALONE COLOR/SIZE, frame as a necessary action (e.g., 'Make sure to select the Dark Cherry option!'). Do NOT use vague pronouns like 'them'. MATH LOCK: ONLY include a per-item price if the raw text explicitly calculates it for you.),
         "b5_verification": (String. Evaluate retailer. If Walmart, note $35 delivery. If Walgreens, note $10 pickup. If Woot, note Amazon Prime login. If none, write "NONE"),
-        "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!', 'I always make sure my total reaches $35 so delivery is included!', 'Just add a few more things to hit the $35 mark!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
+        "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
         "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
         "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
         "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
@@ -428,7 +428,7 @@
         "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
         "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
         "dt_signoff": (String. 1 short lifestyle sentence using 'I', 'My', or 'We'),
-        "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. Do NOT use generic shapes.)
+        "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. ESCAPE HATCH: If you run out of exact matches, fill the rest of the 30 with neutral aesthetic emojis like ✨, 🌟, 💫, 🌿, 🤎. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
         
         GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective.`;
 
@@ -458,11 +458,11 @@
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
             
-            // V8.24 EMOJI ENGINE REWRITE: Deduplication & Global Scope
+            // V8.25 EMOJI ENGINE REWRITE: Lowered threshold to 8, cleaned fallback array
             const rawEmojiPool = aiData.emoji_pool || [];
             const uniqueEmojiPool = [...new Set(rawEmojiPool)]; 
-            const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","📱","💻","🎧","👟","👕","👗","🏠","🛋️","🍳","🍽️","🚗","🛠️","📚","✏️","🧸","🎮","⚽","🏀"];
-            const finalEmojiPool = uniqueEmojiPool.length >= 15 ? uniqueEmojiPool : fallbackEmojis;
+            const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","💫","🌟","🌿","🤎","🤍","✅","👀","💡"];
+            const finalEmojiPool = uniqueEmojiPool.length >= 8 ? uniqueEmojiPool : fallbackEmojis;
             
             let masterEmojiPool = [...finalEmojiPool].sort(() => 0.5 - Math.random());
             let masterEmojiIdx = 0;
