@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.10</title>
+    <title>The CB Regular Deal Generator v8.11</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.10 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* V8.11 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.10</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.11</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.10 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.11 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -287,7 +287,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.10 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // V8.11 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -320,7 +320,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.10 The Emoji Enforcer Algorithm
+    // V8.11 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -374,22 +374,26 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.10 ROOT CAUSE FIX: Eradicated B9 to prevent Fact Starvation Cannibalization
+        // V8.11 ROOT CAUSE FIX: Dynamic B5/B6 Generation & Avid Shopper Persona
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
         "cleaned_title": (String. Copy product name exactly. Remove emojis. Do NOT delete 'QTY'),
         "sale_price": (String. Extract sale price, e.g. "$19.99"),
-        "reg_price": (String. Extract regular price. Strip decimal, e.g. "34 99". If none, write "NONE"),
-        "praises": (Array of 3 short hype questions ending in '?'. BEST FRIEND PERSONA: Sound like a real person excitedly texting a friend.),
-        "inferences": (Array of 3 short lifestyle statements. Sound like a real person.),
+        "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". If none, write "NONE"),
+        "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend.),
+        "inferences": (Array of 3 short lifestyle statements. AVID SHOPPER PERSONA: You MUST use 'I' or 'My' statements like 'I love using this...'. Do NOT sound robotic.),
         "disclaimers": (Array of 3 casual warnings like 'Fingers crossed it hasn't jumped back up!'. SCARCITY BAN: Do NOT use words like 'hurry', 'vanishing', 'stock up', or 'running out'.),
-        "b2_verification": (String. Extract ONLY limits, required quantities, minimum orders, or explicit options like '12lbs' or 'Black'. If none, write "NONE"),
-        "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits from verification. Do NOT invent scents, colors, or generic words like 'threshold'.),
+        "b2_verification": (String. Extract ONLY limits, required quantities, or explicit options like '12lbs' or 'Black'. Do NOT extract shipping/pickup minimums like $10 or $35. If none, write "NONE"),
+        "b2_strategies": (Array of 4 UNIQUE sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the exact literal numbers/limits from verification. Do NOT invent scents or colors.),
+        "b5_verification": (String. Evaluate retailer. If Walmart, note $35 delivery. If Walgreens, note $10 pickup. If Woot, note Amazon login. If none, write "NONE"),
+        "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. AVID SHOPPER PERSONA: Sound like a human sharing a tip. BANNED WORD LOCK: Never use the word 'Free'. Use 'covered' or 'included'.),
+        "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
+        "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to use the code/coupon.),
         "b7_occasions": (Array of 4 sentences. If text mentions a holiday or event, write 4 unique urgency sentences about it arriving in time. If not, write ["DEAD","DEAD","DEAD","DEAD"]),
-        "b8_verification": (String. Decode all leetspeak first. Extract leftover factual info. You MUST explicitly extract "Negative Facts" like 'No code needed' or 'No minimum'. Do NOT extract sizes/features already in the title. If none, write "NONE"),
-        "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. If the fact is 'No code needed', frame it as a positive perk like 'You don't even need a special string for this!'. ANTI-HALLUCINATION LOCK: Do NOT spell out prices in words. Do NOT repeat the title.),
-        "dt_signoff": (String. 1 short lifestyle sentence),
+        "b8_verification": (String. Decode all leetspeak first. Extract leftover factual info. You MUST explicitly extract "Negative Facts" like 'No code needed'. Do NOT extract sizes/features already in the title. If none, write "NONE"),
+        "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the fact 4 times. If it is a negative requirement, frame it as a positive perk. Do NOT copy prompt examples. Do NOT spell out prices in words.),
+        "dt_signoff": (String. 1 short lifestyle sentence using 'I' or 'My'),
         "emoji_pool": (Array of 12 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. Do NOT use generic shapes.)
         
         GLOBAL SHIELD: Do NOT use banned words: Price, Cost, Sale, Deal, Save, Discount, Buy, Shop, Coupon, Checkout, Promo, Free, Link, Cart.`;
@@ -425,29 +429,6 @@
             const isPickup = rLower.includes('pickup') || rLower.includes('pick up') || rLower.includes('walgreens') || rLower.includes('w@lgreens');
             const dynamicStatuses = isPickup ? ["Pickup!", "In-store!", "Grab at store!", "Local pickup!"] : ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
 
-            const getB5PerksFixed = (r) => {
-                if(r.includes('walmart') || r.includes('w@lm@rt')) return ["Hitting that thirty-five mark means delivery is completely covered!", "If your total reaches thirty-five, they handle the shipping with nothing extra added.", "Members get this sent right to the door with delivery included.", "Reaching a thirty-five total gets it shipped right to your door."];
-                if(r.includes('walgreens') || r.includes('w@lgreens')) return ["Snag it for local pickup with nothing extra added once you hit the ten mark!", "Once your order reaches ten, it's ready for local pickup!", "Get pickup included right now when your total hits ten!", "Score local pickup completely covered once you reach the ten mark!"];
-                if(r.includes('woot')) return ["Sign in with your Amazon account for delivery with nothing extra added!", "Log in using your Amazon account for delivery included!", "Use your Amazon account login so it's shipped completely covered!", "Your delivery is included right now when you sign in with Amazon!"];
-                return ["DEAD", "DEAD", "DEAD", "DEAD"];
-            };
-
-            const getB6SavingsFixed = (r) => {
-                const textWithoutUrl = r.replace(/(https?:\/\/[^\s]+)/g, '');
-                const noCode = textWithoutUrl.includes('no code') || textWithoutUrl.includes('no c0de') || textWithoutUrl.includes('no promo');
-                
-                if(!noCode && (textWithoutUrl.includes('code') || textWithoutUrl.includes('c0de') || textWithoutUrl.includes('promo'))) {
-                    return ["Make sure to enter the special string at the end to see this total!", "Apply the promotional text at the end to lock in this value!", "Don't forget to type in the special phrase at the end!", "You'll need to enter the promotional string before finishing up!"];
-                }
-                if(textWithoutUrl.includes('coupon') || textWithoutUrl.includes('clippable') || textWithoutUrl.includes('voucher') || textWithoutUrl.includes('digital box') || textWithoutUrl.includes('qpon') || textWithoutUrl.includes('qp0n') || textWithoutUrl.includes('cp0n')) {
-                    return ["Make sure to check that little box on the page to grab this amount!", "Ensure you select the digital option on the product page to see this total!", "Remember to check the digital box before finishing up!", "Selecting the digital option on the page secures this value!"];
-                }
-                return ["DEAD", "DEAD", "DEAD", "DEAD"];
-            };
-
-            const b5Perks = getB5PerksFixed(rLower);
-            const b6Savings = getB6SavingsFixed(rLower);
-
             let phase0 = `${rawText}`;
             document.getElementById('out-phase0').innerText = phase0;
             currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
@@ -464,12 +445,12 @@
             for(let i=0; i<3; i++) {
                 let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])}` : "";
                 
-                let b5 = b5Perks[i] !== "DEAD" ? `${b5Perks[i]} ` : "";
-                let b6 = b6Savings[i] !== "DEAD" ? `${b6Savings[i]} ` : "";
+                // V8.11: Pulling B5 and B6 dynamically from the LLM JSON
+                let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
+                let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
                 let b8 = aiData.b8_overflow && aiData.b8_overflow[i] !== "DEAD" ? `${cleanText(aiData.b8_overflow[i])} ` : "";
                 
-                // V8.10: b9 is completely removed from the bottomLine assembly
                 let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
 
                 let inf = cleanText(aiData.inferences[i]);
@@ -545,12 +526,11 @@
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? cleanText(aiData.b2_strategies[3]) : "";
             
-            let dtB5 = b5Perks[3] !== "DEAD" ? `${b5Perks[3]} ` : "";
-            let dtB6 = b6Savings[3] !== "DEAD" ? `${b6Savings[3]} ` : "";
+            let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
+            let dtB6 = aiData.b6_savings && aiData.b6_savings[3] !== "DEAD" ? `${cleanText(aiData.b6_savings[3])} ` : "";
             let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
             let dtB8 = aiData.b8_overflow && aiData.b8_overflow[3] !== "DEAD" ? `${cleanText(aiData.b8_overflow[3])} ` : "";
             
-            // V8.10: b9 removed from DT overflow
             let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}`.trim();
 
             let rawDtLines = [];
