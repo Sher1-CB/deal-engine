@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.23</title>
+    <title>The CB Regular Deal Generator v8.24</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.23 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* V8.24 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.23</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.24</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.23 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.24 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -310,7 +310,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.23 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // V8.24 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -343,7 +343,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.23 The Emoji Enforcer Algorithm
+    // V8.24 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -393,6 +393,7 @@
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
         localStorage.setItem('geminiApiKey', apiKey);
 
+        // V8.24 AUTO-RESET LOGIC: 14-Deal Cycle
         if (dealCount >= 14) {
             sessionHistory = [];
             dealCount = 0;
@@ -405,14 +406,14 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.23 ROOT CAUSE FIX: Anti-Robot Whitelists for B2 & B5
+        // V8.24 THE MASTER PAYLOAD: Rhetorical Hype Lock (Praises) added
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
         "cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
         "sale_price": (String. Extract sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
         "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". If none, write "NONE"),
-        "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend.),
+        "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?', 'How perfect is this for summer?', 'Isn't this exactly what we needed?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt (e.g., do NOT ask 'Does this work well?' or 'Is it comfortable?').),
         "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own using 'I', 'My', or 'We'. Make it highly specific to the product.),
         "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the amount fluctuating.),
         "b2_verification": (String. Extract ONLY limits, required quantities, sizes, size ranges, colors, or scents. Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS: Do NOT extract sizes/quantities ALREADY in the title. If none, write "NONE"),
@@ -430,6 +431,7 @@
         "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. Do NOT use generic shapes.)
         
         GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective.`;
+
         try {
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
@@ -456,13 +458,12 @@
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
             
-            // V8.23 EMOJI ENGINE REWRITE: Deduplication & Global Scope
+            // V8.24 EMOJI ENGINE REWRITE: Deduplication & Global Scope
             const rawEmojiPool = aiData.emoji_pool || [];
-            const uniqueEmojiPool = [...new Set(rawEmojiPool)]; // Kills AI duplicates instantly
+            const uniqueEmojiPool = [...new Set(rawEmojiPool)]; 
             const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","📱","💻","🎧","👟","👕","👗","🏠","🛋️","🍳","🍽️","🚗","🛠️","📚","✏️","🧸","🎮","⚽","🏀"];
             const finalEmojiPool = uniqueEmojiPool.length >= 15 ? uniqueEmojiPool : fallbackEmojis;
             
-            // Global Emoji Tracker (Cycles through all emojis before repeating)
             let masterEmojiPool = [...finalEmojiPool].sort(() => 0.5 - Math.random());
             let masterEmojiIdx = 0;
             const getNextEmoji = () => { 
@@ -471,7 +472,6 @@
                 return e; 
             };
 
-            // V8.23 Updated injectEmojis function
             function injectEmojisV8(linesArray, min, max) {
                 let count = 0;
                 let result = [];
@@ -523,8 +523,9 @@
                 let b6 = aiData.b6_savings && aiData.b6_savings[i] !== "DEAD" ? `${cleanText(aiData.b6_savings[i])} ` : "";
                 let b7 = aiData.b7_occasions && aiData.b7_occasions[i] !== "DEAD" ? `${cleanText(aiData.b7_occasions[i])} ` : "";
                 let b8 = aiData.b8_overflow && aiData.b8_overflow[i] !== "DEAD" ? `${cleanText(aiData.b8_overflow[i])} ` : "";
+                let b9 = aiData.b9_overflow && aiData.b9_overflow[i] !== "DEAD" ? `${cleanText(aiData.b9_overflow[i])} ` : "";
                 
-                let bottomLine = `${b5}${b6}${b7}${b8}`.trim();
+                let bottomLine = `${b5}${b6}${b7}${b8}${b9}`.trim();
                 let inf = cleanText(aiData.inferences[i]);
                 
                 let flipB1 = Math.random() > 0.5;
@@ -607,8 +608,9 @@
             let dtB6 = aiData.b6_savings && aiData.b6_savings[3] !== "DEAD" ? `${cleanText(aiData.b6_savings[3])} ` : "";
             let dtB7 = aiData.b7_occasions && aiData.b7_occasions[3] !== "DEAD" ? `${cleanText(aiData.b7_occasions[3])} ` : "";
             let dtB8 = aiData.b8_overflow && aiData.b8_overflow[3] !== "DEAD" ? `${cleanText(aiData.b8_overflow[3])} ` : "";
+            let dtB9 = aiData.b9_overflow && aiData.b9_overflow[3] !== "DEAD" ? `${cleanText(aiData.b9_overflow[3])} ` : "";
             
-            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}`.trim();
+            let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
             let rawDtLines = [];
             if(isOdd) {
