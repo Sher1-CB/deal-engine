@@ -147,11 +147,11 @@
                         <option value="7">Deal 7 (ODD)</option>
                     </select>
                 </div>
-                <div class="col">
+                <<div class="col">
                     <label>🗣️ Persona Pronoun Style</label>
                     <select id="pronounStyle">
-                        <option value="subject">1st Person (I / We)</option>
-                        <option value="possessive">3rd Person (My / Our)</option>
+                        <option value="first">1st Person (I / My)</option>
+                        <option value="third">3rd Person (This / That / Our / We)</option>
                     </select>
                 </div>
             </div>
@@ -371,10 +371,10 @@
         document.getElementById('outputSection').style.display = "block";
 
         let pronounInstruction = "";
-        if (pronounStyle === "subject") {
-            pronounInstruction = "Use Subject Pronouns (e.g., 'I love this', 'We use this daily'). Do NOT use possessive pronouns like 'My' or 'Our'.";
+        if (pronounStyle === "first") {
+            pronounInstruction = "Use 1st Person singular pronouns (e.g., 'I love this', 'My family uses this'). You MUST use 'I' or 'My'.";
         } else {
-            pronounInstruction = "Use Possessive Pronouns to show ownership (e.g., 'My kids love this', 'Our home looks great').";
+            pronounInstruction = "Use plural or demonstrative pronouns (e.g., 'We love this', 'Our home looks great', 'This is perfect'). You MUST use 'We', 'Our', 'This', or 'That'. You are STRICTLY FORBIDDEN from using 'I' or 'My'.";
         }
 
         let customLineInstruction = customLine 
