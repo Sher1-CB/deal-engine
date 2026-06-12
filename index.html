@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Regular Deal Generator v8.30</title>
+    <title>The CB Regular Deal Generator v8.31</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -51,7 +51,7 @@
         .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
         .api-link:hover { text-decoration: underline; }
 
-        /* V8.30 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
+        /* V8.31 UI Upgrades: 15px Font, Tight Padding, Raw Output Button */
         .output-container { max-width: 1200px; margin: 0 auto; } 
         .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
         @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.30</span></h1>
+        <h1>The CB Regular Deal Generator <span class="version-tag">v8.31</span></h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -162,7 +162,7 @@
     </div>
 </div>
 
-<!-- V8.30 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
+<!-- V8.31 BOTTOM SECTION: COMPACT UI & RAW OUTPUT BUTTON -->
 <div class="output-container" id="outputSection" style="display:none;">
     <div class="card">
         <div class="card-header">
@@ -310,7 +310,7 @@
         return matrix[day][dealNum - 1];
     }
 
-    // V8.30 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
+    // V8.31 Ultimate Emoji Assassin (Kills ZWJ sequences like runners)
     function cleanText(str) {
         if (!str) return "";
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
@@ -343,7 +343,7 @@
         return ["DEAD", "DEAD", "DEAD", "DEAD"];
     }
 
-    // V8.30 The Emoji Enforcer Algorithm
+    // V8.31 The Emoji Enforcer Algorithm
     function injectEmojis(linesArray, min, max, pool) {
         let count = 0;
         let result = [];
@@ -381,6 +381,31 @@
         return result;
     }
 
+    // V8.31 INFINITE VARIATION ARRAYS (Replaces the rigid Banks)
+    const allPrefixes = ["Just", "Down to", "At", "Score it for", "Only", "Found for", "Marked at", "Sitting at", "Now", "Fell to", "Yours for", "Spotted at", "Grab it for", "Snag it for"];
+    const allCompLabels = ["Regular", "Normally", "Originally", "Previously", "Was", "List"];
+    const allPointers = [
+        "I put it right under here for you!", "You can grab yours right under here!", "I left the exact page right under this!",
+        "It's waiting for you right down there!", "Just scroll down a tiny bit to find it!", "The right spot is waiting just a step down!",
+        "Find the exact location ready for you in the next section!", "Everything you need is a little further down!", "Catch it just a quick scroll away!",
+        "I pinned the exact spot right under this text!", "The location is resting just under this text!", "Look just a little further down for the page!",
+        "I tucked the exact spot right under here!", "You can find it right under here!", "I left the location right under this!",
+        "It's resting for you right down there!", "Just scroll down a bit to see it!", "The exact page is waiting just a step down!",
+        "Find the exact spot ready for you in the next section!", "Everything you want is a little further down!", "Catch the location just a quick scroll away!"
+    ];
+    const allDiscoveries = [
+        "We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today",
+        "I can't believe how low this dropped", "This is an absolute steal right now", "We had to share this massive reduction immediately",
+        "Look at this incredible value we just found", "This is one of the best drops we've seen all week", "Our team is obsessed with this current value",
+        "I just grabbed mine at this lower total", "We noticed this fell and it is so good", "This is a perfect catch for anyone looking"
+    ];
+    const allLinkLeads = [
+        "Grab it here:", "See it here:", "Find it here:", "Check the exact page here:", "I linked it for you here:",
+        "The direct spot is here:", "You can view it here:", "Catch it right here:", "Here is the exact location:", "I left the page right here:"
+    ];
+
+    const shuffleArray = (arr) => [...arr].sort(() => 0.5 - Math.random());
+
     async function processDeal() {
         const apiKey = document.getElementById('apiKey').value.trim();
         const rawText = document.getElementById('rawText').value.trim();
@@ -393,7 +418,6 @@
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
         localStorage.setItem('geminiApiKey', apiKey);
 
-        // V8.30 AUTO-RESET LOGIC: 14-Deal Cycle
         if (dealCount >= 14) {
             sessionHistory = [];
             dealCount = 0;
@@ -406,7 +430,7 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
-        // V8.30 THE MASTER PAYLOAD: Contextual Exception Clause added to Global Shield
+        // V8.31 THE MASTER PAYLOAD: Prompt Leak Fix, Title Echo Ban, Possessive Pronouns
         const prompt = `Analyze this deal: "${rawText}"
         Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
         "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -414,10 +438,10 @@
         "sale_price": (String. Extract sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
         "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
         "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
-        "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own using 'I', 'My', or 'We'. Make it highly specific to the product.),
-        "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here. Those belong ONLY in b2_strategies.),
+        "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. POSSESSIVE PRONOUN LOCK: You MUST use possessive pronouns (e.g., 'my', 'our') to show ownership (e.g., 'My kids love this', 'This is perfect for my living room'). Make it highly specific to the product.),
+        "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. Use a wide variety of phrasing (e.g., 'The total might shift', 'Values change quickly', 'Fingers crossed it stays low'). B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
         "b2_verification": (String. Extract ONLY limits, required quantities, sizes, size ranges, colors, or scents. Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS: Do NOT extract sizes/quantities ALREADY in the title. VERB INDEPENDENCE: If the raw text lists a standalone color/size without a verb (e.g., 'Dark Cherry color'), you MUST extract it. If none, write "NONE"),
-        "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the BLUEPRINT METHOD: Gather ALL extracted facts into a single Data Payload. Include the ENTIRE Data Payload in EVERY SINGLE sentence. LOGIC GATES: If 'Limit'/'Maximum', frame as a strict restriction (e.g., 'Keep in mind there is a strict limit of 1!'). If 'Add'/'Buy'/'Minimum', frame as a mandatory requirement. VARIETY FIX: If '3 Colors', say 'Make sure to pick your favorite of the 3 colors!'. EXACT VARIANT LOCK: Do NOT translate or separate hyphenated options (e.g., 'White-60pcs', 'Brown04'). Print the exact literal string. NO MATH HALLUCINATION: Do NOT calculate per-item prices yourself. PRICE ECHO BAN: Do NOT pull the main sale price into these sentences. ONLY include a price here if a per-item breakdown is explicitly provided in the raw text.),
+        "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the BLUEPRINT METHOD: Gather ALL extracted facts. Include ALL of these facts in EVERY SINGLE sentence. LOGIC GATES: If 'Limit'/'Maximum', frame as a strict restriction (e.g., 'Keep in mind there is a strict limit of 1!'). If 'Add'/'Buy'/'Minimum', frame as a mandatory requirement. VARIETY FIX: If '3 Colors', say 'Make sure to pick your favorite of the 3 colors!'. EXACT VARIANT LOCK: Do NOT translate or separate hyphenated options (e.g., 'White-60pcs', 'Brown04'). Print the exact literal string. NO MATH HALLUCINATION: Do NOT calculate per-item prices yourself. PRICE ECHO BAN: Do NOT pull the main sale price into these sentences. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product name or title in these sentences. Do NOT use the words 'data payload'.),
         "b5_verification": (String. Evaluate retailer. If Walmart, note $35 delivery. If Walgreens, note $10 pickup. If Woot, note Amazon Prime login. If none, write "NONE"),
         "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
         "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
@@ -451,14 +475,19 @@
             
             // --- JAVASCRIPT ASSEMBLY ENGINE ---
             const isOdd = dealNum % 2 !== 0;
-            const bank = banks[getRoutingBank(day, dealNum)];
             const extractedURL = extractURL(rawText);
+            
+            // V8.31: Dynamic Array Shuffling for Infinite Variations
+            const selectedPrefixes = shuffleArray(allPrefixes).slice(0, 4);
+            const selectedCompLabels = shuffleArray(allCompLabels).slice(0, 4);
+            const selectedPointers = shuffleArray(allPointers).slice(0, 4);
+            const selectedDiscoveries = shuffleArray(allDiscoveries).slice(0, 4);
+            const selectedLinkLeads = shuffleArray(allLinkLeads).slice(0, 4);
             
             const cleanTitle = cleanText(aiData.cleaned_title);
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
             const dtSignoff = cleanText(aiData.dt_signoff);
             
-            // V8.30 EMOJI ENGINE
             const rawEmojiPool = aiData.emoji_pool || [];
             const uniqueEmojiPool = [...new Set(rawEmojiPool)]; 
             const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","💫","🌟","🌿","🤎","🤍","✅","👀","💡"];
@@ -510,8 +539,8 @@
             let sl = [];
             for(let i=0; i<3; i++) {
                 let priceDisplay = aiData.sale_price === "???" ? "???" : cleanText(aiData.sale_price);
-                let hook = `${bank.prefixes[i]} ${priceDisplay.includes("???") ? priceDisplay : "$" + priceDisplay.replace('$', '')} ${dynamicStatuses[i]}`;
-                if(aiData.reg_price !== "NONE") hook += ` (${bank.compLabels[i]} ${cleanText(aiData.reg_price)})`;
+                let hook = `${selectedPrefixes[i]} ${priceDisplay.includes("???") ? priceDisplay : "$" + priceDisplay.replace('$', '')} ${dynamicStatuses[i]}`;
+                if(aiData.reg_price !== "NONE") hook += ` (${selectedCompLabels[i]} ${cleanText(aiData.reg_price)})`;
                 let flip = Math.random() > 0.5;
                 sl.push(flip ? `${hook} -- ${cleanTitle}` : `${cleanTitle} -- ${hook}`);
             }
@@ -530,10 +559,10 @@
                 
                 let flipB1 = Math.random() > 0.5;
                 let discLine = flipB1 
-                    ? `${discoveries[i]} on ${retailer}!` 
-                    : `On ${retailer}, ${discoveries[i].toLowerCase()}!`;
+                    ? `${selectedDiscoveries[i]} on ${retailer}!` 
+                    : `On ${retailer}, ${selectedDiscoveries[i].toLowerCase()}!`;
                 
-                let ptrLine = bank.pointers[i];
+                let ptrLine = selectedPointers[i];
                 let rawLines = [];
                 const shuffleType = (i + dealNum) % 3; 
                 
@@ -572,7 +601,7 @@
             for(let i=0; i<3; i++) {
                 let praise = cleanText(aiData.praises[i]);
                 let disc = cleanText(aiData.disclaimers[i]);
-                let linkLine = `${linkLeads[i]} ${extractedURL}`;
+                let linkLine = `${selectedLinkLeads[i]} ${extractedURL}`;
 
                 let rawLines = [];
                 const commentType = (i + dealNum) % 3;
@@ -598,10 +627,10 @@
             }
 
             let priceDisplayDT = aiData.sale_price === "???" ? "???" : cleanText(aiData.sale_price);
-            let dtHook = `${bank.prefixes[3]} ${priceDisplayDT.includes("???") ? priceDisplayDT : "$" + priceDisplayDT.replace('$', '')} ${dynamicStatuses[3]}`;
+            let dtHook = `${selectedPrefixes[3]} ${priceDisplayDT.includes("???") ? priceDisplayDT : "$" + priceDisplayDT.replace('$', '')} ${dynamicStatuses[3]}`;
             
             let dtHeader = isOdd ? `${dtHook} on ${retailer} -- ${cleanTitle}` : `${cleanTitle} -- ${dtHook} on ${retailer}`;
-            if(aiData.reg_price !== "NONE") dtHeader += ` (${bank.compLabels[3]} ${cleanText(aiData.reg_price)})`;
+            if(aiData.reg_price !== "NONE") dtHeader += ` (${selectedCompLabels[3]} ${cleanText(aiData.reg_price)})`;
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? cleanText(aiData.b2_strategies[3]) : "";
             let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
