@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.34</title>
+    <title>The CB Deal Generator v8.35</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -147,11 +147,11 @@
                         <option value="7">Deal 7 (ODD)</option>
                     </select>
                 </div>
-                <<div class="col">
+                <div class="col">
                     <label>🗣️ Persona Pronoun Style</label>
                     <select id="pronounStyle">
-                        <option value="first">1st Person (I / My)</option>
-                        <option value="third">3rd Person (This / That / Our / We)</option>
+                        <option value="subject">1st Person (I / My / We / Our)</option>
+                        <option value="possessive">3rd Person (This / That / It / These)</option>
                     </select>
                 </div>
             </div>
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.34</span>
+            <span class="version-tag">v8.35</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -356,6 +356,11 @@
         const btn = document.getElementById('apiButton');
 
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
+        
+        if (dealType === 'run') {
+            alert("Run Deal architecture is currently being compiled for the next update! Defaulting to Regular Deal for now.");
+        }
+
         localStorage.setItem('geminiApiKey', apiKey);
 
         if (dealCount >= 14) {
@@ -370,12 +375,11 @@
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
 
+        // V8.35: Pronoun Recalibration
         let pronounInstruction = "";
         if (pronounStyle === "subject") {
-            // 1st Person (Personal/Collective)
             pronounInstruction = "You MUST use 1st Person pronouns (e.g., 'I', 'My', 'We', 'Our', 'Us') to show personal ownership or collective experience (e.g., 'I love how this looks', 'This saves us so much time').";
         } else {
-            // 3rd Person / Demonstrative (Objective)
             pronounInstruction = "You MUST use 3rd Person or Demonstrative pronouns (e.g., 'It', 'Its', 'Them', 'Their', 'These', 'Those', 'This', 'That'). You are STRICTLY FORBIDDEN from using 1st Person pronouns like 'I', 'My', 'We', 'Our', or 'Us'. Frame the sentence objectively (e.g., 'This looks perfect in the kitchen', 'These are great for saving time').";
         }
 
@@ -386,6 +390,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
+            // V8.35 THE MASTER PAYLOAD: B2 Action Verb Whitelist & Acronym Scrub
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -396,7 +401,7 @@
             "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product.),
             "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. Use a wide variety of phrasing. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
             "b2_verification": (String. Extract ONLY limits, required quantities, sizes, size ranges, colors, or scents. Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS: Do NOT extract sizes/quantities ALREADY in the title. VERB INDEPENDENCE: If the raw text lists a standalone color/size without a verb (e.g., 'Dark Cherry color'), you MUST extract it. If none, write "NONE"),
-            "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the BLUEPRINT METHOD: Gather ALL extracted facts. Include ALL of these facts in EVERY SINGLE sentence. LOGIC GATES: If 'Limit'/'Maximum', frame as a strict restriction (e.g., 'Keep in mind there is a strict limit of 1!'). If 'Add'/'Buy'/'Minimum', frame as a mandatory requirement. VARIETY FIX: If '3 Colors', say 'Make sure to pick your favorite of the 3 colors!'. EXACT VARIANT LOCK: Do NOT translate or separate hyphenated options (e.g., 'White-60pcs', 'Brown04'). Print the exact literal string. MATH LOCK: If the raw text explicitly calculates a per-item price (e.g., 'Each will be $27.59'), you MUST include that exact math in ALL 4 sentences. PRICE ECHO BAN: Do NOT pull the main sale price into these sentences. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product name or title in these sentences. Do NOT use the words 'data payload'.),
+            "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the BLUEPRINT METHOD: Gather ALL extracted facts. Include ALL of these facts in EVERY SINGLE sentence. LOGIC GATES: If 'Limit'/'Maximum', frame as a strict restriction (e.g., 'Keep in mind there is a strict limit of 1!'). If 'Add'/'Buy'/'Minimum', frame as a mandatory requirement. ACTION VERB WHITELIST: When framing a requirement, use natural shopper verbs like 'add', 'grab', or 'pick up'. You are STRICTLY FORBIDDEN from using robotic verbs like 'provide', 'submit', or 'input'. ACRONYM SCRUB: You MUST translate clunky acronyms into plain English in these sentences. Change 'QTY' to 'items', 'of them', or 'to your cart'. Do NOT print the literal letters 'QTY' here. VARIETY FIX: If '3 Colors', say 'Make sure to pick your favorite of the 3 colors!'. EXACT VARIANT LOCK: Do NOT translate or separate hyphenated options (e.g., 'White-60pcs', 'Brown04'). Print the exact literal string. MATH LOCK: If the raw text explicitly calculates a per-item price (e.g., 'Each will be $27.59'), you MUST include that exact math in ALL 4 sentences. PRICE ECHO BAN: Do NOT pull the main sale price into these sentences. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product name or title in these sentences. Do NOT use the words 'data payload'.),
             "b5_verification": (String. Evaluate retailer. If Walmart, note $35 delivery. If Walgreens, note $10 pickup. If Woot, note Amazon Prime login. If none, write "NONE"),
             "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
             "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
