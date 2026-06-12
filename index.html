@@ -371,10 +371,12 @@
         document.getElementById('outputSection').style.display = "block";
 
         let pronounInstruction = "";
-        if (pronounStyle === "first") {
-            pronounInstruction = "Use 1st Person singular pronouns (e.g., 'I love this', 'My family uses this'). You MUST use 'I' or 'My'.";
+        if (pronounStyle === "subject") {
+            // 1st Person (Personal/Collective)
+            pronounInstruction = "You MUST use 1st Person pronouns (e.g., 'I', 'My', 'We', 'Our', 'Us') to show personal ownership or collective experience (e.g., 'I love how this looks', 'This saves us so much time').";
         } else {
-            pronounInstruction = "Use plural or demonstrative pronouns (e.g., 'We love this', 'Our home looks great', 'This is perfect'). You MUST use 'We', 'Our', 'This', or 'That'. You are STRICTLY FORBIDDEN from using 'I' or 'My'.";
+            // 3rd Person / Demonstrative (Objective)
+            pronounInstruction = "You MUST use 3rd Person or Demonstrative pronouns (e.g., 'It', 'Its', 'Them', 'Their', 'These', 'Those', 'This', 'That'). You are STRICTLY FORBIDDEN from using 1st Person pronouns like 'I', 'My', 'We', 'Our', or 'Us'. Frame the sentence objectively (e.g., 'This looks perfect in the kitchen', 'These are great for saving time').";
         }
 
         let customLineInstruction = customLine 
