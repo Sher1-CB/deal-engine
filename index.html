@@ -22,7 +22,7 @@
         .header-icon { background: #fff; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
         .header-title h1 { margin: 0; font-size: 18px; color: var(--text-main); font-weight: 600;}
         .header-title p { margin: 0; font-size: 12px; color: var(--text-muted); }
-        .version-tag { font-size: 11px; background: #e8f0fe; color: var(--primary); padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle;}
+        .version-tag { font-size: 12px; background: #fff; color: var(--primary); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--primary); font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
 
         .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; max-width: 1200px; margin: auto; }
         @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
@@ -45,7 +45,7 @@
         .btn-outline:hover { background: #f1f3f4; }
 
         .row { display: flex; gap: 10px; flex-wrap: wrap; }
-        .col { flex: 1; min-width: 200px; }
+        .col { flex: 1; min-width: 180px; }
         
         .api-box { background: #fff8e1; border: 1px solid #fbbc04; border-radius: 8px; padding: 10px 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
         .api-box input { margin-top: 0; flex: 1; padding: 6px 10px;}
@@ -80,7 +80,7 @@
 <div class="header-container">
     <div class="header-icon">📚</div>
     <div class="header-title">
-        <h1>The CB Regular Deal Generator <span class="version-tag">v8.32</span></h1>
+        <h1>The CB Deal Generator</h1>
         <p>Precision Social Media Deal Generation Workspace</p>
     </div>
 </div>
@@ -102,11 +102,17 @@
             <label>Raw Deal Context Text</label>
             <textarea id="rawText" placeholder="Paste or type raw deals information verbatim here..."></textarea>
             
-            <!-- V8.32 NEW FEATURE: Custom Injection Line -->
             <label>✍️ Custom Injection Line (Optional)</label>
             <textarea id="customLine" class="small-textarea" placeholder="Type a personal review, joke, or custom instruction here. The AI will scrub it for banned words and rephrase it 4 times..."></textarea>
             
             <div class="row" style="margin-top: 15px;">
+                <div class="col">
+                    <label>🚨 Deal Type</label>
+                    <select id="dealType">
+                        <option value="regular" selected>Regular Deal</option>
+                        <option value="run">Run Deal</option>
+                    </select>
+                </div>
                 <div class="col">
                     <label>📅 Day of Week Reference</label>
                     <select id="currentDay">
@@ -159,6 +165,9 @@
     </div>
 
     <div class="right-col">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
+            <span class="version-tag">v8.32</span>
+        </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
                 <h3 id="sessionBaseHeader">📚 SESSION BASE (0 / 14)</h3>
@@ -334,11 +343,17 @@
         const day = document.getElementById('currentDay').value;
         const selectedModel = document.getElementById('aiModel').value;
         const pronounStyle = document.getElementById('pronounStyle').value;
+        const dealType = document.getElementById('dealType').value;
         let dealNumInput = document.getElementById('dealNumber');
         let dealNum = parseInt(dealNumInput.value);
         const btn = document.getElementById('apiButton');
 
         if(!apiKey || !rawText) { alert("Please provide API Key and Raw Text!"); return; }
+        
+        if (dealType === 'run') {
+            alert("Run Deal architecture is currently being compiled for the next update! Defaulting to Regular Deal for now.");
+        }
+
         localStorage.setItem('geminiApiKey', apiKey);
 
         if (dealCount >= 14) {
@@ -360,7 +375,6 @@
             pronounInstruction = "Use Possessive Pronouns to show ownership (e.g., 'My kids love this', 'Our home looks great').";
         }
 
-        // V8.32: Dynamic Custom Line Injection
         let customLineInstruction = customLine 
             ? `"custom_line_rephrases": (Array of 4 sentences. The user provided this custom line: "${customLine}". You MUST fix leetspeak, scrub banned words, and rephrase it 4 unique ways. Do NOT change the meaning.),` 
             : `"custom_line_rephrases": (Array of 4 sentences. Write ["DEAD","DEAD","DEAD","DEAD"]),`;
@@ -517,7 +531,6 @@
                     rawLines.push(ptrLine);
                 }
 
-                // V8.32: Randomly inject the Custom Line into the Post Variation
                 let customText = aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD" ? cleanText(aiData.custom_line_rephrases[i]) : "";
                 if (customText) {
                     const randIdx = Math.floor(Math.random() * (rawLines.length + 1));
@@ -594,7 +607,6 @@
                 if(dtOverflow) rawDtLines.push(dtOverflow);
             }
 
-            // V8.32: Randomly inject the Custom Line into the Daily Thread
             let customTextDT = aiData.custom_line_rephrases && aiData.custom_line_rephrases[3] !== "DEAD" ? cleanText(aiData.custom_line_rephrases[3]) : "";
             if (customTextDT) {
                 const randIdxDT = Math.floor(Math.random() * (rawDtLines.length + 1));
