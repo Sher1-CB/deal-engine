@@ -1,3 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The CB Deal Generator v8.34</title>
+    <style>
+        :root {
+            --primary: #1a73e8; 
+            --primary-hover: #1557b0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #202124;
+            --text-muted: #5f6368;
+            --border: #dadce0;
+            --success: #0f9d58;
+        }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 15px; }
+        
+        .header-container { max-width: 1200px; margin: 0 auto 15px auto; display: flex; align-items: center; gap: 15px; }
+        .header-icon { background: #fff; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .header-title h1 { margin: 0; font-size: 18px; color: var(--text-main); font-weight: 600;}
+        .header-title p { margin: 0; font-size: 12px; color: var(--text-muted); }
+        .version-tag { font-size: 12px; background: #fff; color: var(--primary); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--primary); font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+
+        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; max-width: 1200px; margin: auto; }
+        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 15px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px; }
+        .card-header h3 { margin: 0; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        label { font-weight: 600; display: block; margin-top: 10px; margin-bottom: 5px; font-size: 12px; color: var(--text-main); }
+        textarea, input, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #fff; color: var(--text-main); font-family: inherit; box-sizing: border-box; font-size: 13px; transition: border 0.2s; }
+        textarea:focus, input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
+        textarea { height: 100px; resize: vertical; }
+        .small-textarea { height: 60px; }
+        
+        button { background: var(--primary); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        button:hover { background: var(--primary-hover); box-shadow: 0 1px 3px rgba(0,0,0,0.15);}
+        button:disabled { background: #ccc; cursor: not-allowed; box-shadow: none;}
+        
+        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 6px 12px; font-size: 12px;}
+        .btn-outline:hover { background: #f1f3f4; }
+
+        .row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 180px; }
+        
+        .api-box { background: #fff8e1; border: 1px solid #fbbc04; border-radius: 8px; padding: 10px 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        .api-box input { margin-top: 0; flex: 1; padding: 6px 10px;}
+        .api-link { font-size: 11px; color: #b06000; text-decoration: none; font-weight: 600; white-space: nowrap;}
+        .api-link:hover { text-decoration: underline; }
+
+        .output-container { max-width: 1200px; margin: 0 auto; } 
+        .output-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-top: 15px; } 
+        @media (max-width: 900px) { .output-layout { grid-template-columns: 1fr; } }
+        .output-col { display: flex; flex-direction: column; gap: 15px; }
+
+        .output-box { background: #ffffff; border: 1px solid var(--border); padding: 12px 15px; border-radius: 8px; font-family: inherit; color: var(--text-main); font-size: 15px; line-height: 1.5; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.03);}
+        .output-content { white-space: pre-wrap; word-wrap: break-word; }
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #f1f3f4; padding-bottom: 6px;}
+        .box-header h4 { margin: 0; font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        .copy-btn { background: #f8f9fa; color: var(--text-muted); border: 1px solid var(--border); padding: 4px 10px; font-size: 11px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px; margin: 0;}
+        .copy-btn:hover { background: #e8eaed; color: var(--primary); border-color: var(--primary); }
+        
+        .raw-output-btn { background: #f8f9fa; color: var(--text-main); border: 1px solid var(--border); padding: 6px 12px; font-size: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .raw-output-btn:hover { background: #e8eaed; }
+
+        .history-list { max-height: 400px; overflow-y: auto; padding-right: 5px;}
+        .history-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .history-card:hover { border-color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .history-time { color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 2px; text-transform: uppercase;}
+        .history-title { font-size: 12px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <div class="header-icon">📚</div>
+    <div class="header-title">
+        <h1>The CB Deal Generator</h1>
+        <p>Precision Social Media Deal Generation Workspace</p>
+    </div>
+</div>
+
+<div class="main-grid">
+    <div class="left-col">
+        
+        <div class="api-box">
+            <a href="https://aistudio.google.com/u/1/api-keys" target="_blank" class="api-link">🔗 Get your Gemini API Key through this LINK</a>
+            <input type="password" id="apiKey" placeholder="Paste your AIzaSy... key here">
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 style="color: var(--primary);">🔵 RAW INPUT WORKSPACE</h3>
+                <button class="btn-outline" onclick="clearWorkspace()">🗑️ Clear Memory</button>
+            </div>
+            
+            <label>Raw Deal Context Text</label>
+            <textarea id="rawText" placeholder="Paste or type raw deals information verbatim here..."></textarea>
+            
+            <label>✍️ Custom Injection Line (Optional)</label>
+            <textarea id="customLine" class="small-textarea" placeholder="Type a personal review, joke, or custom instruction here. The AI will scrub it for banned words and rephrase it 4 times..."></textarea>
+            
+            <div class="row" style="margin-top: 15px;">
+                <div class="col">
+                    <label>🚨 Deal Type</label>
+                    <select id="dealType">
+                        <option value="regular" selected>Regular Deal</option>
+                        <option value="run">Run Deal</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>📅 Day of Week Reference</label>
+                    <select id="currentDay">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>✨ Primary AI Model</label>
+                    <select id="aiModel">
+                        <option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite (Fastest)</option>
+                        <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
+                        <option value="gemini-1.5-flash-8b">gemini-1.5-flash-8b</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col">
+                    <label>🔢 Cycle Deal Sequence #</label>
+                    <select id="dealNumber" onchange="updateButtonText()">
+                        <option value="1">Deal 1 (ODD)</option>
+                        <option value="2">Deal 2 (EVEN)</option>
+                        <option value="3">Deal 3 (ODD)</option>
+                        <option value="4">Deal 4 (EVEN)</option>
+                        <option value="5">Deal 5 (ODD)</option>
+                        <option value="6">Deal 6 (EVEN)</option>
+                        <option value="7">Deal 7 (ODD)</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>🗣️ Persona Pronoun Style</label>
+                    <select id="pronounStyle">
+                        <option value="subject">1st Person (I / We)</option>
+                        <option value="possessive">3rd Person (My / Our)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+                <span style="font-size: 12px; color: var(--text-muted);" id="nextTargetText">Next target: <strong>Deal 1</strong>. Output saves automatically to ledger.</span>
+                <button id="apiButton" onclick="processDeal()">✨ Generate Deal 1</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="right-col">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
+            <span class="version-tag">v8.34</span>
+        </div>
+        <div class="card">
+            <div class="card-header" id="sessionBaseHeaderContainer">
+                <h3 id="sessionBaseHeader">📚 SESSION BASE (0 / 14)</h3>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: -5px; margin-bottom: 10px;">History saves on device automatically</p>
+            <div id="historyLog" class="history-list">
+                <div style="text-align: center; padding: 30px 20px; color: var(--text-muted);" id="emptyHistory">
+                    <div style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;">📄</div>
+                    <strong>No deals tracked yet</strong><br>
+                    <span style="font-size: 11px;">Add or generate deals to populate active sequence saves.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="output-container" id="outputSection" style="display:none;">
+    <div class="card">
+        <div class="card-header">
+            <h3 style="color: var(--success);">✅ GENERATED SOCIAL POST VARIATIONS</h3>
+            <button class="raw-output-btn" onclick="copyRawOutput(this)">📄 Copy Raw Output</button>
+        </div>
+        
+        <div class="output-layout">
+            <div class="output-col">
+                <div class="output-box" style="border-left: 4px solid var(--primary);">
+                    <div class="box-header">
+                        <h4>🎯 PHASE 0: TARGET LOCK</h4>
+                    </div>
+                    <div id="out-phase0" class="output-content" style="font-family: monospace; font-size: 12px;"></div>
+                </div>
+
+                <div class="output-box">
+                    <div class="box-header">
+                        <h4>📝 POST VARIATION 1</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-post1" class="output-content"></div>
+                </div>
+
+                <div class="output-box">
+                    <div class="box-header">
+                        <h4>📝 POST VARIATION 2</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-post2" class="output-content"></div>
+                </div>
+
+                <div class="output-box">
+                    <div class="box-header">
+                        <h4>📝 POST VARIATION 3</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-post3" class="output-content"></div>
+                </div>
+            </div>
+
+            <div class="output-col">
+                <div class="output-box">
+                    <div class="box-header">
+                        <h4>💬 COMMENT 1</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-com1" class="output-content"></div>
+                </div>
+
+                <div class="output-box">
+                    <div class="box-header">
+                        <h4>💬 COMMENT 2</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-com2" class="output-content"></div>
+                </div>
+
+                <div class="output-box">
+                    <div class="box-header">
+                        <h4>💬 COMMENT 3</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy</button>
+                    </div>
+                    <div id="out-com3" class="output-content"></div>
+                </div>
+
+                <div class="output-box" style="border-left: 4px solid #fbbc04;">
+                    <div class="box-header">
+                        <h4>🧵 DAILY THREAD COMMENT</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('out-dt', this)">📄 Copy Thread</button>
+                    </div>
+                    <div id="out-dt" class="output-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let dealCount = 0;
     let sessionHistory = []; 
@@ -49,7 +313,6 @@
         "Find the exact spot ready for you in the next section!", "Everything you want is a little further down!", "Catch the location just a quick scroll away!"
     ];
     
-    // V8.34: Dedicated Short Pointers for Run Deals (Protects Colored Backgrounds)
     const shortPointers = [
         "Right under here!", "Tucked down there!", "Just under this!", "Waiting down there!", 
         "Pinned down there!", "Right down there!", "Just down there!", "Tucked under this!", 
@@ -147,7 +410,7 @@
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.34 RUN DEAL PROMPT: Punctuation Fix & Truncation Ban
+            // V8.34 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -492,4 +755,60 @@
             btn.disabled = false;
         }
     }
+
+    function loadHistory(index) {
+        const data = sessionHistory[index];
+        document.getElementById('outputSection').style.display = "block";
+        document.getElementById('out-phase0').innerText = data.phase0;
+        currentRawOutput = data.raw; 
+        
+        for(let i=0; i<3; i++) {
+            document.getElementById(`out-post${i+1}`).innerText = data.posts[i];
+            document.getElementById(`out-com${i+1}`).innerText = data.comments[i];
+        }
+        document.getElementById('out-dt').innerText = data.dt;
+        
+        document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyToClipboard(elementId, btnElement) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "✅ Copied!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#0f9d58";
+            btnElement.style.borderColor = "#0f9d58";
+            setTimeout(() => { 
+                btnElement.innerText = originalText; 
+                btnElement.style.background = "#f8f9fa"; 
+                btnElement.style.color = "var(--text-muted)";
+                btnElement.style.borderColor = "var(--border)";
+            }, 2000);
+        }).catch(err => {
+            alert("Failed to copy text: " + err);
+        });
+    }
+
+    function copyRawOutput(btnElement) {
+        if(!currentRawOutput) { alert("No output generated yet!"); return; }
+        navigator.clipboard.writeText(currentRawOutput).then(() => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "✅ Copied Raw Output!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#0f9d58";
+            btnElement.style.borderColor = "#0f9d58";
+            setTimeout(() => { 
+                btnElement.innerText = originalText; 
+                btnElement.style.background = "#f8f9fa"; 
+                btnElement.style.color = "var(--text-main)";
+                btnElement.style.borderColor = "var(--border)";
+            }, 2000);
+        }).catch(err => {
+            alert("Failed to copy text: " + err);
+        });
+    }
 </script>
+
+</body>
+</html>
