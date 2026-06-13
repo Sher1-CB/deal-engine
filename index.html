@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.46</title>
+    <title>The CB Deal Generator v8.47</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.46</span>
+            <span class="version-tag">v8.47</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -351,6 +351,31 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
 
+    // V8.47: The Space Chaos Gap Controller
+    function joinWithSpaceChaos(linesArray, minBlank, maxBlank) {
+        if (!linesArray || linesArray.length === 0) return "";
+        if (linesArray.length === 1) return linesArray[0];
+        
+        let numGaps = linesArray.length - 1;
+        let maxPossible = Math.min(maxBlank, numGaps);
+        let minPossible = Math.min(minBlank, maxPossible);
+        
+        let numDoubleSpaces = Math.floor(Math.random() * (maxPossible - minPossible + 1)) + minPossible;
+        let numSingleSpaces = numGaps - numDoubleSpaces;
+        
+        let separators = [];
+        for(let i=0; i<numDoubleSpaces; i++) separators.push('\n\n');
+        for(let i=0; i<numSingleSpaces; i++) separators.push('\n');
+        
+        separators = separators.sort(() => 0.5 - Math.random());
+        
+        let result = linesArray[0];
+        for(let i=0; i<numGaps; i++) {
+            result += separators[i] + linesArray[i+1];
+        }
+        return result;
+    }
+
     async function processDeal() {
         const apiKey = document.getElementById('apiKey').value.trim();
         const rawText = document.getElementById('rawText').value.trim();
@@ -418,7 +443,7 @@
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.46 RUN DEAL PROMPT
+            // V8.47 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -598,12 +623,7 @@
                     }
 
                     let emojifiedLines = injectEmojisV8(rawLines, 3, 6);
-
-                    let postText = emojifiedLines[0];
-                    for(let j = 1; j < emojifiedLines.length; j++) {
-                        let separator = Math.random() > 0.5 ? '\n' : '\n\n';
-                        postText += `${separator}${emojifiedLines[j]}`; 
-                    }
+                    let postText = joinWithSpaceChaos(emojifiedLines, 2, 4);
                     
                     postOutputs.push(postText);
                     document.getElementById(`out-post${i+1}`).innerText = postText;
@@ -641,7 +661,7 @@
                 }
 
             } else {
-                // V8.46 RUN DEAL ASSEMBLY: Readability Breaks for Run-On Comments
+                // RUN DEAL ASSEMBLY
                 for(let i=0; i<3; i++) {
                     let hook = selectedHooks[i];
                     let inf = cleanText(aiData.inferences[i]);
@@ -682,8 +702,29 @@
                     
                     let bottomLine = `${b2} ${b5}${b6}${b7}${b8}${b9}`.trim();
 
-                    let rawLines = [praise, linkLine, disc, discLine, sl[i]];
-                    if (bottomLine) rawLines.push(bottomLine);
+                    let rawLines = [];
+                    
+                    const commentType = (i + dealNum) % 3;
+                    if(commentType === 0) { 
+                        rawLines.push(discLine);
+                        rawLines.push(sl[i]);
+                        rawLines.push(praise);
+                        rawLines.push(linkLine);
+                        rawLines.push(disc);
+                        if (bottomLine) rawLines.push(bottomLine);
+                    } else if (commentType === 1) { 
+                        rawLines.push(praise);
+                        rawLines.push(linkLine);
+                        rawLines.push(disc);
+                        rawLines.push(discLine);
+                        rawLines.push(sl[i]);
+                        if (bottomLine) rawLines.push(bottomLine);
+                    } else { 
+                        rawLines.push(linkLine);
+                        rawLines.push(`${disc} ${praise}`);
+                        rawLines.push(`${discLine} ${sl[i]}`);
+                        if (bottomLine) rawLines.push(bottomLine);
+                    }
 
                     let customText = aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD" ? cleanText(aiData.custom_line_rephrases[i]) : "";
                     if (customText) {
@@ -692,19 +733,7 @@
                     }
 
                     let emojifiedLines = injectEmojisV8(rawLines, 3, 6);
-                    let cText = "";
-                    
-                    const commentType = (i + dealNum) % 3;
-                    if(commentType === 0) { 
-                        // V8.46: Readability Breaks for the Run-On
-                        cText = emojifiedLines[0] + "\n\n" + emojifiedLines[1] + " " + emojifiedLines[2] + " " + emojifiedLines[3] + "\n\n" + emojifiedLines.slice(4).join(" ");
-                    } else if (commentType === 1) { 
-                        cText = emojifiedLines[3] + "\n\n" + emojifiedLines[4] + "\n\n" + emojifiedLines[0] + "\n\n" + emojifiedLines[1] + "\n\n" + emojifiedLines[2];
-                        if (bottomLine) cText += "\n\n" + emojifiedLines.slice(5).join(" ");
-                    } else { 
-                        cText = emojifiedLines[1] + "\n\n" + emojifiedLines[2] + "\n\n" + emojifiedLines[0] + "\n\n" + emojifiedLines[3] + "\n\n" + emojifiedLines[4];
-                        if (bottomLine) cText += "\n\n" + emojifiedLines.slice(5).join(" ");
-                    }
+                    let cText = joinWithSpaceChaos(emojifiedLines, 2, 4);
 
                     commentOutputs.push(cText);
                     document.getElementById(`out-com${i+1}`).innerText = cText;
@@ -753,11 +782,7 @@
             }
 
             let emojifiedDtLines = injectEmojisV8(rawDtLines, 3, 5);
-            let dtText = emojifiedDtLines[0];
-            for(let j = 1; j < emojifiedDtLines.length; j++) {
-                let separator = Math.random() > 0.5 ? '\n' : '\n\n';
-                dtText += `${separator}${emojifiedDtLines[j]}`; 
-            }
+            let dtText = joinWithSpaceChaos(emojifiedDtLines, 2, 4);
 
             document.getElementById('out-dt').innerText = dtText;
             document.getElementById('out-dt').setAttribute('data-raw', dtText);
