@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.42</title>
+    <title>The CB Deal Generator v8.43</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.42</span>
+            <span class="version-tag">v8.43</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -315,7 +315,7 @@
     
     const shortPointers = [
         "Right under here!", "Tucked down there!", "Just under this!", "Waiting down there!", 
-        "Pinned down there!", "Right down down there!", "Just down there!", "Tucked under this!", 
+        "Pinned down there!", "Right down there!", "Just down there!", "Tucked under this!", 
         "Just under here!", "Waiting under this!", "Resting down there!", "Right under this!"
     ];
 
@@ -326,6 +326,14 @@
         "I just grabbed mine at this lower total", "We noticed this fell and it is so good", "This is a perfect catch for anyone looking"
     ];
     
+    // V8.43: Massive Array of Curiosity Hooks for Run Deals
+    const allCuriosityHooks = [
+        "Did the warehouse mess up?!", "Someone is getting fired!", "Is this a system glitch?!", 
+        "How is this even possible?!", "Did they price this wrong?!", "This has to be a mistake!", 
+        "Are you seeing these numbers?!", "Did the algorithm break?!", "Someone made a huge error!", 
+        "Is this a pricing glitch?!", "They are practically giving it away!", "Did someone type the wrong digit?!"
+    ];
+
     const allLinkLeads = [
         "Grab it here:", "See it here:", "Find it here:", "Check the exact page here:", "I left the page right here:",
         "The direct spot is here:", "You can view it here:", "Catch it right here:", "Here is the exact location:", "The exact spot is here:"
@@ -385,7 +393,6 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.42 THE MASTER PAYLOAD: Generic Noun Whitelist (B2)
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -395,7 +402,7 @@
             "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
             "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product.),
             "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. Use a wide variety of phrasing. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY limits, required quantities, sizes, dimensions (e.g., '65 Inch'), size ranges, specific colors/scents, OR generic variety phrases (e.g., 'several colors', '3 colors'). Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS SUPREMACY: You are STRICTLY FORBIDDEN from extracting ANY size, color, or quantity that is ALREADY in the title (e.g., if the title says '3 Color Temperature', do NOT extract '3 Color'). This rule OVERRIDES all other extraction rules. EXCEPTION: If a color or specific variant name is attached to a size/quantity (e.g., 'White-60pcs'), you MUST extract the entire variant name even if the number is in the title. AGGRESSIVE EXTRACTION: You MUST extract ANY mention of a color, scent, size, or dimension in the raw text, AS LONG AS it is not in the title. If the text contains the phrase 'works on' followed by a word (e.g., 'works on Gray'), you MUST extract it as a mandatory variant. Assume ALL colors/sizes/dimensions are mandatory selections. If none, write "NONE"),
+            "b2_verification": (String. Extract ONLY limits, required quantities, sizes, dimensions (e.g., '65 Inch'), size ranges, specific colors/scents, OR generic variety phrases (e.g., 'several colors', '3 colors'). Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS SUPREMACY: Do NOT extract passive sizes/colors ALREADY in the title. EXCEPTION: You MUST ALWAYS extract mandatory requirements (e.g., 'Add 2'), strict limits (e.g., 'Limit 1'), and per-item math, even if they appear in the title, because you must instruct the user on what to do. AGGRESSIVE EXTRACTION: You MUST extract ANY mention of a color, scent, size, or dimension in the raw text, AS LONG AS it is not in the title. If the text contains the phrase 'works on' followed by a word (e.g., 'works on Gray'), you MUST extract it as a mandatory variant. Assume ALL colors/sizes/dimensions are mandatory selections. If none, write "NONE"),
             "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the BLUEPRINT METHOD: Gather ALL extracted facts. Include ALL of these facts in EVERY SINGLE sentence. LOGIC GATES: If 'Limit'/'Maximum', frame it ONLY as a casual heads-up (e.g., 'Keep in mind there is a strict limit of 3 per order!'). You are STRICTLY FORBIDDEN from using instructional verbs like 'add', 'grab', or 'pick up' when discussing limits. If 'Add'/'Buy'/'Minimum' or a STANDALONE COLOR/SIZE/DIMENSION, frame as a necessary action using natural shopper verbs like 'add', 'grab', or 'select' (e.g., 'Make sure to select the 65 Inch option!'). You are STRICTLY FORBIDDEN from using robotic phrases like 'match the requirement', 'provide', 'submit', or 'input'. COLOR TRANSLATION LOCK: If the fact contains 'works on', you MUST translate it to a selection (e.g., 'Make sure to select the Gray option!'). You are STRICTLY FORBIDDEN from saying the item 'functions on gray surfaces'. ACRONYM SCRUB: You MUST translate clunky acronyms into plain English in these sentences. Change 'QTY' to 'items', 'of them', or 'to your cart'. Do NOT print the literal letters 'QTY' here. VARIETY FIX: If '3 Colors' or 'several colors', say 'Make sure to pick your favorite color!' Do NOT drop the number if provided. EXACT VARIANT LOCK: Do NOT translate or separate hyphenated options (e.g., 'White-60pcs', 'Brown04'). Print the exact literal string. MATH LOCK: If the raw text explicitly calculates a per-item price (e.g., 'Each will be $27.59'), you MUST include that exact math in ALL 4 sentences. PRICE ECHO BAN: Do NOT pull the main sale price into these sentences. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product name or title in these sentences. To be specific without using the title, use generic nouns (e.g., 'Make sure to add 4 items to your cart', 'Grab 2 boxes', 'Pick your favorite color'). Do NOT use the words 'data payload'.),
             "b5_verification": (String. Evaluate the raw text for ANY retailer-specific shipping/pickup perks (e.g., 'Free shipping with Converse Account', 'Walmart+'). If none, write "NONE"),
             "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount if one is provided (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
@@ -412,7 +419,7 @@
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.42 RUN DEAL PROMPT
+            // V8.43 RUN DEAL PROMPT: Title Blindness Exception & Expanded Inference Vocabulary
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -420,11 +427,10 @@
             "scrubbed_keyword": (String. Extract a generic noun for the product. STRICT LIMIT: Max 1 to 2 words, e.g., 'Microwave', 'Carpet Cleaner'. CONTEXTUAL MULTIPLIER MANDATE: If the deal includes a specific quantity multiplier like 2 QTY or 4-Pack, you MUST include it here, e.g., '2-Pack Microwave'.),
             "sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
             "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
-            "curiosity_hooks": (Array of 3 full, unique sentences acting out a Suspicious Glitch Hunter persona. STRICT LIMIT: Max 25 characters. MUST end with "?!" or "!". CONVERSATIONAL ACCUSATION LAW: Frame the hook as a conversational question or accusation (e.g., 'Did the warehouse mess up?!', 'Someone is getting fired!'). EMOTIONAL BOUNDARY LAW: You are STRICTLY FORBIDDEN from mentioning the physical product or its use-case here.),
-            "inferences": (Array of 3 short lifestyle statements. THE ACTION-VALUE MANDATE: STRICT LENGTH LIMIT: Max 6 words. PRODUCT-SPECIFIC VERB LAW: You MUST start the sentence with a physical action verb specific to how you use the item (e.g., 'Heat up food', 'Wash clothes'). VALUE WHITELIST: You MUST end the sentence with one of these exact phrases: 'for way less', 'for a fraction of the cost', or 'without breaking the bank'. Do NOT truncate these phrases.),
+            "inferences": (Array of 3 short lifestyle statements. THE ACTION-VALUE MANDATE: STRICT LENGTH LIMIT: Max 6 words. PRODUCT-SPECIFIC VERB LAW: You MUST start the sentence with a physical action verb specific to how you use the item (e.g., 'Heat up food', 'Wash clothes'). VALUE WHITELIST: You MUST end the sentence with one of these exact phrases: 'for way less', 'for a fraction of the cost', 'without breaking the bank', 'for pennies', 'at a massive discount', 'for next to nothing', or 'on a serious budget'. Do NOT truncate these phrases.),
             "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
             "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating (e.g., 'The system might correct this value at any moment!', 'This calculation usually doesn't stay active for long!'). B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY limits, required quantities, sizes, dimensions (e.g., '65 Inch'), size ranges, specific colors/scents, OR generic variety phrases (e.g., 'several colors', '3 colors'). Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS SUPREMACY: You are STRICTLY FORBIDDEN from extracting ANY size, color, or quantity that is ALREADY in the title (e.g., if the title says '3 Color Temperature', do NOT extract '3 Color'). This rule OVERRIDES all other extraction rules. EXCEPTION: If a color or specific variant name is attached to a size/quantity (e.g., 'White-60pcs'), you MUST extract the entire variant name even if the number is in the title. AGGRESSIVE EXTRACTION: You MUST extract ANY mention of a color, scent, size, or dimension in the raw text, AS LONG AS it is not in the title. If the text contains the phrase 'works on' followed by a word (e.g., 'works on Gray'), you MUST extract it as a mandatory variant. Assume ALL colors/sizes/dimensions are mandatory selections. If none, write "NONE"),
+            "b2_verification": (String. Extract ONLY limits, required quantities, sizes, dimensions (e.g., '65 Inch'), size ranges, specific colors/scents, OR generic variety phrases (e.g., 'several colors', '3 colors'). Do NOT extract shipping/pickup minimums like $10 or $35. TITLE BLINDNESS SUPREMACY: Do NOT extract passive sizes/colors ALREADY in the title. EXCEPTION: You MUST ALWAYS extract mandatory requirements (e.g., 'Add 2'), strict limits (e.g., 'Limit 1'), and per-item math, even if they appear in the title, because you must instruct the user on what to do. AGGRESSIVE EXTRACTION: You MUST extract ANY mention of a color, scent, size, or dimension in the raw text, AS LONG AS it is not in the title. If the text contains the phrase 'works on' followed by a word (e.g., 'works on Gray'), you MUST extract it as a mandatory variant. Assume ALL colors/sizes/dimensions are mandatory selections. If none, write "NONE"),
             "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST use the BLUEPRINT METHOD: Gather ALL extracted facts. Include ALL of these facts in EVERY SINGLE sentence. LOGIC GATES: If 'Limit'/'Maximum', frame it ONLY as a casual heads-up (e.g., 'Keep in mind there is a strict limit of 3 per order!'). You are STRICTLY FORBIDDEN from using instructional verbs like 'add', 'grab', or 'pick up' when discussing limits. If 'Add'/'Buy'/'Minimum' or a STANDALONE COLOR/SIZE/DIMENSION, frame as a necessary action using natural shopper verbs like 'add', 'grab', or 'select' (e.g., 'Make sure to select the 65 Inch option!'). You are STRICTLY FORBIDDEN from using robotic phrases like 'match the requirement', 'provide', 'submit', or 'input'. COLOR TRANSLATION LOCK: If the fact contains 'works on', you MUST translate it to a selection (e.g., 'Make sure to select the Gray option!'). You are STRICTLY FORBIDDEN from saying the item 'functions on gray surfaces'. ACRONYM SCRUB: You MUST translate clunky acronyms into plain English in these sentences. Change 'QTY' to 'items', 'of them', or 'to your cart'. Do NOT print the literal letters 'QTY' here. VARIETY FIX: If '3 Colors' or 'several colors', say 'Make sure to pick your favorite color!' Do NOT drop the number if provided. EXACT VARIANT LOCK: Do NOT translate or separate hyphenated options (e.g., 'White-60pcs', 'Brown04'). Print the exact literal string. MATH LOCK: If the raw text explicitly calculates a per-item price (e.g., 'Each will be $27.59'), you MUST include that exact math in ALL 4 sentences. PRICE ECHO BAN: Do NOT pull the main sale price into these sentences. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product name or title in these sentences. To be specific without using the title, use generic nouns (e.g., 'Make sure to add 4 items to your cart', 'Grab 2 boxes', 'Pick your favorite color'). Do NOT use the words 'data payload'.),
             "b5_verification": (String. Evaluate the raw text for ANY retailer-specific shipping/pickup perks (e.g., 'Free shipping with Converse Account', 'Walmart+'). If none, write "NONE"),
             "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically rephrase the perk 4 times. EXACT VALUE LOCK: You MUST state the exact dollar amount if one is provided (e.g., $35 or $10). INSTRUCTIONAL PERSONA: Use natural phrases like: 'Once your cart hits $10, local pickup is covered!'. Do NOT use robotic words like 'threshold', 'qualify', 'utilize', 'service', 'credentials', or 'session'.),
@@ -469,6 +475,9 @@
             const selectedShortPointers = shuffleArray(shortPointers).slice(0, 4);
             const selectedDiscoveries = shuffleArray(allDiscoveries).slice(0, 4);
             const selectedLinkLeads = shuffleArray(allLinkLeads).slice(0, 4);
+            
+            // V8.43: Dynamic Curiosity Hooks for Run Deals
+            const selectedHooks = shuffleArray(allCuriosityHooks).slice(0, 3);
             
             const cleanTitle = cleanText(aiData.cleaned_title);
             const retailer = cleanText(aiData.retailer_name) || "Amazon";
@@ -583,7 +592,6 @@
                         rawLines.splice(randIdx, 0, customText);
                     }
 
-                    // V8.42: Hybrid Space Chaos (Horizontal Merge + Vertical Randomization)
                     if (rawLines.length > 2 && Math.random() > 0.3) {
                         let mergeIdx = Math.floor(Math.random() * (rawLines.length - 1));
                         rawLines[mergeIdx] = rawLines[mergeIdx] + " " + rawLines[mergeIdx + 1];
@@ -636,7 +644,7 @@
             } else {
                 // RUN DEAL ASSEMBLY
                 for(let i=0; i<3; i++) {
-                    let hook = cleanText(aiData.curiosity_hooks[i]);
+                    let hook = selectedHooks[i];
                     let inf = cleanText(aiData.inferences[i]);
                     let keyword = cleanText(aiData.scrubbed_keyword);
                     let ptrLine = selectedShortPointers[i];
@@ -727,7 +735,6 @@
                 rawDtLines.splice(randIdxDT, 0, customTextDT);
             }
 
-            // V8.42: Hybrid Space Chaos for Daily Thread
             if (rawDtLines.length > 2 && Math.random() > 0.3) {
                 let mergeIdxDT = Math.floor(Math.random() * (rawDtLines.length - 1));
                 rawDtLines[mergeIdxDT] = rawDtLines[mergeIdxDT] + " " + rawDtLines[mergeIdxDT + 1];
