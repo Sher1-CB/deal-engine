@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.58</title>
+    <title>The CB Deal Generator v8.61</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.58</span>
+            <span class="version-tag">v8.61</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -416,7 +416,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.58 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
+            // V8.61 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -426,13 +426,13 @@
             "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
             "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product.),
             "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. Use a wide variety of phrasing. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY these 3 categories from the extra text: 1) Active purchase limits, 2) Required cart quantities (e.g., 'Add 4', 'Buy 2'), 3) Mandatory variant selections (colors/sizes/scents). SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping/pickup minimums (e.g., $35 order). Leave shipping entirely out of B2! TITLE BLINDNESS: Ignore pack-sizes or adjectives if they are merely part of the product name. TITLE EXCEPTION: If the extra text explicitly commands a cart quantity (e.g., 'ADD 4 QTY') or says an option is 'cheaper', you MUST extract it even if it shares words with the title. If no limits, quantities, or mandatory selections exist outside the title, write "NONE"),
+            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities (e.g., 'Add 4'), 3) Specific variants, 4) Size ranges (e.g., 'S-XXL', 'up to 4X'), and 5) Generic variety phrases (e.g., '3 colors', 'several options'). SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: You MUST extract size ranges and variety phrases found in the extra text even if they share words with the title (e.g., 'Plus Size'). If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
-- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up! (e.g., If there is a color AND a size, put both in all 4 sentences).
+- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
 - RULE 1 (LIMITS): Frame limits casually: "Heads up, there is a limit of 1!"
-- RULE 2 (QUANTITIES): Frame required cart amounts actively: "You gotta toss 4 in your cart!"
-- RULE 3 (VARIANTS): Frame options casually: "Make sure to pick your favorite size and color!"
-- MATH LOCK: If the raw text explicitly gives a per-item price (e.g., '$16.88 per Jug'), you MUST include that exact math in EVERY sentence.
+- RULE 2 (QUANTITIES): Frame required amounts actively using a VARIETY of casual verbs (e.g., 'Make sure to grab 4', 'You need to add 4 of these'). Do NOT repeat the exact same sentence structure.
+- RULE 3 (VARIANTS & RANGES): Frame options and size ranges casually: "Make sure to pick your favorite size and color!", "Pick the one that fits best from the options!"
+- MATH LOCK: If the raw text explicitly gives a per-item price, include that exact math in EVERY sentence.
 Do NOT use robotic words like 'ensure' or 'suggest'.),
             "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
             "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
@@ -442,13 +442,14 @@ Do NOT use robotic words like 'ensure' or 'suggest'.),
             "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
             "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
             "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
-            "b8_verification": (String. Extract leftover facts explicitly stated in the extra text (e.g., Auto-delivery/S&S, 'No code needed', or 'Select accounts'). If none, write "NONE"),
-            "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts using these exact blueprints:
-            - IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
-            - IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
-            - IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
-            - COMPOUNDING: If you extracted multiple facts, you MUST combine the blueprints into one sentence.
-            Do NOT use thesaurus words like 'reduction' or 'markdown'. Use casual phrases like 'drop the total'.),
+            "b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text (e.g., 'Oven & Microwave Safe', 'BPA Free', Auto-delivery/S&S, 'No code needed', or 'Select accounts'). If none, write "NONE"),
+"b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts using these exact blueprints:
+- IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
+- IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
+- IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
+- IF GENERIC PRODUCT FACT: Frame it casually as a bonus feature (e.g., 'Plus, these are totally oven and microwave safe!').
+- COMPOUNDING: If you extracted multiple facts, you MUST combine the blueprints into one sentence.
+Do NOT use thesaurus words like 'reduction' or 'markdown'. Use casual phrases like 'drop the total'.),
             "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
             "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
             ${customLineInstruction}
@@ -457,7 +458,7 @@ Do NOT use robotic words like 'ensure' or 'suggest'.),
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.58 RUN DEAL PROMPT
+            // V8.61 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -469,13 +470,13 @@ Do NOT use robotic words like 'ensure' or 'suggest'.),
             "inferences": (Array of 3 short lifestyle statements. THE ACTION-VALUE MANDATE: STRICT LENGTH LIMIT: Max 6 words. PRODUCT-SPECIFIC VERB LAW: You MUST start the sentence with a physical action verb specific to how you use the item (e.g., 'Heat up food', 'Wash clothes'). VALUE WHITELIST: You MUST end the sentence with one of these exact phrases: 'for way less', 'for a fraction of the cost', 'without breaking the bank', 'at a massive discount', or 'on a serious budget'. Do NOT truncate these phrases. PUNCTUATION BAN: Do NOT add a period at the end of these phrases.),
             "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
             "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating (e.g., 'The system might correct this value at any moment!', 'This calculation usually doesn't stay active for long!'). B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY these 3 categories from the extra text: 1) Active purchase limits, 2) Required cart quantities (e.g., 'Add 4', 'Buy 2'), 3) Mandatory variant selections (colors/sizes/scents). SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping/pickup minimums (e.g., $35 order). Leave shipping entirely out of B2! TITLE BLINDNESS: Ignore pack-sizes or adjectives if they are merely part of the product name. TITLE EXCEPTION: If the extra text explicitly commands a cart quantity (e.g., 'ADD 4 QTY') or says an option is 'cheaper', you MUST extract it even if it shares words with the title. If no limits, quantities, or mandatory selections exist outside the title, write "NONE"),
+            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities (e.g., 'Add 4'), 3) Specific variants, 4) Size ranges (e.g., 'S-XXL', 'up to 4X'), and 5) Generic variety phrases (e.g., '3 colors', 'several options'). SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: You MUST extract size ranges and variety phrases found in the extra text even if they share words with the title (e.g., 'Plus Size'). If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
-- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up! (e.g., If there is a color AND a size, put both in all 4 sentences).
+- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
 - RULE 1 (LIMITS): Frame limits casually: "Heads up, there is a limit of 1!"
-- RULE 2 (QUANTITIES): Frame required cart amounts actively: "You gotta toss 4 in your cart!"
-- RULE 3 (VARIANTS): Frame options casually: "Make sure to pick your favorite size and color!"
-- MATH LOCK: If the raw text explicitly gives a per-item price (e.g., '$16.88 per Jug'), you MUST include that exact math in EVERY sentence.
+- RULE 2 (QUANTITIES): Frame required amounts actively using a VARIETY of casual verbs (e.g., 'Make sure to grab 4', 'You need to add 4 of these'). Do NOT repeat the exact same sentence structure.
+- RULE 3 (VARIANTS & RANGES): Frame options and size ranges casually: "Make sure to pick your favorite size and color!", "Pick the one that fits best from the options!"
+- MATH LOCK: If the raw text explicitly gives a per-item price, include that exact math in EVERY sentence.
 Do NOT use robotic words like 'ensure' or 'suggest'.),
             Do NOT use robotic words like 'ensure', 'suggest', 'select to your haul', or 'match requirement'.),
             "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
@@ -486,13 +487,14 @@ Do NOT use robotic words like 'ensure' or 'suggest'.),
             "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
             "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
             "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
-            "b8_verification": (String. Extract leftover facts explicitly stated in the extra text (e.g., Auto-delivery/S&S, 'No code needed', or 'Select accounts'). If none, write "NONE"),
-            "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts using these exact blueprints:
-            - IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
-            - IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
-            - IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
-            - COMPOUNDING: If you extracted multiple facts, you MUST combine the blueprints into one sentence.
-            Do NOT use thesaurus words like 'reduction' or 'markdown'. Use casual phrases like 'drop the total'.),
+            "b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text (e.g., 'Oven & Microwave Safe', 'BPA Free', Auto-delivery/S&S, 'No code needed', or 'Select accounts'). If none, write "NONE"),
+"b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts using these exact blueprints:
+- IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
+- IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
+- IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
+- IF GENERIC PRODUCT FACT: Frame it casually as a bonus feature (e.g., 'Plus, these are totally oven and microwave safe!').
+- COMPOUNDING: If you extracted multiple facts, you MUST combine the blueprints into one sentence.
+Do NOT use thesaurus words like 'reduction' or 'markdown'. Use casual phrases like 'drop the total'.),
             "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
             "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
             ${customLineInstruction}
