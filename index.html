@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.52</title>
+    <title>The CB Deal Generator v8.55</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.52</span>
+            <span class="version-tag">v8.55</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -416,7 +416,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.52 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
+            // V8.55 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -434,7 +434,7 @@
             "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
             "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
             "b8_verification": (String. Decode all leetspeak first. Extract ALL leftover factual info into ONE string. ONLY extract facts explicitly written in the raw text. You MUST explicitly extract "Negative Facts" (like 'No code needed'), programs like 'S&S' or 'Subscribe & Save', and conditions like 'Select Accounts'. If the ONLY leftover info is a size/weight ALREADY in the title, write "NONE".),
-            "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the ENTIRE verification string 4 times. COMPOUND LOCK: You MUST include ALL facts in EVERY sentence. Do not split them up. LOGISTICS VOCABULARY: If the fact is an auto-delivery program, use safe phrases like 'Set-and-forget option', 'Scheduled arrivals', or 'Auto-delivery'. S&S CONTEXT LOCK: If the raw text says 'cheaper under S&S' or '+ S&S', you MUST explicitly state that the auto-delivery option provides an EXTRA discount in EVERY sentence using CASUAL BEST-FRIEND LANGUAGE (e.g., 'Set up routine delivery to make it even cheaper!', 'You can get it for even less if you use the set-and-forget option!'). Do not just talk about convenience. PRINT BAN: You are STRICTLY FORBIDDEN from printing the words 'S&S', 'Subscribe', or 'Subscription' here. If the fact is 'No code needed', say 'The reduction applies automatically at the end!'. Do NOT spell out prices in words.),
+            "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the ENTIRE verification string 4 times. COMPOUND FACT LOCK: You MUST include ALL extracted facts in EVERY SINGLE sentence. Do not drop facts. S&S / AUTO-DELIVERY LOCK: If the raw text mentions S&S or auto-delivery, you MUST frame it as a way to make the item even cheaper. THESAURUS BAN: Because words like 'discount' and 'savings' are banned globally, you MUST use casual conversational phrases like 'make it even cheaper', 'drop the total even more', or 'get it for even less'. You are STRICTLY FORBIDDEN from using robotic thesaurus words like 'reduction', 'deduction', or 'markdown'. TARGETED ACCOUNTS: If the raw text mentions 'select accounts' or 'targeted', translate it into a casual heads-up (e.g., 'Heads up, this might only work for certain accounts!', 'Make sure to check if your account is eligible!'). PRINT BAN: You are STRICTLY FORBIDDEN from printing the letters 'S&S' or words 'Subscribe' or 'Subscription' here. Do NOT spell out prices in words.),
             "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
             "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
             ${customLineInstruction}
@@ -443,7 +443,7 @@
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.52 RUN DEAL PROMPT
+            // V8.55 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -463,7 +463,7 @@
             "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
             "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
             "b8_verification": (String. Decode all leetspeak first. Extract ALL leftover factual info into ONE string. ONLY extract facts explicitly written in the raw text. You MUST explicitly extract "Negative Facts" (like 'No code needed') AND programs like 'S&S' or 'Subscribe & Save'. If the ONLY leftover info is a size/weight ALREADY in the title, write "NONE".),
-            "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the ENTIRE verification string 4 times. COMPOUND LOCK: You MUST include ALL facts in EVERY sentence. Do not split them up. LOGISTICS VOCABULARY: If the fact is an auto-delivery program, use safe phrases like 'Set-and-forget option', 'Scheduled arrivals', or 'Auto-delivery'. S&S CONTEXT LOCK: If the raw text says 'cheaper under S&S' or '+ S&S', you MUST explicitly state that the auto-delivery option provides an EXTRA discount in EVERY sentence using CASUAL BEST-FRIEND LANGUAGE (e.g., 'Set up routine delivery to make it even cheaper!', 'You can get it for even less if you use the set-and-forget option!'). Do not just talk about convenience. PRINT BAN: You are STRICTLY FORBIDDEN from printing the words 'S&S', 'Subscribe', or 'Subscription' here. If the fact is 'No code needed', say 'The reduction applies automatically at the end!'. Do NOT spell out prices in words.),
+            "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the ENTIRE verification string 4 times. COMPOUND FACT LOCK: You MUST include ALL extracted facts in EVERY SINGLE sentence. Do not drop facts. S&S / AUTO-DELIVERY LOCK: If the raw text mentions S&S or auto-delivery, you MUST frame it as a way to make the item even cheaper. THESAURUS BAN: Because words like 'discount' and 'savings' are banned globally, you MUST use casual conversational phrases like 'make it even cheaper', 'drop the total even more', or 'get it for even less'. You are STRICTLY FORBIDDEN from using robotic thesaurus words like 'reduction', 'deduction', or 'markdown'. TARGETED ACCOUNTS: If the raw text mentions 'select accounts' or 'targeted', translate it into a casual heads-up (e.g., 'Heads up, this might only work for certain accounts!', 'Make sure to check if your account is eligible!'). PRINT BAN: You are STRICTLY FORBIDDEN from printing the letters 'S&S' or words 'Subscribe' or 'Subscription' here. Do NOT spell out prices in words.),
             "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
             "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
             ${customLineInstruction}
