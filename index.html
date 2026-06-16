@@ -443,7 +443,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
 "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code.),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
-"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, AND included accessories/bonuses (e.g., 'Gloves included', 'Waterproof'). Also extract Auto-delivery/S&S, 'No code needed', or 'Select accounts'. If none, write "NONE"),
+"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, AND included accessories/bonuses (e.g., 'Gloves included', 'Waterproof'). Also extract Auto-delivery/S&S, 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. Colors and sizes belong exclusively to B2. If the only leftover facts are colors or sizes, write "NONE"),
 "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
 - IF S&S / AUTO-DELIVERY: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S').
 - IF NO CODE NEEDED: "The total drops automatically at the end!" 
@@ -487,7 +487,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
 "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code.),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
-"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, AND included accessories/bonuses (e.g., 'Gloves included', 'Waterproof'). Also extract Auto-delivery/S&S, 'No code needed', or 'Select accounts'. If none, write "NONE"),
+"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, AND included accessories/bonuses (e.g., 'Gloves included', 'Waterproof'). Also extract Auto-delivery/S&S, 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. Colors and sizes belong exclusively to B2. If the only leftover facts are colors or sizes, write "NONE"),
 "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
 - IF S&S / AUTO-DELIVERY: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S').
 - IF NO CODE NEEDED: "The total drops automatically at the end!" 
@@ -581,10 +581,13 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             const isPickup = rLower.includes('pickup') || rLower.includes('pick up') || rLower.includes('walgreens') || rLower.includes('w@lgreens');
             const dynamicStatuses = isPickup ? ["Pickup!", "In-store!", "Grab at store!", "Local pickup!"] : ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
 
-            let phase0 = `${rawText}`;
-            if (customLine) phase0 += `\n[Custom Injection: ${customLine}]`;
-            document.getElementById('out-phase0').innerText = phase0;
-            currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
+            const modeText = document.getElementById('dealType').options[document.getElementById('dealType').selectedIndex].text;
+            const pronounText = document.getElementById('pronounStyle').options[document.getElementById('pronounStyle').selectedIndex].text;
+
+let phase0 = `[MODE: ${modeText} | PRONOUNS: ${pronounText}]\n${rawText}`;
+if (customLine) phase0 += `\n[Custom Injection: ${customLine}]`;
+document.getElementById('out-phase0').innerText = phase0;
+currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
 
             let sl = [];
             for(let i=0; i<3; i++) {
