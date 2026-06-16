@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.69</title>
+    <title>The CB Deal Generator v8.70</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.69</span>
+            <span class="version-tag">v8.70</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -321,7 +321,7 @@
 
     const allDiscoveries = [
         "We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today",
-        "I can't believe how low this dropped", "This is an absolute steal right now", "We had to share this massive reduction immediately",
+        "I can't believe how low this dropped", "This is an absolute steal right now", "We had to share this massive drop immediately",
         "Look at this incredible value we just found", "This is one of the best drops we've seen all week", "Our team is obsessed with this current value",
         "I just grabbed mine at this lower total", "We noticed this fell and it is so good", "This is a perfect catch for anyone looking"
     ];
@@ -416,17 +416,17 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.69 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
+            // V8.70 REGULAR DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
-            Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
-            "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
-            "cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
-            "sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
-            "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
-            "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
-            "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product's use-case. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, or prices into these lifestyle statements. Keep them focused purely on the physical item and how it is used.),
-            "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. Use a wide variety of phrasing. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. TRIGGER CATCH-ALL: If the text says 'works on', 'cheaper', or 'cheapest' (e.g., 'works on blue'), you MUST extract that variant! SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
+Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
+"retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
+"cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
+"sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
+"reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
+"praises": (Array of 3 short hype questions ending in '?'. PRONOUN ENFORCEMENT: ${pronounInstruction} AVID SHOPPER PERSONA: Ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
+"inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, use it as the base and rephrase it 3 times. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. Make it highly specific to the product's use-case. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements. Keep them focused purely on the physical item and how it is used.),
+"disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
+"b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. TRIGGER CATCH-ALL: If the text says 'works on', 'cheaper', or 'cheapest' (e.g., 'works on blue'), you MUST extract that variant! SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
 - BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
 - RULE 1 (LIMITS): Frame limits casually: "Heads up, there is a limit of 5!" (Do NOT say 'add' or 'grab' for limits).
@@ -435,43 +435,42 @@
 - ANTI-PARROT VERB ROTATION: For Quantities and Variants, you MUST randomly rotate between the verbs 'Choose', 'Select', 'Grab', and 'Pick' across the 4 sentences. You are STRICTLY FORBIDDEN from starting multiple sentences with 'Make sure to select'.
 - MATH BAN: You are STRICTLY FORBIDDEN from calculating math.
 Do NOT use robotic filler phrases like 'It is fun to select'.),
-            "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
-            "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
-            - RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
-            - EXACT VALUE: Include the exact dollar amount if provided.
-            Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
-            "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
-            "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
-            "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
-            "b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, and capabilities (e.g., 'Auto 2-Sided Printing', 'Waterproof', 'Oven Safe'), Auto-delivery/S&S, 'No code needed', or 'Select accounts'. If none, write "NONE"),
-"b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts using these exact blueprints:
-- IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
-- IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
-- IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
-- IF PRODUCT FEATURE/SPEC: EXACT LITERAL LOCK. You MUST print the exact literal string of the feature (e.g., 'LED Display & Remote Control'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'built-in features' or 'specs'. Frame it casually using PRONOUN-SAFE language: "It even comes with [Insert Literal Feature Here]!", "Plus, it features [Insert Literal Feature Here]!"
-- COMPOUNDING: If you extracted multiple facts, combine the blueprints into one sentence.
+"b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
+"b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
+- RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
+- EXACT VALUE: Include the exact dollar amount if provided.
+Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
+"b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
+"b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code.),
+"b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
+"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, AND included accessories/bonuses (e.g., 'Gloves included', 'Waterproof'). Also extract Auto-delivery/S&S, 'No code needed', or 'Select accounts'. If none, write "NONE"),
+"b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
+- IF S&S / AUTO-DELIVERY: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S').
+- IF NO CODE NEEDED: "The total drops automatically at the end!" 
+- IF SELECT ACCOUNTS: "Heads up, this might only work for certain accounts!"
+- IF FEATURE OR ACCESSORY: Frame casually. SEMANTIC ENTITY LOCK: You MUST name the specific feature/accessory, but adjust the grammar so it sounds natural (e.g., If the text says 'Gloves included', say 'It even comes with gloves!', do NOT say 'It features Gloves included!'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'specs'.
+- COMPOUNDING: If you extracted multiple facts, combine them.
 Do NOT use thesaurus words like 'reduction'.),
-            "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
-            "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
-            ${customLineInstruction}
-            "dt_signoff": (String. 1 short lifestyle sentence. PRONOUN LOCK: ${pronounInstruction}),
-            "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. ESCAPE HATCH: If you run out of exact matches, fill the rest of the 30 with neutral aesthetic emojis like ✨, 🌟, 💫, 🌿, 🤎. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
-            
-            GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
+"b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, write "NONE".),
+"b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
+${customLineInstruction}
+"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else.),
+"emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
+GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.69 RUN DEAL PROMPT
+            // V8.70 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
-            Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
-            "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
-            "cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
-            "scrubbed_keyword": (String. Extract a generic noun for the product. STRICT LIMIT: Max 1 to 2 words, e.g., 'Microwave', 'Carpet Cleaner'. CONTEXTUAL MULTIPLIER MANDATE: If the deal includes a specific quantity multiplier like 2 QTY or 4-Pack, you MUST include it here, e.g., '2-Pack Microwave'.),
-            "sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
-            "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
-            "curiosity_hooks": (Array of 3 full, unique sentences acting out a Suspicious Glitch Hunter persona. STRICT LIMIT: Max 25 characters. MUST end with "?!" or "!". CONVERSATIONAL ACCUSATION LAW: Frame the hook as a conversational question or accusation (e.g., 'Did the warehouse mess up?!', 'Someone is getting fired!'). EMOTIONAL BOUNDARY LAW: You are STRICTLY FORBIDDEN from mentioning the physical product or its use-case here.),
-            "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product's use-case. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, or prices into these lifestyle statements. Keep them focused purely on the physical item and how it is used.),
-            "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
-            "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating (e.g., 'The system might correct this value at any moment!', 'This calculation usually doesn't stay active for long!'). B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. TRIGGER CATCH-ALL: If the text says 'works on', 'cheaper', or 'cheapest' (e.g., 'works on blue'), you MUST extract that variant! SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
+Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
+"retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
+"cleaned_title": (String. Copy product name exactly. Remove emojis. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
+"scrubbed_keyword": (String. Extract a generic noun for the product. STRICT LIMIT: Max 1 to 2 words. CONTEXTUAL MULTIPLIER MANDATE: If the deal includes a specific quantity multiplier like 2 QTY or 4-Pack, you MUST include it here, e.g., '2-Pack Microwave'.),
+"sale_price": (String. Scan the ENTIRE raw text to extract the sale price. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
+"reg_price": (String. Extract regular price. Strip the $ sign AND the decimal. If none, write "NONE"),
+"curiosity_hooks": (Array of 3 full, unique sentences acting out a Suspicious Glitch Hunter persona. STRICT LIMIT: Max 25 characters. MUST end with "?!" or "!". EMOTIONAL BOUNDARY LAW: You are STRICTLY FORBIDDEN from mentioning the physical product or its use-case here.),
+"inferences": (Array of 3 short lifestyle statements. THE ACTION-VALUE MANDATE: STRICT LENGTH LIMIT: Max 6 words. PRODUCT-SPECIFIC VERB LAW: You MUST start the sentence with a physical action verb specific to how you use the item (e.g., 'Heat up food'). VALUE WHITELIST: You MUST end the sentence with one of these exact phrases: 'for way less', 'for a fraction of the cost', 'without breaking the bank', 'at a massive discount', or 'on a serious budget'. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
+"praises": (Array of 3 short hype questions ending in '?'. PRONOUN ENFORCEMENT: ${pronounInstruction} Ask positive, rhetorical questions.),
+"disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
+"b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. TRIGGER CATCH-ALL: If the text says 'works on', 'cheaper', or 'cheapest' (e.g., 'works on blue'), you MUST extract that variant! SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
 - BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
 - RULE 1 (LIMITS): Frame limits casually: "Heads up, there is a limit of 5!" (Do NOT say 'add' or 'grab' for limits).
@@ -480,29 +479,28 @@ Do NOT use thesaurus words like 'reduction'.),
 - ANTI-PARROT VERB ROTATION: For Quantities and Variants, you MUST randomly rotate between the verbs 'Choose', 'Select', 'Grab', and 'Pick' across the 4 sentences. You are STRICTLY FORBIDDEN from starting multiple sentences with 'Make sure to select'.
 - MATH BAN: You are STRICTLY FORBIDDEN from calculating math.
 Do NOT use robotic filler phrases like 'It is fun to select'.),
-            "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
-            "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
-            - RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
-            - EXACT VALUE: Include the exact dollar amount if provided.
-            Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
-            "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
-            "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders. INSTRUCTIONAL PERSONA: Use natural safe phrasing directed at the reader like 'Make sure to check the little box on the page!'. Do NOT use 'I' or 'My' here.),
-            "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. Do NOT invent arrival times just because a holiday is in the title. If no explicit arrival time is in the raw text, write ["DEAD","DEAD","DEAD","DEAD"]),
-            "b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, and capabilities (e.g., 'Auto 2-Sided Printing', 'Waterproof', 'Oven Safe'), Auto-delivery/S&S, 'No code needed', or 'Select accounts'. If none, write "NONE"),
-"b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts using these exact blueprints:
-- IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
-- IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
-- IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
-- IF PRODUCT FEATURE/SPEC: EXACT LITERAL LOCK. You MUST print the exact literal string of the feature (e.g., 'LED Display & Remote Control'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'built-in features' or 'specs'. Frame it casually using PRONOUN-SAFE language: "It even comes with [Insert Literal Feature Here]!", "Plus, it features [Insert Literal Feature Here]!"
-- COMPOUNDING: If you extracted multiple facts, combine the blueprints into one sentence.
+"b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
+"b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
+- RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths.
+- EXACT VALUE: Include the exact dollar amount if provided.
+Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
+"b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
+"b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code.),
+"b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
+"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, AND included accessories/bonuses (e.g., 'Gloves included', 'Waterproof'). Also extract Auto-delivery/S&S, 'No code needed', or 'Select accounts'. If none, write "NONE"),
+"b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
+- IF S&S / AUTO-DELIVERY: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S').
+- IF NO CODE NEEDED: "The total drops automatically at the end!" 
+- IF SELECT ACCOUNTS: "Heads up, this might only work for certain accounts!"
+- IF FEATURE OR ACCESSORY: Frame casually. SEMANTIC ENTITY LOCK: You MUST name the specific feature/accessory, but adjust the grammar so it sounds natural (e.g., If the text says 'Gloves included', say 'It even comes with gloves!', do NOT say 'It features Gloves included!'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'specs'.
+- COMPOUNDING: If you extracted multiple facts, combine them.
 Do NOT use thesaurus words like 'reduction'.),
-            "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
-            "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", you MUST write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
-            ${customLineInstruction}
-            "dt_signoff": (String. 1 short lifestyle sentence. PRONOUN LOCK: ${pronounInstruction}),
-            "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. e.g., if fitness, use 👟🏋️‍♂️💧🍎💪; if kitchen, use 🥩🧅🍳🧂🍽️. ESCAPE HATCH: If you run out of exact matches, fill the rest of the 30 with neutral aesthetic emojis like ✨, 🌟, 💫, 🌿, 🤎. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
-            
-            GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
+"b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, write "NONE".),
+"b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, rephrase the SECOND fact 4 times.),
+${customLineInstruction}
+"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else.),
+"emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
+GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         }
 
         try {
@@ -646,12 +644,6 @@ Do NOT use thesaurus words like 'reduction'.),
                     if (customText) {
                         const randIdx = Math.floor(Math.random() * (rawLines.length + 1));
                         rawLines.splice(randIdx, 0, customText);
-                    }
-
-                    if (rawLines.length > 2 && Math.random() > 0.3) {
-                        let mergeIdx = Math.floor(Math.random() * (rawLines.length - 1));
-                        rawLines[mergeIdx] = rawLines[mergeIdx] + " " + rawLines[mergeIdx + 1];
-                        rawLines.splice(mergeIdx + 1, 1);
                     }
 
                     let emojifiedLines = injectEmojisV8(rawLines, 3, 6);
@@ -805,12 +797,6 @@ Do NOT use thesaurus words like 'reduction'.),
             if (customTextDT) {
                 const randIdxDT = Math.floor(Math.random() * (rawDtLines.length + 1));
                 rawDtLines.splice(randIdxDT, 0, customTextDT);
-            }
-
-            if (rawDtLines.length > 2 && Math.random() > 0.3) {
-                let mergeIdxDT = Math.floor(Math.random() * (rawDtLines.length - 1));
-                rawDtLines[mergeIdxDT] = rawDtLines[mergeIdxDT] + " " + rawDtLines[mergeIdxDT + 1];
-                rawDtLines.splice(mergeIdxDT + 1, 1);
             }
 
             let emojifiedDtLines = injectEmojisV8(rawDtLines, 3, 5);
