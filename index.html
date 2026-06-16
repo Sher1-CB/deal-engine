@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.70</title>
+    <title>The CB Deal Generator v8.71</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.70</span>
+            <span class="version-tag">v8.71</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -303,27 +303,61 @@
 
     const allPrefixes = ["Just", "Down to", "At", "Score it for", "Only", "Found for", "Marked at", "Sitting at", "Now", "Fell to", "Yours for", "Spotted at", "Grab it for", "Snag it for"];
     const allCompLabels = ["Regular", "Normally", "Originally", "Previously", "Was", "List"];
-    const allPointers = [
-        "I put it right under here for you!", "You can grab yours right under here!", "I left the exact page right under this!",
-        "It's waiting for you right down there!", "Just scroll down a tiny bit to find it!", "The right spot is waiting just a step down!",
-        "Find the exact location ready for you in the next section!", "Everything you need is a little further down!", "Catch it just a quick scroll away!",
-        "I pinned the exact spot right under this text!", "The location is resting just under this text!", "Look just a little further down for the page!",
-        "I tucked the exact spot right under here!", "You can find it right under here!", "I left the location right under this!",
-        "It's resting for you right down there!", "Just scroll down a bit to see it!", "The exact page is waiting just a step down!",
-        "Find the exact spot ready for you in the next section!", "Everything you want is a little further down!", "Catch the location just a quick scroll away!"
-    ];
     
+    // --- 1ST PERSON DICTIONARIES (HIGH-VOLUME) ---
+    const discoveries1st = [
+        "We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today",
+        "I can't believe how low this dropped", "This is an absolute steal right now", "We had to share this massive drop immediately",
+        "Look at this incredible value we just found", "This is one of the best drops we've seen all week", "Our team is obsessed with this current value",
+        "I just grabbed mine at this lower total", "We noticed this fell and it is so good", "I am obsessed with this perfect catch",
+        "My jaw dropped when I saw this one", "We couldn't keep this a secret from you", "I practically ran to share this markdown",
+        "Our group chat went crazy over this", "I snagged this immediately for my house", "We are loving this incredible markdown today",
+        "I immediately added this to my list", "We are totally blown away by this one", "I am so hyped about this current number"
+    ];
+    const pointers1st = [
+        "I put it right under here for you!", "I left the exact page right under this!", "I pinned the exact spot right under this text!",
+        "I tucked the exact spot right under here!", "We linked it just a quick scroll away!", "I placed the location just under this text!",
+        "You can grab yours right under here!", "Just scroll down a tiny bit to find it!", "Everything you need is a little further down!",
+        "I dropped the exact page right below!", "We added the info right down there for you!", "I am leaving the spot right under here!",
+        "I secured the page right under this!", "We put the exact location just a step down!", "I attached it right down there!",
+        "I made sure to pin it right under this!", "We left the exact location waiting below!", "I tucked it just a tiny scroll away!",
+        "I made sure to drop it right under here!", "We placed the exact page right down there!"
+    ];
+    const linkLeads1st = [
+        "I left the page right here:", "My direct link is here:", "I pinned the exact page here:", "See what we found right here:",
+        "I dropped it right here:", "We put it right here for you:", "I added the location here:", "We linked it exactly here:",
+        "I secured the spot right here:", "My exact find is here:", "I attached the page here:", "We pinned it right here:",
+        "Grab it here:", "See it here:", "Check the exact page here:", "You can view it here:"
+    ];
+
+    // --- 3RD PERSON DICTIONARIES (HIGH-VOLUME) ---
+    const discoveries3rd = [
+        "This is a crazy good find", "This plummeted to an amazing new low", "This is an unreal discovery today",
+        "It's hard to believe how low this dropped", "This is an absolute steal right now", "This massive drop just went live",
+        "Look at this incredible value", "This is one of the best drops of the week", "This current value is unbelievable",
+        "This just hit a much lower total", "This fell and it is so good", "This is a perfect catch for anyone looking",
+        "This markdown is absolutely wild right now", "This is a phenomenal markdown to catch", "This is an unmatched value today",
+        "This is a top-tier find right now", "This is an unbeatable catch today", "This dropped beautifully just now",
+        "This is a spectacular markdown to grab", "This is a brilliantly timed drop", "This is a brilliant catch today"
+    ];
+    const pointers3rd = [
+        "The exact page is right under here!", "You can grab yours right under here!", "The link is right under this!",
+        "It's waiting for you right down there!", "Just scroll down a tiny bit to find it!", "The right spot is waiting just a step down!",
+        "Find the exact location ready in the next section!", "Everything you need is a little further down!", "Catch it just a quick scroll away!",
+        "The exact spot is pinned right under this text!", "The location is resting just under this text!", "Look just a little further down for the page!",
+        "It is tucked right down there!", "The exact page is waiting below!", "The info is resting just a step down!",
+        "The exact location is pinned right below!", "Catch the exact page right down there!"
+    ];
+    const linkLeads3rd = [
+        "Grab it here:", "See it here:", "Find it here:", "Check the exact page here:", "The page is right here:",
+        "The direct spot is here:", "You can view it here:", "Catch it right here:", "Here is the exact location:", 
+        "The exact spot is here:", "The location is here:", "The exact page is pinned here:", "View the exact spot here:"
+    ];
+
     const shortPointers = [
         "Right under here!", "Tucked down there!", "Just under this!", "Waiting down there!", 
         "Pinned down there!", "Right down there!", "Just down there!", "Tucked under this!", 
         "Just under here!", "Waiting under this!", "Resting down there!", "Right under this!"
-    ];
-
-    const allDiscoveries = [
-        "We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today",
-        "I can't believe how low this dropped", "This is an absolute steal right now", "We had to share this massive drop immediately",
-        "Look at this incredible value we just found", "This is one of the best drops we've seen all week", "Our team is obsessed with this current value",
-        "I just grabbed mine at this lower total", "We noticed this fell and it is so good", "This is a perfect catch for anyone looking"
     ];
     
     const allCuriosityHooks = [
@@ -331,11 +365,6 @@
         "How is this even possible?!", "Did they type this wrong?!", "This has to be a mistake!", 
         "Are you seeing these numbers?!", "Did the algorithm break?!", "Someone made a huge error!", 
         "Is this a system error?!", "They are practically giving it away!", "Did someone type the wrong digit?!"
-    ];
-
-    const allLinkLeads = [
-        "Grab it here:", "See it here:", "Find it here:", "Check the exact page here:", "I left the page right here:",
-        "The direct spot is here:", "You can view it here:", "Catch it right here:", "Here is the exact location:", "The exact spot is here:"
     ];
 
     const shuffleArray = (arr) => [...arr].sort(() => 0.5 - Math.random());
@@ -416,7 +445,6 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.70 REGULAR DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -458,7 +486,6 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.70 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -524,24 +551,22 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             const isOdd = dealNum % 2 !== 0;
             const extractedURL = extractURL(rawText);
             
+            // DYNAMIC DICTIONARY SELECTOR
+            const is1stPerson = (pronounStyle === "subject");
+            const activeDiscoveries = is1stPerson ? discoveries1st : discoveries3rd;
+            const activePointers = is1stPerson ? pointers1st : pointers3rd;
+            const activeLinkLeads = is1stPerson ? linkLeads1st : linkLeads3rd;
+
             const selectedPrefixes = shuffleArray(allPrefixes).slice(0, 4);
             const selectedCompLabels = shuffleArray(allCompLabels).slice(0, 4);
-            const selectedPointers = shuffleArray(allPointers).slice(0, 4);
             const selectedShortPointers = shuffleArray(shortPointers).slice(0, 4);
-            const selectedDiscoveries = shuffleArray(allDiscoveries).slice(0, 4);
-            const selectedLinkLeads = shuffleArray(allLinkLeads).slice(0, 4);
-            
             const selectedHooks = shuffleArray(allCuriosityHooks).slice(0, 3);
-            
-            const cleanTitle = cleanText(aiData.cleaned_title);
-            const retailer = cleanText(aiData.retailer_name) || "Amazon";
-            const dtSignoff = cleanText(aiData.dt_signoff);
-            
-            const rawEmojiPool = aiData.emoji_pool || [];
-            const uniqueEmojiPool = [...new Set(rawEmojiPool)]; 
-            const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","💫","🌟","🌿","🤎","🤍","✅","👀","💡"];
-            const finalEmojiPool = uniqueEmojiPool.length >= 8 ? uniqueEmojiPool : fallbackEmojis;
-            
+
+            // Using the dynamically selected arrays
+            const selectedDiscoveries = shuffleArray(activeDiscoveries).slice(0, 4);
+            const selectedPointers = shuffleArray(activePointers).slice(0, 4);
+            const selectedLinkLeads = shuffleArray(activeLinkLeads).slice(0, 4);
+
             let masterEmojiPool = [...finalEmojiPool].sort(() => 0.5 - Math.random());
             let masterEmojiIdx = 0;
             const getNextEmoji = () => { 
@@ -584,10 +609,10 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             const modeText = document.getElementById('dealType').options[document.getElementById('dealType').selectedIndex].text;
             const pronounText = document.getElementById('pronounStyle').options[document.getElementById('pronounStyle').selectedIndex].text;
 
-let phase0 = `[MODE: ${modeText} | PRONOUNS: ${pronounText}]\n${rawText}`;
-if (customLine) phase0 += `\n[Custom Injection: ${customLine}]`;
-document.getElementById('out-phase0').innerText = phase0;
-currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
+            let phase0 = `[MODE: ${modeText} | PRONOUNS: ${pronounText}]\n${rawText}`;
+            if (customLine) phase0 += `\n[Custom Injection: ${customLine}]`;
+            document.getElementById('out-phase0').innerText = phase0;
+            currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
 
             let sl = [];
             for(let i=0; i<3; i++) {
