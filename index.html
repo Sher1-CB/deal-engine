@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.66</title>
+    <title>The CB Deal Generator v8.67</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.66</span>
+            <span class="version-tag">v8.67</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -416,7 +416,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.66 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
+            // V8.67 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -447,7 +447,7 @@ Do NOT use robotic filler phrases like 'It is fun to select', 'ensure', or 'sugg
 - IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
 - IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
 - IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
-- IF PRODUCT FEATURE/SPEC: Frame it casually as a bonus (e.g., 'Plus, I love that it features [Feature]!', 'It even comes with [Feature]!').
+- IF PRODUCT FEATURE/SPEC: EXACT LITERAL LOCK. You MUST print the exact literal string of the feature (e.g., 'LED Display & Remote Control'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'built-in features' or 'specs'. Frame it casually using PRONOUN-SAFE language: "It even comes with [Insert Literal Feature Here]!", "Plus, it features [Insert Literal Feature Here]!"
 - COMPOUNDING: If you extracted multiple facts, combine the blueprints into one sentence.
 Do NOT use thesaurus words like 'reduction'.),
             "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
@@ -458,7 +458,7 @@ Do NOT use thesaurus words like 'reduction'.),
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.66 RUN DEAL PROMPT
+            // V8.67 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -491,7 +491,7 @@ Do NOT use robotic filler phrases like 'It is fun to select', 'ensure', or 'sugg
 - IF S&S / AUTO-DELIVERY: Frame it as an extra price drop: "Set up routine delivery to drop the total even more!" (Do NOT print 'S&S' or 'Subscribe').
 - IF NO CODE NEEDED: Frame it as instant: "The total drops automatically at the end!" 
 - IF SELECT ACCOUNTS: Frame it as a warning: "Heads up, this might only work for certain accounts!"
-- IF PRODUCT FEATURE/SPEC: Frame it casually as a bonus (e.g., 'Plus, I love that it features [Feature]!', 'It even comes with [Feature]!').
+- IF PRODUCT FEATURE/SPEC: EXACT LITERAL LOCK. You MUST print the exact literal string of the feature (e.g., 'LED Display & Remote Control'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'built-in features' or 'specs'. Frame it casually using PRONOUN-SAFE language: "It even comes with [Insert Literal Feature Here]!", "Plus, it features [Insert Literal Feature Here]!"
 - COMPOUNDING: If you extracted multiple facts, combine the blueprints into one sentence.
 Do NOT use thesaurus words like 'reduction'.),
             "b9_verification": (String. Extract a SECOND distinct leftover fact if one exists. If there is only ONE leftover fact total, you MUST write "NONE".),
