@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.67</title>
+    <title>The CB Deal Generator v8.69</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.67</span>
+            <span class="version-tag">v8.69</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -416,7 +416,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.67 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
+            // V8.69 THE MASTER PAYLOAD: S&S Context Fix, Select Accounts Fix, "Only" Override
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -424,16 +424,17 @@
             "sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
             "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
             "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
-            "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product.),
+            "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product's use-case. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, or prices into these lifestyle statements. Keep them focused purely on the physical item and how it is used.),
             "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. Use a wide variety of phrasing. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits/maximums, 2) Required cart quantities (e.g., 'Add 4'), 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: You MUST extract size ranges and variety phrases found in the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
+            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. TRIGGER CATCH-ALL: If the text says 'works on', 'cheaper', or 'cheapest' (e.g., 'works on blue'), you MUST extract that variant! SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
 - BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
-- RULE 1 (LIMITS): If the fact is a Maximum or Limit, frame it ONLY as a restriction (e.g., "Heads up, there is a limit of 5!"). You are STRICTLY FORBIDDEN from telling the user they 'need to add' a limit amount.
-- RULE 2 (QUANTITIES): If the fact is a REQUIRED minimum (e.g., 'Add 4'), frame it actively using a VARIETY of casual verbs (e.g., 'Make sure to grab 4', 'You need to add 4 of these').
-- RULE 3 (VARIANTS & RANGES): IF SINGLE VARIANT (e.g., 'Blue'): "Make sure to select the Blue option!". IF SPECIFIC RANGE (e.g., 'S-XXL'): "Grab your fit from the S-XXL options!" (You MUST print the literal size range). IF GENERIC VARIETY (e.g., 'several colors', '3 colors'): "Make sure to pick your favorite color!". You are STRICTLY FORBIDDEN from saying 'favorite blue' or 'favorite several colors options'.
-- MATH BAN: You are STRICTLY FORBIDDEN from calculating math. ONLY print math if it is explicitly written in the raw text.
-Do NOT use robotic filler phrases like 'It is fun to select', 'ensure', or 'suggest'.),
+- RULE 1 (LIMITS): Frame limits casually: "Heads up, there is a limit of 5!" (Do NOT say 'add' or 'grab' for limits).
+- RULE 2 (QUANTITIES): Frame required minimums actively: "You need to add 4 of these!"
+- RULE 3 (VARIANTS & RANGES): IF SPECIFIC VARIANTS (e.g., 'Blue', 'Red and Blue'): You MUST print the literal variants. IF SPECIFIC RANGE (e.g., 'S-XXL'): You MUST print the literal range. IF GENERIC VARIETY (e.g., 'several colors'): "Make sure to pick your favorite color!".
+- ANTI-PARROT VERB ROTATION: For Quantities and Variants, you MUST randomly rotate between the verbs 'Choose', 'Select', 'Grab', and 'Pick' across the 4 sentences. You are STRICTLY FORBIDDEN from starting multiple sentences with 'Make sure to select'.
+- MATH BAN: You are STRICTLY FORBIDDEN from calculating math.
+Do NOT use robotic filler phrases like 'It is fun to select'.),
             "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
             "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
             - RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
@@ -458,7 +459,7 @@ Do NOT use thesaurus words like 'reduction'.),
             
             GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.67 RUN DEAL PROMPT
+            // V8.69 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
             Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
             "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -467,17 +468,18 @@ Do NOT use thesaurus words like 'reduction'.),
             "sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
             "reg_price": (String. Extract regular price. Strip the $ sign AND the decimal, e.g. "34 99". KEEP hyphens for ranges, e.g. "14 99 - 17 99". If none, write "NONE"),
             "curiosity_hooks": (Array of 3 full, unique sentences acting out a Suspicious Glitch Hunter persona. STRICT LIMIT: Max 25 characters. MUST end with "?!" or "!". CONVERSATIONAL ACCUSATION LAW: Frame the hook as a conversational question or accusation (e.g., 'Did the warehouse mess up?!', 'Someone is getting fired!'). EMOTIONAL BOUNDARY LAW: You are STRICTLY FORBIDDEN from mentioning the physical product or its use-case here.),
-            "inferences": (Array of 3 short lifestyle statements. THE ACTION-VALUE MANDATE: STRICT LENGTH LIMIT: Max 6 words. PRODUCT-SPECIFIC VERB LAW: You MUST start the sentence with a physical action verb specific to how you use the item (e.g., 'Heat up food', 'Wash clothes'). VALUE WHITELIST: You MUST end the sentence with one of these exact phrases: 'for way less', 'for a fraction of the cost', 'without breaking the bank', 'at a massive discount', or 'on a serious budget'. Do NOT truncate these phrases. PUNCTUATION BAN: Do NOT add a period at the end of these phrases.),
+            "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, you MUST use it as the base and rephrase it 3 times. If none, generate your own. PRONOUN LOCK: ${pronounInstruction} Make it highly specific to the product's use-case. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, or prices into these lifestyle statements. Keep them focused purely on the physical item and how it is used.),
             "praises": (Array of 3 short hype questions ending in '?'. AVID SHOPPER PERSONA: Sound like a real person excitedly texting a friend. You MUST ask positive, rhetorical questions (e.g., 'Can you believe how good this looks?'). You are STRICTLY FORBIDDEN from asking functional or troubleshooting questions that introduce doubt.),
             "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating (e.g., 'The system might correct this value at any moment!', 'This calculation usually doesn't stay active for long!'). B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
-            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits/maximums, 2) Required cart quantities (e.g., 'Add 4'), 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: You MUST extract size ranges and variety phrases found in the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
+            "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, and 5) Generic variety phrases. TRIGGER CATCH-ALL: If the text says 'works on', 'cheaper', or 'cheapest' (e.g., 'works on blue'), you MUST extract that variant! SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no limits, quantities, ranges, or variants exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
 - BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
-- RULE 1 (LIMITS): If the fact is a Maximum or Limit, frame it ONLY as a restriction (e.g., "Heads up, there is a limit of 5!"). You are STRICTLY FORBIDDEN from telling the user they 'need to add' a limit amount.
-- RULE 2 (QUANTITIES): If the fact is a REQUIRED minimum (e.g., 'Add 4'), frame it actively using a VARIETY of casual verbs (e.g., 'Make sure to grab 4', 'You need to add 4 of these').
-- RULE 3 (VARIANTS & RANGES): IF SINGLE VARIANT (e.g., 'Blue'): "Make sure to select the Blue option!". IF SPECIFIC RANGE (e.g., 'S-XXL'): "Grab your fit from the S-XXL options!" (You MUST print the literal size range). IF GENERIC VARIETY (e.g., 'several colors', '3 colors'): "Make sure to pick your favorite color!". You are STRICTLY FORBIDDEN from saying 'favorite blue' or 'favorite several colors options'.
-- MATH BAN: You are STRICTLY FORBIDDEN from calculating math. ONLY print math if it is explicitly written in the raw text.
-Do NOT use robotic filler phrases like 'It is fun to select', 'ensure', or 'suggest'.),
+- RULE 1 (LIMITS): Frame limits casually: "Heads up, there is a limit of 5!" (Do NOT say 'add' or 'grab' for limits).
+- RULE 2 (QUANTITIES): Frame required minimums actively: "You need to add 4 of these!"
+- RULE 3 (VARIANTS & RANGES): IF SPECIFIC VARIANTS (e.g., 'Blue', 'Red and Blue'): You MUST print the literal variants. IF SPECIFIC RANGE (e.g., 'S-XXL'): You MUST print the literal range. IF GENERIC VARIETY (e.g., 'several colors'): "Make sure to pick your favorite color!".
+- ANTI-PARROT VERB ROTATION: For Quantities and Variants, you MUST randomly rotate between the verbs 'Choose', 'Select', 'Grab', and 'Pick' across the 4 sentences. You are STRICTLY FORBIDDEN from starting multiple sentences with 'Make sure to select'.
+- MATH BAN: You are STRICTLY FORBIDDEN from calculating math.
+Do NOT use robotic filler phrases like 'It is fun to select'.),
             "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. If none, write "NONE"),
             "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
             - RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
