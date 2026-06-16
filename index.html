@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.84</title>
+    <title>The CB Deal Generator v8.85</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.84</span>
+            <span class="version-tag">v8.85</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -445,7 +445,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.84 REGULAR DEAL PROMPT
+            // V8.85 REGULAR DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -474,7 +474,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
 "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code.),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. EXACT LITERAL LOCK: You MUST print the exact timeline provided (e.g., '4 days before'). You are STRICTLY FORBIDDEN from dropping the numbers. Frame it casually: "This will show up 4 days before Father's Day!", "It arrives in time for Father's Day!". You are STRICTLY FORBIDDEN from using commercial words like 'gift', 'present', or 'celebration'. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
-"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, dimensions/measurements (e.g., '1500ft²'), AND included accessories/bonuses. S&S OVERRIDE MANDATE: You MUST extract 'S&S', 'Subscribe', or 'Auto-delivery' even if it shares a line with a B2 quantity or the word 'cheaper'. Also extract 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. TITLE BLINDNESS: You are STRICTLY FORBIDDEN from extracting specs, features, or dimensions if they are already part of the main product title. If the only leftover facts are colors, sizes, or title-specs, write "NONE"),
+"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, dimensions/measurements, AND included accessories/bonuses (e.g., 'includes 3 cups'). S&S OVERRIDE MANDATE: You MUST extract 'S&S', 'Subscribe', or 'Auto-delivery' even if it shares a line with a B2 quantity or the word 'cheaper'. Also extract 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. ACCESSORY EXCEPTION: You MUST extract included accessories or bundles even if they contain a number (e.g., '3 cups'). TITLE BLINDNESS: You are STRICTLY FORBIDDEN from extracting specs, features, or dimensions if they are already part of the main product title. If the only leftover facts are colors, sizes, or title-specs, write "NONE"),
 "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
 - IF S&S / AUTO-DELIVERY: You MUST randomly rotate between these phrases: "Set up routine delivery to drop the total even more!", "Use the auto-delivery option to make it even cheaper!", "Opt for scheduled arrivals for an extra discount!" (Do NOT print 'S&S').
 - IF NO CODE NEEDED: "The total drops automatically at the end!" 
@@ -490,7 +490,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click here, Tap here, Check the bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.84 RUN DEAL PROMPT
+            // V8.85 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -521,7 +521,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. If no, write "NONE"),
 "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code.),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. EXACT LITERAL LOCK: You MUST print the exact timeline provided (e.g., '4 days before'). You are STRICTLY FORBIDDEN from dropping the numbers. Frame it casually: "This will show up 4 days before Father's Day!", "It arrives in time for Father's Day!". You are STRICTLY FORBIDDEN from using commercial words like 'gift', 'present', or 'celebration'. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
-"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, dimensions/measurements (e.g., '1500ft²'), AND included accessories/bonuses. S&S OVERRIDE MANDATE: You MUST extract 'S&S', 'Subscribe', or 'Auto-delivery' even if it shares a line with a B2 quantity or the word 'cheaper'. Also extract 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. TITLE BLINDNESS: You are STRICTLY FORBIDDEN from extracting specs, features, or dimensions if they are already part of the main product title. If the only leftover facts are colors, sizes, or title-specs, write "NONE"),
+"b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, dimensions/measurements, AND included accessories/bonuses (e.g., 'includes 3 cups'). S&S OVERRIDE MANDATE: You MUST extract 'S&S', 'Subscribe', or 'Auto-delivery' even if it shares a line with a B2 quantity or the word 'cheaper'. Also extract 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. ACCESSORY EXCEPTION: You MUST extract included accessories or bundles even if they contain a number (e.g., '3 cups'). TITLE BLINDNESS: You are STRICTLY FORBIDDEN from extracting specs, features, or dimensions if they are already part of the main product title. If the only leftover facts are colors, sizes, or title-specs, write "NONE"),
 "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
 - IF S&S / AUTO-DELIVERY: You MUST randomly rotate between these phrases: "Set up routine delivery to drop the total even more!", "Use the auto-delivery option to make it even cheaper!", "Opt for scheduled arrivals for an extra discount!" (Do NOT print 'S&S').
 - IF NO CODE NEEDED: "The total drops automatically at the end!" 
