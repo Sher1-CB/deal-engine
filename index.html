@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.91</title>
+    <title>The CB Deal Generator v8.92</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.91</span>
+            <span class="version-tag">v8.92</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -445,7 +445,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.91 REGULAR DEAL PROMPT
+            // V8.92 REGULAR DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -491,7 +491,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.91 RUN DEAL PROMPT
+            // V8.92 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
@@ -568,7 +568,6 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
             const rawEmojiPool = aiData.emoji_pool || [];
             const uniqueEmojiPool = [...new Set(rawEmojiPool)]; 
-            // Supersized fallback pool to guarantee massive variety if AI gets lazy
             const fallbackEmojis = ["📦","🛒","👇","✨","🔥","🎁","🛍️","🎉","🎈","🎊","🎀","🏷️","💫","🌟","🌿","🤎","🤍","✅","👀","💡","🎯","📌","📍","💳","💸","💎","🏆","🥇","🚀","⚡","💥","💯","📣","🔔","📢","💬","💭"];
             const finalEmojiPool = uniqueEmojiPool.length >= 15 ? uniqueEmojiPool : fallbackEmojis;
 
@@ -578,7 +577,6 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
             const getNextEmoji = () => { 
                 if (drawBag.length === 0) {
-                    // Refill and shuffle the bag when empty
                     drawBag = [...masterEmojiPool].sort(() => 0.5 - Math.random());
                 }
                 return drawBag.pop(); 
@@ -597,10 +595,20 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             const selectedShortPointers = shuffleArray(shortPointers).slice(0, 4);
             const selectedHooks = shuffleArray(allCuriosityHooks).slice(0, 3);
 
-            // Using the dynamically selected arrays
             const selectedDiscoveries = shuffleArray(activeDiscoveries).slice(0, 4);
             const selectedPointers = shuffleArray(activePointers).slice(0, 4);
             const selectedLinkLeads = shuffleArray(activeLinkLeads).slice(0, 4);
+
+            // SYNTAX SHUFFLERS (Destroys Structural Footprints)
+            const titleSeparators = [" -- ", " - ", " | ", " ~ ", " // ", " ✨ ", " 👉 ", " : "];
+            const runConnectors = ["with this", "using this", "thanks to this", "grabbing this", "via this"];
+            const retPrefixes = [`On ${retailer},`, `At ${retailer},`, `Over at ${retailer},`, `Checking ${retailer},`];
+            const retSuffixes = [`on ${retailer}!`, `at ${retailer}!`, `via ${retailer}!`, `from ${retailer}!`];
+            
+            const wrapRegPrice = (text) => {
+                const styles = [`(${text})`, `[${text}]`, `- ${text}`, `~${text}~`];
+                return styles[Math.floor(Math.random() * styles.length)];
+            };
 
             function injectEmojisV8(linesArray, min, max) {
                 let count = 0;
@@ -644,9 +652,13 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             for(let i=0; i<3; i++) {
                 let priceDisplay = aiData.sale_price === "???" ? "???" : cleanText(aiData.sale_price);
                 let hook = `${selectedPrefixes[i]} ${priceDisplay.includes("???") ? priceDisplay : "$" + priceDisplay.replace('$', '')} ${dynamicStatuses[i]}`;
-                if(aiData.reg_price !== "NONE") hook += ` (${selectedCompLabels[i]} ${cleanText(aiData.reg_price)})`;
+                
+                if(aiData.reg_price !== "NONE") hook += ` ${wrapRegPrice(selectedCompLabels[i] + " " + cleanText(aiData.reg_price))}`;
+                
                 let flip = Math.random() > 0.5;
-                sl.push(flip ? `${hook} -- ${cleanTitle}` : `${cleanTitle} -- ${hook}`);
+                let sep = titleSeparators[Math.floor(Math.random() * titleSeparators.length)];
+                
+                sl.push(flip ? `${hook}${sep}${cleanTitle}` : `${cleanTitle}${sep}${hook}`);
             }
 
             let postOutputs = [];
@@ -670,9 +682,10 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                     if (!discText.startsWith("I ")) {
                         discText = discText.charAt(0).toLowerCase() + discText.slice(1);
                     }
-                    let discLine = flipB1 
-                        ? `${selectedDiscoveries[i]} on ${retailer}!` 
-                        : `On ${retailer}, ${discText}!`;
+                    
+                    let rPref = retPrefixes[Math.floor(Math.random() * retPrefixes.length)];
+                    let rSuff = retSuffixes[Math.floor(Math.random() * retSuffixes.length)];
+                    let discLine = flipB1 ? `${selectedDiscoveries[i]} ${rSuff}` : `${rPref} ${discText}!`;
                     
                     let ptrLine = selectedPointers[i];
                     let rawLines = [];
@@ -746,7 +759,8 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                     let keyword = cleanText(aiData.scrubbed_keyword);
                     let ptrLine = selectedShortPointers[i];
                     
-                    let rawLines = [`${hook} ${inf} with this ${keyword}! ${ptrLine}`];
+                    let rConn = runConnectors[Math.floor(Math.random() * runConnectors.length)];
+                    let rawLines = [`${hook} ${inf} ${rConn} ${keyword}! ${ptrLine}`];
                     
                     let emojifiedLines = injectEmojisV8(rawLines, 1, 3);
                     let postText = emojifiedLines[0];
@@ -767,9 +781,10 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                     if (!discText.startsWith("I ")) {
                         discText = discText.charAt(0).toLowerCase() + discText.slice(1);
                     }
-                    let discLine = flipB1 
-                        ? `${selectedDiscoveries[i]} on ${retailer}!` 
-                        : `On ${retailer}, ${discText}!`;
+                    
+                    let rPref = retPrefixes[Math.floor(Math.random() * retPrefixes.length)];
+                    let rSuff = retSuffixes[Math.floor(Math.random() * retSuffixes.length)];
+                    let discLine = flipB1 ? `${selectedDiscoveries[i]} ${rSuff}` : `${rPref} ${discText}!`;
 
                     let b2 = aiData.b2_strategies[i] !== "DEAD" ? `${cleanText(aiData.b2_strategies[i])}` : "";
                     let b5 = aiData.b5_perks && aiData.b5_perks[i] !== "DEAD" ? `${cleanText(aiData.b5_perks[i])} ` : "";
@@ -825,10 +840,13 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
             // DAILY THREAD ASSEMBLY (Universal)
             let priceDisplayDT = aiData.sale_price === "???" ? "???" : cleanText(aiData.sale_price);
+            let dtSep = titleSeparators[Math.floor(Math.random() * titleSeparators.length)];
+            let dtRet = `on ${retailer}`;
             let dtHook = `${selectedPrefixes[3]} ${priceDisplayDT.includes("???") ? priceDisplayDT : "$" + priceDisplayDT.replace('$', '')} ${dynamicStatuses[3]}`;
             
-            let dtHeader = isOdd ? `${dtHook} on ${retailer} -- ${cleanTitle}` : `${cleanTitle} -- ${dtHook} on ${retailer}`;
-            if(aiData.reg_price !== "NONE") dtHeader += ` (${selectedCompLabels[3]} ${cleanText(aiData.reg_price)})`;
+            if(aiData.reg_price !== "NONE") dtHook += ` ${wrapRegPrice(selectedCompLabels[3] + " " + cleanText(aiData.reg_price))}`;
+            
+            let dtHeader = isOdd ? `${dtHook} ${dtRet}${dtSep}${cleanTitle}` : `${cleanTitle}${dtSep}${dtHook} ${dtRet}`;
             
             let dtB2 = aiData.b2_strategies[3] !== "DEAD" ? cleanText(aiData.b2_strategies[3]) : "";
             let dtB5 = aiData.b5_perks && aiData.b5_perks[3] !== "DEAD" ? `${cleanText(aiData.b5_perks[3])} ` : "";
