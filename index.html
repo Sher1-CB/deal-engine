@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v8.97</title>
+    <title>The CB Deal Generator v8.98</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -166,7 +166,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v8.97</span>
+            <span class="version-tag">v8.98</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -304,14 +304,14 @@
     const allPrefixes = ["Just", "Down to", "At", "Score it for", "Only", "Found for", "Marked at", "Sitting at", "Now", "Fell to", "Yours for", "Spotted at", "Grab it for", "Snag it for"];
     const allCompLabels = ["Regular", "Normally", "Originally", "Previously", "Was", "List"];
     
-    // --- 1ST PERSON DICTIONARIES (HIGH-VOLUME) ---
+    /// --- 1ST PERSON DICTIONARIES (HIGH-VOLUME) ---
     const discoveries1st = [
         "We just spotted this crazy good find", "This plummeted and we had to show you", "Our team thinks this is an unreal discovery today",
         "I can't believe how low this dropped", "This is an absolute steal right now", "We had to share this massive drop immediately",
         "Look at this incredible value we just found", "This is one of the best drops we've seen all week", "Our team is obsessed with this current value",
         "I just grabbed mine at this lower total", "We noticed this fell and it is so good", "I am obsessed with this perfect catch",
         "My jaw dropped when I saw this one", "We couldn't keep this a secret from you", "I practically ran to share this drop",
-        "Our group chat went crazy over this", "I snagged this immediately for my house", "We are loving this incredible drop today",
+        "We all went crazy over this one", "I snagged this immediately for my house", "We are loving this incredible drop today",
         "I immediately added this to my list", "We are totally blown away by this one", "I am so hyped about this current number"
     ];
     const pointers1st = [
@@ -445,7 +445,7 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            // V8.97 REGULAR DEAL PROMPT
+            // V8.98 REGULAR DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -491,7 +491,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Comment, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V8.97 RUN DEAL PROMPT
+            // V8.98 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
