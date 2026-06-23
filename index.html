@@ -448,7 +448,7 @@
             // V8.92 REGULAR DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
-"retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
+"retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
 "cleaned_title": (String. Copy the primary product name exactly. Remove emojis. LINE BOUNDARY: You MUST stop extracting at the end of the product name line. You are STRICTLY FORBIDDEN from appending extra lines, variant instructions (e.g., 'Works on'), or limits into the title. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price, e.g. "$19.99". MISSING PRICE LOCK: If there is NO price in the raw text, you MUST write "???". Do NOT hallucinate a price.),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". Do NOT mash the numbers together like "10896". If none, write "NONE"),
@@ -494,7 +494,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             // V8.92 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
-"retailer_name": (String. Extract retailer, e.g. "Amazon" or "Walmart". Fix leetspeak like W@lm@rt),
+"retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
 "cleaned_title": (String. Copy the primary product name exactly. Remove emojis. LINE BOUNDARY: You MUST stop extracting at the end of the product name line. You are STRICTLY FORBIDDEN from appending extra lines, variant instructions (e.g., 'Works on'), or limits into the title. ABSOLUTE VERBATIM LOCK: Do NOT delete 'QTY' or instructional verbs like 'ADD' or 'BUY'.),
 "scrubbed_keyword": (String. Extract a generic noun for the product. STRICT LIMIT: Max 1 to 2 words. CONTEXTUAL MULTIPLIER MANDATE: If the deal includes a specific quantity multiplier like 2 QTY or 4-Pack, you MUST include it here, e.g., '2-Pack Microwave'.),
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
