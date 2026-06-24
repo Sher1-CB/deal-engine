@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.04</title>
+    <title>The CB Deal Generator v9.05</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -172,7 +172,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.04</span>
+            <span class="version-tag">v9.05</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -437,7 +437,7 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
 
-    // V9.04 DEEP SPACE CHAOS ENGINE
+    // V9.05 DEEP SPACE CHAOS ENGINE
     function joinWithSpaceChaos(linesArray, minBlank, maxBlank) {
         if (!linesArray || linesArray.length === 0) return "";
         if (linesArray.length === 1) return linesArray[0];
@@ -547,7 +547,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.04 RUN DEAL PROMPT
+            // V9.05 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -617,12 +617,12 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
             lastRawText = rawText;
             lastCustomLine = customLine;
             
-            buildLayout();
+            buildLayout(true); // V9.05 FIX: Tells the engine this is a brand new deal
             
             // Show the shuffle button
             document.getElementById('shuffleButton').style.display = "block";
 
-            // V9.04 FIX: Clear the input boxes for the next deal
+            // V9.05 FIX: Clear the input boxes for the next deal
             document.getElementById('rawText').value = "";
             document.getElementById('customLine').value = "";
 
@@ -636,10 +636,10 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
     function reShuffleLayout() {
         if (!lastAiData) return;
-        buildLayout();
+        buildLayout(false); // V9.05 FIX: Tells the engine this is just a shuffle
     }
 
-    function buildLayout() {
+    function buildLayout(isNewDeal = false) {
         const aiData = lastAiData;
         const rawText = lastRawText;
         const customLine = lastCustomLine;
@@ -685,7 +685,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
         const selectedPointers = shuffleArray(activePointers).slice(0, 4);
         const selectedLinkLeads = shuffleArray(activeLinkLeads).slice(0, 4);
 
-        // V9.04 RETAILER SYNTAX MATRIX
+        // V9.05 RETAILER SYNTAX MATRIX
         const titleSeparators = [" -- ", " - ", " | ", " ~ ", " // ", " ✨ ", " 👉 ", " : "];
         const runConnectors = ["with this", "using this", "thanks to this", "grabbing this", "via this"];
         const retPrefixes = [`On ${retailer},`, `At ${retailer},`, `Over at ${retailer},`, `Checking ${retailer},`, `Found on ${retailer},`, `Spotted on ${retailer},`, `Browsing ${retailer},`, `Shopping ${retailer},`];
@@ -773,7 +773,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                     discText = discText.charAt(0).toLowerCase() + discText.slice(1);
                 }
                 
-                // V9.04 RETAILER SYNTAX MATRIX
+                // V9.05 RETAILER SYNTAX MATRIX
                 let rPref = retPrefixes[Math.floor(Math.random() * retPrefixes.length)];
                 let rSuff = retSuffixes[Math.floor(Math.random() * retSuffixes.length)];
                 let rTag = retTags[Math.floor(Math.random() * retTags.length)];
@@ -881,7 +881,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                     discText = discText.charAt(0).toLowerCase() + discText.slice(1);
                 }
                 
-                // V9.04 RETAILER SYNTAX MATRIX
+                // V9.05 RETAILER SYNTAX MATRIX
                 let rPref = retPrefixes[Math.floor(Math.random() * retPrefixes.length)];
                 let rSuff = retSuffixes[Math.floor(Math.random() * retSuffixes.length)];
                 let rTag = retTags[Math.floor(Math.random() * retTags.length)];
@@ -957,7 +957,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.04 Daily Thread Link Scrub
+        // V9.05 Daily Thread Link Scrub
         let dtLinkLead = selectedLinkLeads[3] || "Check it out right here:"; 
 
         let rawDtLines = [];
@@ -983,8 +983,8 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
         document.getElementById('out-dt').setAttribute('data-raw', dtText);
         currentRawOutput += `=== DAILY THREAD COMMENT ===\n${dtText}`;
 
-        // Only push to history if this is a fresh generation (not a shuffle)
-        if (!document.getElementById('shuffleButton').style.display || document.getElementById('shuffleButton').style.display === "none") {
+        // V9.05 FIX: Only push to history if the true/false flag says it's a new deal
+        if (isNewDeal) {
             dealCount++;
             const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
             
