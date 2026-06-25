@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.0.3</title>
+    <title>The CB Deal Generator v9.0.4</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -172,7 +172,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.0.3</span>
+            <span class="version-tag">v9.0.4</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -534,7 +534,8 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. EXACT LITERAL LOCK: You MUST print the exact timeline provided (e.g., '4 days before'). You are STRICTLY FORBIDDEN from dropping the numbers. Frame it casually: "This will show up 4 days before Father's Day!", "It arrives in time for Father's Day!". You are STRICTLY FORBIDDEN from using commercial words like 'gift', 'present', or 'celebration'. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
 "b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, dimensions/measurements (e.g., '1500ft²'), AND included accessories/bonuses (e.g., 'includes 3 cups'). S&S OVERRIDE MANDATE: You MUST extract 'S&S', 'Subscribe', or 'Auto-delivery' even if it shares a line with a B2 quantity or the word 'cheaper'. Also extract 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. ACCESSORY EXCEPTION: You MUST extract included accessories or bundles even if they contain a number (e.g., '3 cups'). TITLE BLINDNESS: You are STRICTLY FORBIDDEN from extracting specs, features, or dimensions if they are already part of the main product title. If the only leftover facts are colors, sizes, or title-specs, write "NONE"),
 "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
-- IF S&S / AUTO-DELIVERY: You MUST randomly rotate between these phrases: "Set up routine delivery to drop the total even more!", "Use the auto-delivery option to make it even cheaper!", "Opt for scheduled arrivals to lower the total!" (Do NOT print 'S&S').
+- IF S&S IS MANDATORY (e.g., 'Make sure to get it under S&S'): You MUST frame it as a requirement to get the price: "You have to use the auto-delivery option to get this price!", "Make sure to select routine delivery at checkout!" (Do NOT print 'S&S').
+- IF S&S IS OPTIONAL (e.g., 'Cheaper under S&S'): You MUST frame it as an extra discount: "Set up routine delivery to drop the total even more!", "Use the auto-delivery option to make it even cheaper!" (Do NOT print 'S&S').
 - IF NO CODE NEEDED: "The total drops automatically at the end!" 
 - IF SELECT ACCOUNTS: "Heads up, this might only work for certain accounts!"
 - IF FEATURE OR ACCESSORY: Frame casually. SEMANTIC ENTITY LOCK: You MUST name the specific feature/accessory, but adjust the grammar so it sounds natural (e.g., If the text says 'Gloves included', say 'It even comes with gloves!', do NOT say 'It features Gloves included!'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'specs'.
@@ -548,7 +549,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, commercial/money emojis (e.g., 🛒, 💰, 💳, 🛍️, 🏷️, 💲), and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.0.3 RUN DEAL PROMPT
+            // V9.0.4 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -582,7 +583,8 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. EXACT LITERAL LOCK: You MUST print the exact timeline provided (e.g., '4 days before'). You are STRICTLY FORBIDDEN from dropping the numbers. Frame it casually: "This will show up 4 days before Father's Day!", "It arrives in time for Father's Day!". You are STRICTLY FORBIDDEN from using commercial words like 'gift', 'present', or 'celebration'. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
 "b8_verification": (String. Extract ANY leftover facts explicitly stated in the extra text, including product specs, built-in features, capabilities, dimensions/measurements (e.g., '1500ft²'), AND included accessories/bonuses (e.g., 'includes 3 cups'). S&S OVERRIDE MANDATE: You MUST extract 'S&S', 'Subscribe', or 'Auto-delivery' even if it shares a line with a B2 quantity or the word 'cheaper'. Also extract 'No code needed', or 'Select accounts'. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting colors, size ranges, limits, or required cart quantities here. ACCESSORY EXCEPTION: You MUST extract included accessories or bundles even if they contain a number (e.g., '3 cups'). TITLE BLINDNESS: You are STRICTLY FORBIDDEN from extracting specs, features, or dimensions if they are already part of the main product title. If the only leftover facts are colors, sizes, or title-specs, write "NONE"),
 "b8_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate using these blueprints:
-- IF S&S / AUTO-DELIVERY: You MUST randomly rotate between these phrases: "Set up routine delivery to drop the total even more!", "Use the auto-delivery option to make it even cheaper!", "Opt for scheduled arrivals to lower the total!" (Do NOT print 'S&S').
+- IF S&S IS MANDATORY (e.g., 'Make sure to get it under S&S'): You MUST frame it as a requirement to get the price: "You have to use the auto-delivery option to get this price!", "Make sure to select routine delivery at checkout!" (Do NOT print 'S&S').
+- IF S&S IS OPTIONAL (e.g., 'Cheaper under S&S'): You MUST frame it as an extra discount: "Set up routine delivery to drop the total even more!", "Use the auto-delivery option to make it even cheaper!" (Do NOT print 'S&S').
 - IF NO CODE NEEDED: "The total drops automatically at the end!" 
 - IF SELECT ACCOUNTS: "Heads up, this might only work for certain accounts!"
 - IF FEATURE OR ACCESSORY: Frame casually. SEMANTIC ENTITY LOCK: You MUST name the specific feature/accessory, but adjust the grammar so it sounds natural (e.g., If the text says 'Gloves included', say 'It even comes with gloves!', do NOT say 'It features Gloves included!'). You are STRICTLY FORBIDDEN from abstracting it into generic words like 'specs'.
