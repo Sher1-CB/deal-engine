@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.0.8</title>
+    <title>The CB Deal Generator v9.0.9</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -172,7 +172,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.0.8</span>
+            <span class="version-tag">v9.0.9</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -514,13 +514,13 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, 5) Generic variety phrases, and 6) Explicit per-item math. TRIGGER CATCH-ALL: If the text contains 'work on', 'works on', 'cheaper', or 'cheapest', you MUST extract that variant! CONTEXTUAL FIREWALL: You are STRICTLY FORBIDDEN from extracting the phrases 'work on', 'select', or 'cheaper' if they are describing accounts, S&S, or programs (e.g., 'works on select accounts', 'cheaper under S&S'). Those belong exclusively to B8. SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no facts exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
-- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
+- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up! COMPOUND EXCEPTION: If you have a Limit AND a Variant, you MUST write them as two separate short sentences (e.g., 'Heads up, there is a limit of 1! Make sure to grab the Blue option!'). Do NOT force the limit number into the variant sentence.
 - INSTRUCTIONAL EXEMPTION: Even if you are in 1st Person mode, you MUST use 2nd Person instructional phrasing here (e.g., 'Make sure you grab', 'You need to pick'). Do NOT say 'I will choose' or 'I plan to select'. You are instructing the reader.
 - RULE 1 (LIMITS): If the fact is a Maximum or Limit, frame it ONLY as a restriction. LIMIT ROTATION: You MUST rotate between these phrases: "Heads up, there is a strict limit of [X]!", "Keep in mind you can only get [X]!", "Just a heads up, these are limited to [X]!". You are STRICTLY FORBIDDEN from using verbs like 'Choose', 'Select', 'Grab', or 'Pick' when discussing limits.
 - RULE 2 (QUANTITIES): Frame required minimums actively: "You need to add 4 of these!"
 - RULE 3 (VARIANTS & RANGES): IF SPECIFIC VARIANTS: You MUST print the exact literal variants. ANTI-AUTOCORRECT: Do NOT fix typos, separate letters/numbers, or drop characters (e.g., print 'BlackA', not 'Black'). IF SPECIFIC RANGE: You MUST print the literal range. IF GENERIC VARIETY: "Make sure to pick your favorite color!".
 - QUANTITY/VARIANT ROTATION: For Quantities and Variants ONLY, you MUST randomly rotate between the verbs 'Choose', 'Select', 'Grab', and 'Pick'. Do NOT apply these verbs to Limits.
-- MATH MANDATE: If you extracted per-item math (e.g., '$16.88 per jug'), you MUST attach it directly to the quantity instruction using casual phrasing (e.g., 'Grab 4 of these, making them just $16.88 per jug!', 'You need to add 4 of these to get that $16.88 per jug price!'). You are STRICTLY FORBIDDEN from using robotic filler phrases like 'Please note that', 'Just remember that', or 'It is helpful to know'. If no math was extracted, you are STRICTLY FORBIDDEN from calculating it yourself.
+- MATH MANDATE: If you extracted per-item math (e.g., '$16.88 per jug'), you MUST attach it directly to the quantity instruction using casual phrasing (e.g., 'Grab 4 of these, making them just $16.88 per jug!'). You are STRICTLY FORBIDDEN from using robotic filler phrases like 'Please note that' or 'It is helpful to know'. If no math was extracted, you are STRICTLY FORBIDDEN from calculating it yourself.
 - ACRONYM SCRUB: You MUST translate 'QTY' into plain English. You are STRICTLY FORBIDDEN from printing the literal letters 'QTY'.
 - TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product title here. Use generic nouns.
 Do NOT use robotic filler phrases like 'It is fun to select'.),
@@ -549,7 +549,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, commercial/money emojis (e.g., 🛒, 💰, 💳, 🛍️, 🏷️, 💲), and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.0.8 RUN DEAL PROMPT
+            // V9.0.9 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -563,13 +563,13 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, 5) Generic variety phrases, and 6) Explicit per-item math. TRIGGER CATCH-ALL: If the text contains 'work on', 'works on', 'cheaper', or 'cheapest', you MUST extract that variant! CONTEXTUAL FIREWALL: You are STRICTLY FORBIDDEN from extracting the phrases 'work on', 'select', or 'cheaper' if they are describing accounts, S&S, or programs (e.g., 'works on select accounts', 'cheaper under S&S'). Those belong exclusively to B8. SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no facts exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
-- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up!
+- BLUEPRINT METHOD: You MUST include EVERY extracted fact in EVERY SINGLE sentence. Do not split them up! COMPOUND EXCEPTION: If you have a Limit AND a Variant, you MUST write them as two separate short sentences (e.g., 'Heads up, there is a limit of 1! Make sure to grab the Blue option!'). Do NOT force the limit number into the variant sentence.
 - INSTRUCTIONAL EXEMPTION: Even if you are in 1st Person mode, you MUST use 2nd Person instructional phrasing here (e.g., 'Make sure you grab', 'You need to pick'). Do NOT say 'I will choose' or 'I plan to select'. You are instructing the reader.
 - RULE 1 (LIMITS): If the fact is a Maximum or Limit, frame it ONLY as a restriction. LIMIT ROTATION: You MUST rotate between these phrases: "Heads up, there is a strict limit of [X]!", "Keep in mind you can only get [X]!", "Just a heads up, these are limited to [X]!". You are STRICTLY FORBIDDEN from using verbs like 'Choose', 'Select', 'Grab', or 'Pick' when discussing limits.
 - RULE 2 (QUANTITIES): Frame required minimums actively: "You need to add 4 of these!"
 - RULE 3 (VARIANTS & RANGES): IF SPECIFIC VARIANTS: You MUST print the exact literal variants. ANTI-AUTOCORRECT: Do NOT fix typos, separate letters/numbers, or drop characters (e.g., print 'BlackA', not 'Black'). IF SPECIFIC RANGE: You MUST print the literal range. IF GENERIC VARIETY: "Make sure to pick your favorite color!".
 - QUANTITY/VARIANT ROTATION: For Quantities and Variants ONLY, you MUST randomly rotate between the verbs 'Choose', 'Select', 'Grab', and 'Pick'. Do NOT apply these verbs to Limits.
-- MATH MANDATE: If you extracted per-item math (e.g., '$16.88 per jug'), you MUST attach it directly to the quantity instruction using casual phrasing (e.g., 'Grab 4 of these, making them just $16.88 per jug!', 'You need to add 4 of these to get that $16.88 per jug price!'). You are STRICTLY FORBIDDEN from using robotic filler phrases like 'Please note that', 'Just remember that', or 'It is helpful to know'. If no math was extracted, you are STRICTLY FORBIDDEN from calculating it yourself.
+- MATH MANDATE: If you extracted per-item math (e.g., '$16.88 per jug'), you MUST attach it directly to the quantity instruction using casual phrasing (e.g., 'Grab 4 of these, making them just $16.88 per jug!'). You are STRICTLY FORBIDDEN from using robotic filler phrases like 'Please note that' or 'It is helpful to know'. If no math was extracted, you are STRICTLY FORBIDDEN from calculating it yourself.
 - ACRONYM SCRUB: You MUST translate 'QTY' into plain English. You are STRICTLY FORBIDDEN from printing the literal letters 'QTY'.
 - TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product title here. Use generic nouns.
 Do NOT use robotic filler phrases like 'It is fun to select'.),
