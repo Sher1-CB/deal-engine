@@ -487,6 +487,7 @@
         btn.innerHTML = "⏳ Generating...";
         btn.disabled = true;
         document.getElementById('outputSection').style.display = "block";
+        document.getElementById('shuffleButton').style.display = "none"; // FIX: Hides button so history saves!
 
         let pronounInstruction = "";
         if (pronounStyle === "subject") {
