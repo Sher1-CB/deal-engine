@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.1.4</title>
+    <title>The CB Deal Generator v9.1.5</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -172,7 +172,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.1.4</span>
+            <span class="version-tag">v9.1.5</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -509,8 +509,8 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "cleaned_title": (String. Copy the ENTIRE product name line exactly as written. Remove emojis. LINE BOUNDARY: Stop extracting at the end of the line. VERBATIM OVERRIDE: If the product line contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Coca-Cola'), you MUST keep those exact words in the title. Do NOT strip them out to 'clean' the name. You are only forbidden from appending *additional* lines.),
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price. Extract ONLY the number and $ sign. Do NOT include words like 'As low as'. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". Do NOT mash the numbers together. HYPHEN LOCK: If the price is a range (e.g., '$3.67 - $5.81'), you MUST keep the hyphen exactly as written (e.g., '3 67 - 5 81'). If none, write "NONE"),
-"praises": (Array of 3 short hype questions ending in '?'. PRONOUN ENFORCEMENT: ${pronounInstruction} CASUAL HUMAN QUESTIONS: Ask short, highly relatable, conversational questions that prompt a reply. Do NOT sound like a corporate brand survey. (e.g., 'Who else hates doing dishes?', 'Where would you even put this in your house?', 'What is your favorite flavor?'). You are STRICTLY FORBIDDEN from asking 'Yes/No' or rhetorical questions.),
-"inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, use it as the base and rephrase it 3 times. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. LAZY HUMAN TEXTING: Write like a real person texting a friend. Use short, casual language. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'oasis', or 'ultimate'. Talk about the product like a normal human (e.g., 'This makes dinner so much easier', 'I hate vacuuming so this helps a lot'). DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
+"praises": (Array of 3 short hype questions ending in '?'. PRONOUN ENFORCEMENT: ${pronounInstruction} CASUAL HUMAN QUESTIONS: Ask short, highly relatable, conversational questions that prompt a reply. SURVEY BAN: Do NOT sound like a corporate brand survey or ask weird comparison questions (e.g., 'What makes these better?'). Ask lazy human questions (e.g., 'Who else goes through these way too fast?', 'Where would you even put this in your house?'). You are STRICTLY FORBIDDEN from asking 'Yes/No' or rhetorical questions.),
+"inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, use it as the base and rephrase it 3 times. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. LAZY HUMAN TEXTING: Write like a real person texting a friend. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features or sounding like an Amazon bullet point (e.g., do NOT say 'These handle heavy loads without tearing' or 'Those fit standard cans'). Focus purely on the casual human benefit (e.g., 'This makes taking out the trash way less annoying'). AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'oasis', or 'ultimate'. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
 "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, 5) Generic variety phrases, and 6) Explicit per-item math (e.g., '$16.88 per jug', '38 cent a pack', 'Each will be $27.59'). TRIGGER CATCH-ALL: If the text contains 'work on', 'works on', 'cheaper', or 'cheapest', you MUST extract that variant! CONTEXTUAL FIREWALL: You are STRICTLY FORBIDDEN from extracting 'S&S', 'Subscribe', or 'Accounts' here. If the words 'work on', 'select', or 'cheaper' are attached to accounts or S&S (e.g., 'works on select accounts', 'cheaper under S&S'), you MUST ignore them entirely. Those belong exclusively to B8. SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no facts exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
@@ -550,7 +550,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 UNIQUE emojis that logically complement the product's category. STRICT BAN: Do NOT use generic shapes, commercial/money emojis (e.g., 🛒, 💰, 💳, 🛍️, 🏷️, 💲), and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.1.4 RUN DEAL PROMPT
+            // V9.1.5 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -559,8 +559,8 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price. Extract ONLY the number and $ sign. Do NOT include words like 'As low as'. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". Do NOT mash the numbers together. HYPHEN LOCK: If the price is a range (e.g., '$3.67 - $5.81'), you MUST keep the hyphen exactly as written (e.g., '3 67 - 5 81'). If none, write "NONE"),
 "curiosity_hooks": (Array of 3 full, unique sentences acting out a Suspicious Glitch Hunter persona. STRICT LIMIT: Max 25 characters. MUST end with "?!" or "!". EMOTIONAL BOUNDARY LAW: You are STRICTLY FORBIDDEN from mentioning the physical product or its use-case here.),
-"inferences": (Array of 3 short lifestyle statements. THE ACTION-VALUE MANDATE: STRICT LENGTH LIMIT: Max 6 words. PRODUCT-SPECIFIC VERB LAW: You MUST start the sentence with a physical action verb specific to how you use the item (e.g., 'Heat up food'). VALUE WHITELIST: You MUST end the sentence with one of these exact phrases: 'for way less', 'for a fraction of the cost', 'without breaking the bank', 'at a massive discount', or 'on a serious budget'. ANTI-PARROT LOCK: You MUST select 3 DISTINCT phrases from the whitelist. You are STRICTLY FORBIDDEN from using the same phrase twice. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
-"praises": (Array of 3 short hype questions ending in '?'. PRONOUN ENFORCEMENT: ${pronounInstruction} CASUAL HUMAN QUESTIONS: Ask short, highly relatable, conversational questions that prompt a reply. Do NOT sound like a corporate brand survey. (e.g., 'Who else hates doing dishes?', 'Where would you even put this in your house?', 'What is your favorite flavor?'). You are STRICTLY FORBIDDEN from asking 'Yes/No' or rhetorical questions.),
+"inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: If the raw text contains a personal review, use it as the base and rephrase it 3 times. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. LAZY HUMAN TEXTING: Write like a real person texting a friend. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features or sounding like an Amazon bullet point (e.g., do NOT say 'These handle heavy loads without tearing' or 'Those fit standard cans'). Focus purely on the casual human benefit (e.g., 'This makes taking out the trash way less annoying'). AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'oasis', or 'ultimate'. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
+"praises": (Array of 3 short hype questions ending in '?'. PRONOUN ENFORCEMENT: ${pronounInstruction} CASUAL HUMAN QUESTIONS: Ask short, highly relatable, conversational questions that prompt a reply. SURVEY BAN: Do NOT sound like a corporate brand survey or ask weird comparison questions (e.g., 'What makes these better?'). Ask lazy human questions (e.g., 'Who else goes through these way too fast?', 'Where would you even put this in your house?'). You are STRICTLY FORBIDDEN from asking 'Yes/No' or rhetorical questions.),
 "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (String. Extract ONLY these categories from the extra text: 1) Active limits, 2) Required cart quantities, 3) Specific variants, 4) Size ranges, 5) Generic variety phrases, and 6) Explicit per-item math (e.g., '$16.88 per jug', '38 cent a pack', 'Each will be $27.59'). TRIGGER CATCH-ALL: If the text contains 'work on', 'works on', 'cheaper', or 'cheapest', you MUST extract that variant! CONTEXTUAL FIREWALL: You are STRICTLY FORBIDDEN from extracting 'S&S', 'Subscribe', or 'Accounts' here. If the words 'work on', 'select', or 'cheaper' are attached to accounts or S&S (e.g., 'works on select accounts', 'cheaper under S&S'), you MUST ignore them entirely. Those belong exclusively to B8. SHIPPING BAN: You are STRICTLY FORBIDDEN from extracting shipping minimums. TITLE BLINDNESS: Ignore adjectives if they are ONLY in the title. TITLE EXCEPTION: Extract sizes and varieties from the extra text even if they share words with the title. If no facts exist outside the title, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Translate the facts casually.
@@ -794,7 +794,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                     discLine = `${rTag} ${selectedDiscoveries[i]}!`;
                 }
                 
-                // V9.1.4: 33% Pointer Drop Rate
+                // V9.1.5: 33% Pointer Drop Rate
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : "";
                 let rawLines = [];
                 const shuffleType = (i + dealNum) % 3; 
@@ -838,7 +838,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 // V9.1.2: Standardized 20% drop rate across all comment elements
                 let keepPraise = Math.random() > 0.2; 
                 let keepDisc = Math.random() > 0.2; 
-                let keepLead = Math.random() > 0.33; // V9.1.4: 33% Link Lead Drop
+                let keepLead = Math.random() > 0.33; // V9.1.5: 33% Link Lead Drop
                 
                 let finalLink = keepLead ? `${linkLead} ${extractedURL}` : extractedURL;
 
@@ -865,7 +865,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 let inf = cleanText(aiData.inferences[i]);
                 let keyword = cleanText(aiData.scrubbed_keyword);
                 
-                // V9.1.4: 33% Pointer Drop Rate
+                // V9.1.5: 33% Pointer Drop Rate
                 let ptrLine = Math.random() > 0.33 ? selectedShortPointers[i] : "";
                 
                 let rConn = runConnectors[Math.floor(Math.random() * runConnectors.length)];
@@ -918,7 +918,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 // V9.1.2: Standardized 20% drop rate across all comment elements
                 let keepPraise = Math.random() > 0.2; 
                 let keepDisc = Math.random() > 0.2; 
-                let keepLead = Math.random() > 0.33; // V9.1.4: 33% Link Lead Drop
+                let keepLead = Math.random() > 0.33; // V9.1.5: 33% Link Lead Drop
                 
                 let finalLink = keepLead ? `${linkLead} ${extractedURL}` : extractedURL;
 
@@ -968,7 +968,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.1.4 Daily Thread Link Scrub & 33% Drop Rate
+        // V9.1.5 Daily Thread Link Scrub & 33% Drop Rate
         let keepDtLead = Math.random() > 0.33;
         let dtLinkLead = keepDtLead ? (selectedLinkLeads[3] || "Check it out right here:") : ""; 
 
