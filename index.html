@@ -740,7 +740,8 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
         const modeText = document.getElementById('dealType').options[document.getElementById('dealType').selectedIndex].text;
 
-        let phase0 = `[MODE: ${modeText} | PRONOUNS: ${pronounText}]\n${rawText}`;
+        const appVersion = document.querySelector('.version-tag').innerText;
+        let phase0 = `[MODE: ${modeText} | PRONOUNS: ${pronounText} | DEAL: ${dealNum} | VER: ${appVersion}]\n${rawText}`;
         if (customLine) phase0 += `\n[Custom Injection: ${customLine}]`;
         document.getElementById('out-phase0').innerText = phase0;
         currentRawOutput = `=== PHASE 0: TARGET LOCK ===\n${phase0}\n\n`;
