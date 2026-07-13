@@ -515,12 +515,12 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "b2_verification": (String. Extract ONLY these facts from the extra text. Follow this strict hierarchy:
 1) EXPLICIT LIMITS: MUST contain the exact word 'Limit' or 'Max' followed by a number (e.g., 'Limit 2'). NEVER extract colors or 'select' phrases here.
 2) CART QUANTITIES: e.g., 'Add 3'.
-3) SPECIFIC VARIANTS: Extract the ENTIRE phrase that comes after 'works on', 'cheaper', or 'cheapest' (e.g., 'option SUN2C with 16 Colors'). Include hyphens, numbers, and extra words. Do NOT split the phrase between B2 and B8.
+3) SPECIFIC VARIANTS: Extract the ENTIRE phrase exactly as written after 'works on', 'cheaper', or 'cheapest'. You MUST include hyphens, numbers, and parentheses (e.g., 'Black in size 7 (Pack of 3)'). Do NOT split the phrase into separate size/color buckets.
 4) SIZE RANGES: e.g., 'S-XXL'.
 5) GENERIC PHRASES: e.g., 'several colors', 'select color', 'select option'.
 6) PER-ITEM MATH: e.g., '$16.88 per jug'.
-CLEANING: Strip redundant words like 'only' or 'size' (e.g., 'Green only' becomes 'Green').
-FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. Do NOT extract anything already in the product title. Extract capacities/dimensions from extra text only. If none, write "NONE"),
+CLEANING: Strip redundant words like 'only' (e.g., 'Green only' becomes 'Green').
+FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. TITLE BLINDNESS: Do NOT extract anything already in the product title, EXCEPT for variants/sizes (you MUST extract variants even if they share words like 'Pack' with the title). If none, write "NONE"),t title. Extract capacities/dimensions from extra text only. If none, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"].
 - STRICT BLUEPRINT: Include EVERY extracted fact in EVERY sentence. Do NOT drop facts across the 4 posts.
 - RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. Rotate: "Heads up, there is a strict limit of [X]!", "Keep in mind you can only get [X]!". NEVER use this for colors or options.
@@ -578,12 +578,12 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "b2_verification": (String. Extract ONLY these facts from the extra text. Follow this strict hierarchy:
 1) EXPLICIT LIMITS: MUST contain the exact word 'Limit' or 'Max' followed by a number (e.g., 'Limit 2'). NEVER extract colors or 'select' phrases here.
 2) CART QUANTITIES: e.g., 'Add 3'.
-3) SPECIFIC VARIANTS: Extract the ENTIRE phrase that comes after 'works on', 'cheaper', or 'cheapest' (e.g., 'option SUN2C with 16 Colors'). Include hyphens, numbers, and extra words. Do NOT split the phrase between B2 and B8.
+3) SPECIFIC VARIANTS: Extract the ENTIRE phrase exactly as written after 'works on', 'cheaper', or 'cheapest'. You MUST include hyphens, numbers, and parentheses (e.g., 'Black in size 7 (Pack of 3)'). Do NOT split the phrase into separate size/color buckets.
 4) SIZE RANGES: e.g., 'S-XXL'.
 5) GENERIC PHRASES: e.g., 'several colors', 'select color', 'select option'.
 6) PER-ITEM MATH: e.g., '$16.88 per jug'.
-CLEANING: Strip redundant words like 'only' or 'size' (e.g., 'Green only' becomes 'Green').
-FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. Do NOT extract anything already in the product title. Extract capacities/dimensions from extra text only. If none, write "NONE"),
+CLEANING: Strip redundant words like 'only' (e.g., 'Green only' becomes 'Green').
+FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. TITLE BLINDNESS: Do NOT extract anything already in the product title, EXCEPT for variants/sizes (you MUST extract variants even if they share words like 'Pack' with the title). If none, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"].
 - STRICT BLUEPRINT: Include EVERY extracted fact in EVERY sentence. Do NOT drop facts across the 4 posts.
 - RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. Rotate: "Heads up, there is a strict limit of [X]!", "Keep in mind you can only get [X]!". NEVER use this for colors or options.
