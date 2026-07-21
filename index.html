@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.4.17</title>
+    <title>The CB Deal Generator v9.4.18</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -172,7 +172,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.4.17</span>
+            <span class="version-tag">v9.4.18</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -516,10 +516,10 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 1) EXPLICIT LIMITS: MUST contain the exact word 'Limit' or 'Max' followed by a number (e.g., 'Limit 2'). NEVER extract colors or 'select' phrases here.
 2) CART QUANTITIES: e.g., 'Add 3'.
 3) SPECIFIC VARIANTS: Extract the ENTIRE phrase exactly as written after 'works on', 'cheaper', or 'cheapest'. You MUST include hyphens, numbers, and parentheses (e.g., 'Black in size 7 (Pack of 3)'). Do NOT split the phrase into separate size/color buckets.
-4) SIZE RANGES: e.g., 'S-XXL'.
+4) SIZE RANGES: Extract the ENTIRE size phrase, including words like 'Large', 'Small', or 'up to' (e.g., 'S-XXL', 'up to 4X-Large', 'Plus Sizes').
 5) GENERIC PHRASES: e.g., 'several colors', 'select color', 'select option'.
 6) PER-ITEM MATH: e.g., '$16.88 per jug'.
-CLEANING: Strip redundant words like 'only' (e.g., 'Green only' becomes 'Green').
+CLEANING: Strip redundant words like 'only' or 'size' (e.g., 'Green only' becomes 'Green').
 FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. TITLE BLINDNESS: Do NOT extract anything already in the product title, EXCEPT for variants, sizes, and cart quantities (you MUST extract these even if they share words like 'Pack' or 'ADD 2' with the title). If none, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"].
 - STRICT BLUEPRINT: Include EVERY extracted fact in EVERY sentence. Do NOT drop facts across the 4 posts.
@@ -564,7 +564,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 30 literal emoji characters. FORMAT LOCK: Every single item in this array MUST be a single visual emoji symbol. Example format: ["🛏️", "🌙", "💤", "✨", "🪴"]. ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using any letters, words, or text shortcodes in this array (e.g., do NOT write "pillows" or ":key:"). STRICT BAN: Do NOT use generic shapes, commercial/money emojis (e.g., 🛒, 💰, 💳, 🛍️, 🏷️, 💲), and NEVER use negative/warning emojis like 🚫, ❌, 🛑, or ⚠️.)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.4.17 RUN DEAL PROMPT
+            // V9.4.18 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -580,10 +580,10 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 1) EXPLICIT LIMITS: MUST contain the exact word 'Limit' or 'Max' followed by a number (e.g., 'Limit 2'). NEVER extract colors or 'select' phrases here.
 2) CART QUANTITIES: e.g., 'Add 3'.
 3) SPECIFIC VARIANTS: Extract the ENTIRE phrase exactly as written after 'works on', 'cheaper', or 'cheapest'. You MUST include hyphens, numbers, and parentheses (e.g., 'Black in size 7 (Pack of 3)'). Do NOT split the phrase into separate size/color buckets.
-4) SIZE RANGES: e.g., 'S-XXL'.
+4) SIZE RANGES: Extract the ENTIRE size phrase, including words like 'Large', 'Small', or 'up to' (e.g., 'S-XXL', 'up to 4X-Large', 'Plus Sizes').
 5) GENERIC PHRASES: e.g., 'several colors', 'select color', 'select option'.
 6) PER-ITEM MATH: e.g., '$16.88 per jug'.
-CLEANING: Strip redundant words like 'only' (e.g., 'Green only' becomes 'Green').
+CLEANING: Strip redundant words like 'only' or 'size' (e.g., 'Green only' becomes 'Green').
 FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. TITLE BLINDNESS: Do NOT extract anything already in the product title, EXCEPT for variants, sizes, and cart quantities (you MUST extract these even if they share words like 'Pack' or 'ADD 2' with the title). If none, write "NONE"),
 "b2_strategies": (Array of 4 sentences. DEPENDENCY LOCK: If b2_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"].
 - STRICT BLUEPRINT: Include EVERY extracted fact in EVERY sentence. Do NOT drop facts across the 4 posts.
@@ -898,7 +898,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 // V9.1.3: 33% Pointer Drop Rate
                 let ptrLine = Math.random() > 0.33 ? selectedShortPointers[i] : "";
                 
-                // V9.4.17 Dynamic Run Deal Assembly & Hook Shuffler
+                // V9.4.18 Dynamic Run Deal Assembly & Hook Shuffler
                 let formatRoll = Math.random();
                 let hookFront = Math.random() > 0.5; // 50% chance hook is at the front
                 let coreSentence = "";
