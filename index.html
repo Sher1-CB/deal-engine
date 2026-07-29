@@ -328,9 +328,9 @@
                 opt.text = `${modelId} ${m.version ? '(v' + m.version + ')' : ''}`;
                 select.appendChild(opt);
 
-                // Smart Selection: Find the highest version standard 'flash' model for the best logic output. 
-                // IGNORE 'lite' (too weak), 'pro' (too slow), and 'omni' (experimental/paid tier only).
-                if (!bestModelId && modelId.includes('flash') && !modelId.includes('lite') && !modelId.includes('omni')) {
+                // Smart Selection: Actively hunt for the 'lite' model as the default for maximum speed.
+                // Ignore 'omni' (paid tier) and 'pro' (too slow).
+                if (!bestModelId && modelId.includes('flash') && modelId.includes('lite') && !modelId.includes('omni')) {
                     bestModelId = modelId;
                 }
             });
