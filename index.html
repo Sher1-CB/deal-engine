@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.4.27</title>
+    <title>The CB Deal Generator v9.4.28</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -172,7 +172,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.4.27</span>
+            <span class="version-tag">v9.4.28</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -513,8 +513,8 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: ONLY if the raw text contains a personal review, rephrase it. Otherwise, invent a standard statement. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. LAZY HUMAN TEXTING: Write like a real person texting a friend. CREATIVE VARIANCE: You MUST invent highly specific, vivid, and distinct use-cases for each of the 3 sentences. Do NOT use boring, generic filler like 'this fits in your room'. Paint a picture of exactly how a human uses it. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the product name or any distinct words from the title. You MUST use generic nouns (e.g., 'this gadget', 'this set') to refer to the item. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak or LLM filler words like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'oasis', 'ultimate', 'a breeze', 'essential', 'must-have', 'look no further', 'testament', 'delve', or 'upgrade your'. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
 "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (String. Extract ONLY these facts from the extra text. Follow this strict hierarchy:
-1) EXPLICIT LIMITS: MUST contain the exact word 'Limit', 'Max', or 'Maximum' followed by a number (e.g., 'Limit 2', 'maximum of 4'). LIMIT OVERRIDE: If the text contains 'Max' or 'Maximum', it is ALWAYS a limit, even if the word 'qty' is next to it. NEVER extract colors or 'select' phrases here.
-2) CART QUANTITIES: e.g., 'Add 3'. Do NOT classify 'maximum qty' here.
+1) EXPLICIT LIMITS: MUST contain the exact word 'Limit', 'Max', or 'Maximum' followed by a number (e.g., 'Limit 2', 'maximum of 4'). ABSOLUTE LIMIT FIREWALL: If the text contains 'Limit', 'Max', or 'Maximum', it is ALWAYS a limit. It overrides everything else. Even if the word 'qty' is next to it (e.g., 'Limit of 5 QTY'), you MUST classify it as a Limit. NEVER extract colors or 'select' phrases here.
+2) CART QUANTITIES: e.g., 'Add 3'. Do NOT classify 'Limit qty' or 'maximum qty' here.
 3) SPECIFIC VARIANTS: Extract the ENTIRE phrase exactly as written after 'works on', 'cheaper', or 'cheapest'. You MUST include hyphens, numbers, and parentheses (e.g., 'Black in size 7 (Pack of 3)'). Do NOT split the phrase into separate size/color buckets.
 4) SIZE RANGES: Extract the ENTIRE size phrase, including words like 'Large', 'Small', or 'up to' (e.g., 'S-XXL', 'up to 4X-Large', 'Plus Sizes').
 5) GENERIC PHRASES: e.g., 'several colors', 'select color', 'select option'.
@@ -564,7 +564,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.4.27 RUN DEAL PROMPT
+            // V9.4.28 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \") and ensure all array elements are separated by commas.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -577,8 +577,8 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "praises": (Array of 3 short hype phrases. PRONOUN ENFORCEMENT: ${pronounInstruction} FORMAT MIXER: You MUST randomly mix between asking a casual, open-ended question (e.g., 'Who else loves finding things like this?') AND making a highly positive, enthusiastic statement (e.g., 'This is exactly what my kitchen needed!'). POSITIVITY LOCK: Both the questions and the statements MUST be framed in a highly positive, upbeat way to drive group excitement. SURVEY BAN: Do NOT sound like a corporate brand survey. ANTI-PARROT LOCK: You MUST invent phrases highly specific to the product. You are STRICTLY FORBIDDEN from copying the examples provided in this prompt. You are STRICTLY FORBIDDEN from asking 'Yes/No' questions.),
 "disclaimers": (Array of 3 casual warnings. SAFE SCARCITY MANDATE: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, or items selling out. Focus ONLY on the system or amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (String. Extract ONLY these facts from the extra text. Follow this strict hierarchy:
-1) EXPLICIT LIMITS: MUST contain the exact word 'Limit', 'Max', or 'Maximum' followed by a number (e.g., 'Limit 2', 'maximum of 4'). LIMIT OVERRIDE: If the text contains 'Max' or 'Maximum', it is ALWAYS a limit, even if the word 'qty' is next to it. NEVER extract colors or 'select' phrases here.
-2) CART QUANTITIES: e.g., 'Add 3'. Do NOT classify 'maximum qty' here.
+1) EXPLICIT LIMITS: MUST contain the exact word 'Limit', 'Max', or 'Maximum' followed by a number (e.g., 'Limit 2', 'maximum of 4'). ABSOLUTE LIMIT FIREWALL: If the text contains 'Limit', 'Max', or 'Maximum', it is ALWAYS a limit. It overrides everything else. Even if the word 'qty' is next to it (e.g., 'Limit of 5 QTY'), you MUST classify it as a Limit. NEVER extract colors or 'select' phrases here.
+2) CART QUANTITIES: e.g., 'Add 3'. Do NOT classify 'Limit qty' or 'maximum qty' here.
 3) SPECIFIC VARIANTS: Extract the ENTIRE phrase exactly as written after 'works on', 'cheaper', or 'cheapest'. You MUST include hyphens, numbers, and parentheses (e.g., 'Black in size 7 (Pack of 3)'). Do NOT split the phrase into separate size/color buckets.
 4) SIZE RANGES: Extract the ENTIRE size phrase, including words like 'Large', 'Small', or 'up to' (e.g., 'S-XXL', 'up to 4X-Large', 'Plus Sizes').
 5) GENERIC PHRASES: e.g., 'several colors', 'select color', 'select option'.
@@ -689,7 +689,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
         const rawEmojiPool = aiData.emoji_pool || [];
         
-        // V9.4.27: The Emoji Scrubber (Deletes hallucinated text words from the AI's array)
+        // V9.4.28: The Emoji Scrubber (Deletes hallucinated text words from the AI's array)
         const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu;
         
         let scrubbedEmojiPool = rawEmojiPool.filter(item => {
@@ -914,7 +914,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 // V9.1.3: 33% Pointer Drop Rate
                 let ptrLine = Math.random() > 0.33 ? selectedShortPointers[i] : "";
                 
-                // V9.4.27 Dynamic Run Deal Assembly & Hook Shuffler
+                // V9.4.28 Dynamic Run Deal Assembly & Hook Shuffler
                 let formatRoll = Math.random();
                 let hookFront = Math.random() > 0.5; // 50% chance hook is at the front
                 let coreSentence = "";
