@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.4.95</title>
+    <title>The CB Deal Generator v9.4.96</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.4.95</span>
+            <span class="version-tag">v9.4.96</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -285,7 +285,7 @@
     let lastRawText = "";
     let lastCustomLine = "";
     
-    // V9.4.95 Global Abort Controller
+    // V9.4.96 Global Abort Controller
     let currentAbortController = null;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -546,7 +546,7 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
   "limit": (String. MUST contain 'Limit', 'Max', or 'Maximum' plus a number. Overrides 'qty'. NEVER extract colors here.),
   "quantity": (String. e.g., 'Add 3'. Do NOT extract limits here.),
   "variant": (String. Extract the ENTIRE phrase after 'works on', 'cheaper', or 'cheapest'. Include hyphens, numbers, commas, and parentheses.),
-  "size": (String. Extract the ENTIRE size phrase, e.g., 'S-XXL', 'up to 4X-Large'. Strip the word 'size'. TITLE BAN: You are STRICTLY FORBIDDEN from extracting sizes, dimensions, or capacities (e.g., '14x10 Inch', '144 Total Pieces') if they are already in the product title. ONLY extract sizes from the extra text. Do NOT extract generic phrases like 'select size' here.),
+  "size": (String. Extract the ENTIRE size phrase, e.g., 'S-XXL', 'up to 4X-Large'. LITERAL MATCH MANDATE: You MUST extract the exact numbers/letters the user typed (e.g., if they type '5X', extract '5X'). Do NOT autocorrect or change the sizes. Strip the word 'size'. TITLE BAN: You are STRICTLY FORBIDDEN from extracting sizes, dimensions, or capacities (e.g., '14x10 Inch', '144 Total Pieces') if they are already in the product title. ONLY extract sizes from the extra text. Do NOT extract generic phrases like 'select size' here.),
   "generic": (String. e.g., 'several colors', 'select color', 'select option', 'select color and size', 'select size'. You MUST extract these even if there is no trigger word next to them.),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug'. You MUST extract the exact number, even if it has more than two decimal places.)
 COMMA SPLIT MANDATE: If a line contains a color/variant AND a size separated by a comma (e.g., 'Several colors, S - XXL', 'Black, Medium'), you MUST split the line and place each fact into its correct JSON key. VARIANT COMMA EXCEPTION: If the comma separates a variant and a bundle/quantity (e.g., 'option Silver, 3packs'), do NOT split it. Extract the entire phrase into the "variant" key.
@@ -596,7 +596,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, Miracle, Cure, Guaranteed, Proven, 100% effective. CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.4.95 RUN DEAL PROMPT
+            // V9.4.96 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \") and ensure all array elements are separated by commas.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -612,7 +612,7 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
   "limit": (String. MUST contain 'Limit', 'Max', or 'Maximum' plus a number. Overrides 'qty'. NEVER extract colors here.),
   "quantity": (String. e.g., 'Add 3'. Do NOT extract limits here.),
   "variant": (String. Extract the ENTIRE phrase after 'works on', 'cheaper', or 'cheapest'. Include hyphens, numbers, commas, and parentheses.),
-  "size": (String. Extract the ENTIRE size phrase, e.g., 'S-XXL', 'up to 4X-Large'. Strip the word 'size'. TITLE BAN: You are STRICTLY FORBIDDEN from extracting sizes, dimensions, or capacities (e.g., '14x10 Inch', '144 Total Pieces') if they are already in the product title. ONLY extract sizes from the extra text. Do NOT extract generic phrases like 'select size' here.),
+  "size": (String. Extract the ENTIRE size phrase, e.g., 'S-XXL', 'up to 4X-Large'. LITERAL MATCH MANDATE: You MUST extract the exact numbers/letters the user typed (e.g., if they type '5X', extract '5X'). Do NOT autocorrect or change the sizes. Strip the word 'size'. TITLE BAN: You are STRICTLY FORBIDDEN from extracting sizes, dimensions, or capacities (e.g., '14x10 Inch', '144 Total Pieces') if they are already in the product title. ONLY extract sizes from the extra text. Do NOT extract generic phrases like 'select size' here.),
   "generic": (String. e.g., 'several colors', 'select color', 'select option', 'select color and size', 'select size'. You MUST extract these even if there is no trigger word next to them.),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug'. You MUST extract the exact number, even if it has more than two decimal places.)
 COMMA SPLIT MANDATE: If a line contains a color/variant AND a size separated by a comma (e.g., 'Several colors, S - XXL', 'Black, Medium'), you MUST split the line and place each fact into its correct JSON key. VARIANT COMMA EXCEPTION: If the comma separates a variant and a bundle/quantity (e.g., 'option Silver, 3packs'), do NOT split it. Extract the entire phrase into the "variant" key.
@@ -664,7 +664,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
         }
 
         try {
-            // V9.4.95: Manual Abort Controller
+            // V9.4.96: Manual Abort Controller
             currentAbortController = new AbortController();
 
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
@@ -725,7 +725,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
         }
     }
     
-    // V9.4.95: UI Toggle Logic for Deal Type Buttons
+    // V9.4.96: UI Toggle Logic for Deal Type Buttons
     function setDealType(type) {
         document.getElementById('dealType').value = type;
         if(type === 'regular') {
@@ -759,7 +759,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
 
         const rawEmojiPool = aiData.emoji_pool || [];
         
-        // V9.4.95: The Emoji Scrubber (Deletes hallucinated text words from the AI's array)
+        // V9.4.96: The Emoji Scrubber (Deletes hallucinated text words from the AI's array)
         const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu;
         
         let scrubbedEmojiPool = rawEmojiPool.filter(item => {
@@ -954,7 +954,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
                 
-                // V9.4.95: High-Variance 33% drop rate across all comment elements
+                // V9.4.96: High-Variance 33% drop rate across all comment elements
                 let keepPraise = Math.random() > 0.33; 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
@@ -986,10 +986,10 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 let inf = cleanText(aiData.inferences[i]);
                 let keyword = cleanText(aiData.scrubbed_keyword);
                 
-               // V9.4.95: Pointer only shows 33% of the time
+               // V9.4.96: Pointer only shows 33% of the time
                 let ptrLine = Math.random() < 0.33 ? selectedShortPointers[i] : "";
                 
-                // V9.4.95 Dynamic Run Deal Assembly & Hook Shuffler
+                // V9.4.96 Dynamic Run Deal Assembly & Hook Shuffler
                 let formatRoll = Math.random();
                 let hookFront = Math.random() > 0.5; // 50% chance hook is at the front
                 let coreSentence = "";
@@ -1058,7 +1058,7 @@ GLOBAL SHIELD: You are STRICTLY FORBIDDEN from using any of these banned words: 
                 
                 let bottomLine = `${b5}${b6}${b7}${b8}${b9}`.trim();
 
-                // V9.4.95: High-Variance 33% drop rate across all comment elements
+                // V9.4.96: High-Variance 33% drop rate across all comment elements
                 let keepPraise = Math.random() > 0.33; 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
