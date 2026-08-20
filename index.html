@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.0</title>
+    <title>The CB Deal Generator v9.6.1</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.0</span>
+            <span class="version-tag">v9.6.1</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -285,7 +285,7 @@
     let lastRawText = "";
     let lastCustomLine = "";
     
-    // V9.6.0 Global Abort Controller
+    // V9.6.1 Global Abort Controller
     let currentAbortController = null;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -599,7 +599,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, marked down, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, viral, Miracle, Cure, Guaranteed, Proven, 100% effective. TEMPLATE OVERRIDE: This shield is your highest directive. If ANY rule or template in this prompt accidentally asks you to print a banned word (e.g., 'This deal is...'), you MUST override the template, scrub the banned word, and replace it with a safe generic noun (e.g., 'This one is...'). CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.6.0 RUN DEAL PROMPT
+            // V9.6.1 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \") and ensure all array elements are separated by commas.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -670,7 +670,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
 
         try {
-            // V9.6.0: Manual Abort Controller
+            // V9.6.1: Manual Abort Controller
             currentAbortController = new AbortController();
 
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
@@ -731,7 +731,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.6.0: UI Toggle Logic for Deal Type Buttons
+    // V9.6.1: UI Toggle Logic for Deal Type Buttons
     function setDealType(type) {
         document.getElementById('dealType').value = type;
         if(type === 'regular') {
@@ -765,24 +765,20 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
 
         const rawEmojiPool = aiData.emoji_pool || [];
         
-        // V9.6.0: The Emoji Scrubber (Deletes hallucinated text words from the AI's array)
+        // V9.5.9: The Emoji Scrubber (Deletes hallucinated text words from the AI's array)
         const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu;
         
         let scrubbedEmojiPool = rawEmojiPool.filter(item => {
-            // Only keep the item if it contains an actual Unicode emoji
             return emojiRegex.test(item);
         }).map(item => {
-            // Strip any accidental text attached to the emoji (e.g., "house 🏠" becomes "🏠")
             let match = item.match(emojiRegex);
             return match ? match[0] : null;
-        }).filter(Boolean); // Remove nulls
+        }).filter(Boolean); 
 
         const uniqueEmojiPool = [...new Set(scrubbedEmojiPool)]; 
         
-        // V9.07: Scrubbed commercial emojis from fallback pool
         const fallbackEmojis = ["📦","👇","✨","🔥","🎁","🎉","🎈","🎊","🎀","💫","🌟","🌿","🤎","🤍","✅","👀","💡","🎯","📌","📍","💎","🏆","🥇","🚀","⚡","💥","💯","📣","🔔","📢","💬","💭","🏠","🛋️","🪴","☕","🏃","☁️","☀️","🌻"];
         
-        // If the AI hallucinated too many words and the pool drops below 10, use the fallback
         const finalEmojiPool = uniqueEmojiPool.length >= 10 ? uniqueEmojiPool : fallbackEmojis;
 
         let masterEmojiPool = [...finalEmojiPool];
@@ -811,12 +807,10 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         const selectedPointers = shuffleArray(activePointers).slice(0, 4);
         const selectedLinkLeads = shuffleArray(activeLinkLeads).slice(0, 4);
 
-        // V9.01 RETAILER SYNTAX MATRIX
         const titleSeparators = [" -- ", " - ", " | ", " ~ ", " // ", " ✨ ", " 👉 ", " : "];
 
         const retPrefixes = [`On ${retailer},`, `At ${retailer},`, `Over at ${retailer},`, `Checking ${retailer},`, `Found on ${retailer},`, `Spotted on ${retailer},`, `Browsing ${retailer},`, `Shopping ${retailer},`];
         const retSuffixes = [`on ${retailer}!`, `at ${retailer}!`, `via ${retailer}!`, `from ${retailer}!`, `over on ${retailer}!`, `through ${retailer}!`, `thanks to ${retailer}!`];
-        // V9.1.6: Added separators to tags to prevent run-on sentences
         const retTags = [`[${retailer}] -`, `| ${retailer} |`, `📍 ${retailer} |`, `📦 ${retailer} -`, `🎯 ${retailer} |`];
         
         const wrapRegPrice = (text) => {
@@ -874,10 +868,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             
             if(aiData.reg_price !== "NONE") hook += ` ${wrapRegPrice(selectedCompLabels[i] + " " + cleanText(aiData.reg_price))}`;
             
-            let flip = Math.random() > 0.5;
-            let sep = titleSeparators[Math.floor(Math.random() * titleSeparators.length)];
-            
-            sl.push(flip ? `${hook}${sep}${cleanTitle}` : `${cleanTitle}${sep}${hook}`);
+            sl.push(hook); // V9.6.1: We just push the hook here, assembly happens later
         }
 
         let postOutputs = [];
@@ -895,81 +886,80 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let bottomLine = `${b5}${b6}${b7}${b8}${b9}`.trim();
                 let inf = cleanText(aiData.inferences[i]);
                 
-                let flipB1 = Math.random() > 0.5;
                 let discText = selectedDiscoveries[i];
                 if (!discText.startsWith("I ")) {
                     discText = discText.charAt(0).toLowerCase() + discText.slice(1);
                 }
                 
-                // V9.01 RETAILER SYNTAX MATRIX
                 let rPref = retPrefixes[Math.floor(Math.random() * retPrefixes.length)];
                 let rSuff = retSuffixes[Math.floor(Math.random() * retSuffixes.length)];
                 let rTag = retTags[Math.floor(Math.random() * retTags.length)];
                 
-                let formatRoll = Math.random();
-                let discLine = "";
-                if (formatRoll < 0.33) {
-                    discLine = `${rPref} ${discText}!`;
-                } else if (formatRoll < 0.66) {
-                    discLine = `${selectedDiscoveries[i]} ${rSuff}`;
-                } else {
-                    discLine = `${rTag} ${selectedDiscoveries[i]}!`;
-                }
-                
-                // V9.6.0: MAXIMUM ENTROPY ENGINE
+                // V9.6.1: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
                 // 1. Drop Rates
                 let keepDiscovery = Math.random() > 0.25; // 25% chance to drop Discovery Phrase
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : ""; // 33% chance to drop Pointer
                 
-                // 2. Retailer Placement Variance (50/50 Standalone vs Attached)
-                let isRetailerStandalone = Math.random() > 0.5;
-                let finalDiscLine = "";
+                // 2. Retailer Placement Variance (33% Standalone, 33% Discovery, 33% Price Hook)
+                let retRoll = Math.random();
                 let standaloneRetailerLine = "";
-                
-                if (isRetailerStandalone) {
-                    // Retailer gets its own line, Discovery phrase stands alone (if kept)
-                    standaloneRetailerLine = rTag; // e.g., "📍 Amazon |"
-                    finalDiscLine = keepDiscovery ? `${selectedDiscoveries[i]}!` : "";
-                } else {
-                    // Retailer is attached to the Discovery phrase (if kept)
-                    if (keepDiscovery) {
-                        let formatRoll = Math.random();
-                        if (formatRoll < 0.33) {
-                            finalDiscLine = `${rPref} ${discText}!`;
-                        } else if (formatRoll < 0.66) {
-                            finalDiscLine = `${selectedDiscoveries[i]} ${rSuff}`;
-                        } else {
-                            finalDiscLine = `${rTag} ${selectedDiscoveries[i]}!`;
-                        }
+                let finalDiscLine = "";
+                let finalHook = sl[i];
+
+                if (retRoll < 0.33) {
+                    // Option A: Retailer gets its own standalone line
+                    standaloneRetailerLine = rTag; 
+                    if (keepDiscovery) finalDiscLine = `${selectedDiscoveries[i]}!`;
+                } else if (retRoll < 0.66 && keepDiscovery) {
+                    // Option B: Retailer is attached to the Discovery phrase
+                    let formatRoll = Math.random();
+                    if (formatRoll < 0.33) {
+                        finalDiscLine = `${rPref} ${discText}!`;
+                    } else if (formatRoll < 0.66) {
+                        finalDiscLine = `${selectedDiscoveries[i]} ${rSuff}`;
                     } else {
-                        // If Discovery is dropped but Retailer is attached, Retailer must stand alone to survive
-                        standaloneRetailerLine = rTag; 
+                        finalDiscLine = `${rTag} ${selectedDiscoveries[i]}!`;
+                    }
+                } else {
+                    // Option C: Retailer is attached to the Price Hook (or fallback if Discovery dropped)
+                    if (keepDiscovery) finalDiscLine = `${selectedDiscoveries[i]}!`;
+                    let hookFormatRoll = Math.random();
+                    if (hookFormatRoll < 0.5) {
+                        finalHook = `${rPref} ${sl[i]}`; 
+                    } else {
+                        finalHook = `${sl[i]} ${rSuff}`; 
                     }
                 }
 
-                // 3. Title vs Price Variance (50/50 Above vs Below)
-                let priceDisplay = aiData.sale_price === "???" ? "???" : cleanText(aiData.sale_price);
-                let prefixToUse = isAsLowAs ? selectedLowPrefixes[i] : selectedPrefixes[i];
-                let hook = `${prefixToUse} ${priceDisplay.includes("???") ? priceDisplay : "$" + priceDisplay.replace('$', '')} ${dynamicStatuses[i]}`;
-                if(aiData.reg_price !== "NONE") hook += ` ${wrapRegPrice(selectedCompLabels[i] + " " + cleanText(aiData.reg_price))}`;
-                
+                // 3. Title Placement Variance (25% Separate Line, 75% Attached)
+                let separateTitle = Math.random() < 0.25;
                 let sep = titleSeparators[Math.floor(Math.random() * titleSeparators.length)];
-                let isTitleAbove = Math.random() > 0.5;
-                
-                let finalHeaderLine = isTitleAbove ? `${cleanTitle}${sep}${hook}` : `${hook}${sep}${cleanTitle}`;
+                let headerLines = [];
 
-                // 4. Build the Blocks
+                if (separateTitle) {
+                    // Title gets its own line, completely detached from the price
+                    headerLines.push(cleanTitle);
+                    headerLines.push(finalHook);
+                } else {
+                    // Title is attached to the price (50/50 Above or Below)
+                    let isTitleAbove = Math.random() > 0.5;
+                    if (isTitleAbove) {
+                        headerLines.push(`${cleanTitle}${sep}${finalHook}`);
+                    } else {
+                        headerLines.push(`${finalHook}${sep}${cleanTitle}`);
+                    }
+                }
+
+                // 4. Build the Top Block (Randomizing order of Header, Retailer, and Discovery)
                 let topBlock = [];
-                let middleBlock = [];
-                
-                // Assemble Top Block (Randomizing order of Header, Retailer, and Discovery)
                 if (standaloneRetailerLine) topBlock.push(standaloneRetailerLine);
                 if (finalDiscLine) topBlock.push(finalDiscLine);
-                topBlock.push(finalHeaderLine);
+                topBlock = topBlock.concat(headerLines);
                 topBlock = topBlock.sort(() => 0.5 - Math.random()); // Shuffle the top elements
                 
-                // Assemble Middle Block (Facts & Inferences)
+                // 5. Build the Middle Block (Facts & Inferences)
+                let middleBlock = [];
                 middleBlock.push(inf);
                 if (b2) middleBlock.push(b2);
                 if (bottomLine) middleBlock.push(bottomLine);
@@ -981,9 +971,9 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // Shuffle the Middle Block
                 middleBlock = middleBlock.sort(() => 0.5 - Math.random());
                 
-                // Combine them (Top Block always stays on top)
+                // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
-                
+
                 let emojifiedLines = injectEmojisV8(rawLines, 3, 6);
                 let postText = joinWithSpaceChaos(emojifiedLines, 2, 4);
                 
@@ -998,7 +988,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
                 
-                // V9.6.0: High-Variance 33% drop rate across all comment elements
+                // V9.5.9: High-Variance 33% drop rate across all comment elements
                 let keepPraise = Math.random() > 0.33; 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
@@ -1030,10 +1020,10 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let inf = cleanText(aiData.inferences[i]);
                 let keyword = cleanText(aiData.scrubbed_keyword);
                 
-               // V9.6.0: Pointer only shows 33% of the time
+               // V9.5.9: Pointer only shows 33% of the time
                 let ptrLine = Math.random() < 0.33 ? selectedShortPointers[i] : "";
                 
-                // V9.6.0 Dynamic Run Deal Assembly & Hook Shuffler
+                // V9.5.9 Dynamic Run Deal Assembly & Hook Shuffler
                 let formatRoll = Math.random();
                 let hookFront = Math.random() > 0.5; // 50% chance hook is at the front
                 let coreSentence = "";
@@ -1102,7 +1092,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 let bottomLine = `${b5}${b6}${b7}${b8}${b9}`.trim();
 
-                // V9.6.0: High-Variance 33% drop rate across all comment elements
+                // V9.5.9: High-Variance 33% drop rate across all comment elements
                 let keepPraise = Math.random() > 0.33; 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
