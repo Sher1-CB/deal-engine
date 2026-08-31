@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.64</title>
+    <title>The CB Deal Generator v9.6.65</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.64</span>
+            <span class="version-tag">v9.6.65</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -285,7 +285,7 @@
     let lastRawText = "";
     let lastCustomLine = "";
     
-    // V9.6.64 Global Abort Controller
+    // V9.6.65 Global Abort Controller
     let currentAbortController = null;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -557,7 +557,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - VARIANCE MANDATE: You MUST use a DIFFERENT starting verb (Grab, Choose, Pick, Select) for each of the 4 strings. You are STRICTLY FORBIDDEN from copy-pasting the exact same sentence 4 times.
 - EMPTY BUCKET MANDATE: If a key in b2_verification is "NONE", do NOT generate text for it. ONLY write sentences for active keys.
 - RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. Rotate: "Heads up, there is a strict limit of [X]!", "Keep in mind you can only get [X]!", "Just a heads up, these are limited to [X]!". You MUST apply this to ALL 4 STRINGS.
-- RULE 2 (QUANTITIES): ONLY if "quantity" is active, write: "You need to add [X] of these!". You MUST apply this to ALL 4 STRINGS. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out. MATH MANDATE: If you extracted per-item math, attach it directly (e.g., 'You need to add 4 of these, making them just $6.774 per Tub!'). Print exact numbers.
+- RULE 2 (QUANTITIES): ONLY if "quantity" is active, write: "You need to add [X] of these!". You MUST apply this to ALL 4 STRINGS. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out.
 - RULE 3 (VARIANTS/OPTIONS): ONLY IF a variant, generic, or size is active, you MUST write EXACTLY ONE sentence combining them. NEVER write two separate sentences. You MUST apply this to ALL 4 strings in this array.
   * ONLY WARNING: Evaluate the extracted variant string. IF AND ONLY IF the literal word 'only' is present, you MUST map these exact templates to the 4 strings: String 1: "Heads up, this only works on the [Variant] option!" String 2: "I noticed this is only for the [Variant]!" String 3: "Make sure to grab the [Variant] since it's the only one working!" String 4: "This one is only for the [Variant] option!". (Strip the word 'only' from the variant first). IF the word 'only' is NOT present, you are STRICTLY FORBIDDEN from using these templates and MUST proceed to STRUCTURAL CHAOS.
   * STRUCTURAL CHAOS: For all other variants, you MUST randomly rotate the sentence structure across the 4 posts to avoid language fingerprinting.
@@ -565,7 +565,8 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
   * IF SIZE EXISTS: Rotate between these 3 structures: 1) [Verb] + [Base] + " in sizes " + [Size] + "!" (e.g., 'Grab the Black option in sizes S-XXL!'). 2) "In sizes " + [Size] + ", " + [Verb] + [Base] + "!" (e.g., 'In sizes S-XXL, grab the Black option!'). 3) Conversational: "The " + [Base] + " is available in sizes " + [Size] + "!"
   * [Verb]: Rotate between 'Grab', 'Choose', 'Pick', 'Select'.
   * [Base]: Evaluate in order (Case Insensitive): 1) COLOR GENERICS: If text contains 'several colors', 'several color', 'all colors', 'all color', or 'any color': rotate 'one of the colors', 'a color you like', 'whichever color you want'. 2) MIXED GENERICS: If text contains BOTH a color generic and a size generic (e.g., 'several colors and select sizes'): rotate 'your favorite color in the eligible sizes', 'a color you like in the qualifying sizes'. 3) SELECT KEYWORD: If text contains the word 'select' (e.g., 'select color', 'select scents', 'select option'): rotate 'the eligible option', 'the qualifying option'. (Preserve attached sizes). 4) BOTH KEYWORD: If text contains 'both' (e.g., 'both option', 'both colors'): use 'both options'. 5) If text contains 'and' or 'or': use 'the [Variant] options'. 6) If single word: use 'the [Variant] option'. 7) If phrase: use 'the [Variant]'. 8) If ONLY a size exists: use 'it'.
-  * SYNONYM BAN: Do NOT use words like 'variant', 'version', or 'style'. You are STRICTLY FORBIDDEN from appending the word 'options' or 'option' to a variant unless explicitly instructed by the [Base] rules above.),
+  * SYNONYM BAN: Do NOT use words like 'variant', 'version', or 'style'. You are STRICTLY FORBIDDEN from appending the word 'options' or 'option' to a variant unless explicitly instructed by the [Base] rules above.
+- RULE 4 (MATH): ONLY if "math" is active. If "quantity" is ALSO active, attach the math to the end of the Rule 2 sentence (e.g., '...making them just $12.49 per jug!'). If "quantity" is "NONE", you MUST write a standalone sentence: "That makes it just [Math]!" (e.g., 'That makes it just $12.49 per jug!'). You MUST apply this to ALL 4 strings.),
 "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. SHIPPING BLINDNESS: If the raw text just says 'Shipped', 'Shipped!', or 'Free Shipping' next to the price, you MUST ignore it and write "NONE". The system handles basic shipping automatically. Only extract shipping if it has a specific requirement like 'Walmart+ or $35 order'. If none, write "NONE"),
 "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
 - RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
@@ -600,7 +601,7 @@ ${customLineInstruction}
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, marked down, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective. TEMPLATE OVERRIDE: This shield is your highest directive. If ANY rule or template in this prompt accidentally asks you to print a banned word (e.g., 'This deal is...'), you MUST override the template, scrub the banned word, and replace it with a safe generic noun (e.g., 'This one is...'). CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
-            // V9.6.64 RUN DEAL PROMPT
+            // V9.6.65 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \") and ensure all array elements are separated by commas.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
@@ -627,7 +628,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - VARIANCE MANDATE: You MUST use a DIFFERENT starting verb (Grab, Choose, Pick, Select) for each of the 4 strings. You are STRICTLY FORBIDDEN from copy-pasting the exact same sentence 4 times.
 - EMPTY BUCKET MANDATE: If a key in b2_verification is "NONE", do NOT generate text for it. ONLY write sentences for active keys.
 - RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. Rotate: "Heads up, there is a strict limit of [X]!", "Keep in mind you can only get [X]!", "Just a heads up, these are limited to [X]!". You MUST apply this to ALL 4 STRINGS.
-- RULE 2 (QUANTITIES): ONLY if "quantity" is active, write: "You need to add [X] of these!". You MUST apply this to ALL 4 STRINGS. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out. MATH MANDATE: If you extracted per-item math, attach it directly (e.g., 'You need to add 4 of these, making them just $6.774 per Tub!'). Print exact numbers.
+- RULE 2 (QUANTITIES): ONLY if "quantity" is active, write: "You need to add [X] of these!". You MUST apply this to ALL 4 STRINGS. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out.
 - RULE 3 (VARIANTS/OPTIONS): ONLY IF a variant, generic, or size is active, you MUST write EXACTLY ONE sentence combining them. NEVER write two separate sentences. You MUST apply this to ALL 4 strings in this array.
   * ONLY WARNING: Evaluate the extracted variant string. IF AND ONLY IF the literal word 'only' is present, you MUST map these exact templates to the 4 strings: String 1: "Heads up, this only works on the [Variant] option!" String 2: "I noticed this is only for the [Variant]!" String 3: "Make sure to grab the [Variant] since it's the only one working!" String 4: "This one is only for the [Variant] option!". (Strip the word 'only' from the variant first). IF the word 'only' is NOT present, you are STRICTLY FORBIDDEN from using these templates and MUST proceed to STRUCTURAL CHAOS.
   * STRUCTURAL CHAOS: For all other variants, you MUST randomly rotate the sentence structure across the 4 posts to avoid language fingerprinting.
@@ -635,7 +636,8 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
   * IF SIZE EXISTS: Rotate between these 3 structures: 1) [Verb] + [Base] + " in sizes " + [Size] + "!" (e.g., 'Grab the Black option in sizes S-XXL!'). 2) "In sizes " + [Size] + ", " + [Verb] + [Base] + "!" (e.g., 'In sizes S-XXL, grab the Black option!'). 3) Conversational: "The " + [Base] + " is available in sizes " + [Size] + "!"
   * [Verb]: Rotate between 'Grab', 'Choose', 'Pick', 'Select'.
   * [Base]: Evaluate in order (Case Insensitive): 1) COLOR GENERICS: If text contains 'several colors', 'several color', 'all colors', 'all color', or 'any color': rotate 'one of the colors', 'a color you like', 'whichever color you want'. 2) MIXED GENERICS: If text contains BOTH a color generic and a size generic (e.g., 'several colors and select sizes'): rotate 'your favorite color in the eligible sizes', 'a color you like in the qualifying sizes'. 3) SELECT KEYWORD: If text contains the word 'select' (e.g., 'select color', 'select scents', 'select option'): rotate 'the eligible option', 'the qualifying option'. (Preserve attached sizes). 4) BOTH KEYWORD: If text contains 'both' (e.g., 'both option', 'both colors'): use 'both options'. 5) If text contains 'and' or 'or': use 'the [Variant] options'. 6) If single word: use 'the [Variant] option'. 7) If phrase: use 'the [Variant]'. 8) If ONLY a size exists: use 'it'.
-  * SYNONYM BAN: Do NOT use words like 'variant', 'version', or 'style'. You are STRICTLY FORBIDDEN from appending the word 'options' or 'option' to a variant unless explicitly instructed by the [Base] rules above.),
+  * SYNONYM BAN: Do NOT use words like 'variant', 'version', or 'style'. You are STRICTLY FORBIDDEN from appending the word 'options' or 'option' to a variant unless explicitly instructed by the [Base] rules above.
+- RULE 4 (MATH): ONLY if "math" is active. If "quantity" is ALSO active, attach the math to the end of the Rule 2 sentence (e.g., '...making them just $12.49 per jug!'). If "quantity" is "NONE", you MUST write a standalone sentence: "That makes it just [Math]!" (e.g., 'That makes it just $12.49 per jug!'). You MUST apply this to ALL 4 strings.),
 "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. SHIPPING BLINDNESS: If the raw text just says 'Shipped', 'Shipped!', or 'Free Shipping' next to the price, you MUST ignore it and write "NONE". The system handles basic shipping automatically. Only extract shipping if it has a specific requirement like 'Walmart+ or $35 order'. If none, write "NONE"),
 "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
 - RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths.
@@ -672,7 +674,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
 
         try {
-            // V9.6.64: Manual Abort Controller
+            // V9.6.65: Manual Abort Controller
             currentAbortController = new AbortController();
 
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
@@ -733,7 +735,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.6.64: UI Toggle Logic for Deal Type Buttons
+    // V9.6.65: UI Toggle Logic for Deal Type Buttons
     function setDealType(type) {
         document.getElementById('dealType').value = type;
         if(type === 'regular') {
@@ -870,7 +872,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             
             if(aiData.reg_price !== "NONE") hook += ` ${wrapRegPrice(selectedCompLabels[i] + " " + cleanText(aiData.reg_price))}`;
             
-            sl.push(hook); // V9.6.64: We just push the hook here, assembly happens later
+            sl.push(hook); // V9.6.65: We just push the hook here, assembly happens later
         }
 
         let postOutputs = [];
@@ -897,7 +899,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let rSuff = retSuffixes[Math.floor(Math.random() * retSuffixes.length)];
                 let rTag = retTags[Math.floor(Math.random() * retTags.length)];
                 
-                // V9.6.64: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
+                // V9.6.65: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
                 // 1. Drop Rates
                 let keepDiscovery = Math.random() > 0.25; // 25% chance to drop Discovery Phrase
@@ -1104,7 +1106,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let rawLines = [];
                 rawLines.push(discLine);
                 
-                // V9.6.64 TITLE OVERRIDE: Force the exact title into Run Deal comments if missing
+                // V9.6.65 TITLE OVERRIDE: Force the exact title into Run Deal comments if missing
                 let runDealHook = sl[i];
                 if (!runDealHook.includes(cleanTitle)) {
                     let sep = titleSeparators[Math.floor(Math.random() * titleSeparators.length)];
