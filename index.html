@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.70</title>
+    <title>The CB Deal Generator v9.6.73</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.70</span>
+            <span class="version-tag">v9.6.73</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -401,43 +401,37 @@
         "I immediately added this to my list", "We are really impressed by this one", "I am so glad we caught this current number"
     ];
     const pointers1st = [
-        "I put it right under here for you!", "I left the exact page right under this!", "I pinned the exact spot right under this text!",
-        "I tucked the exact spot right under here!", "We left the page just a quick scroll away!", "I placed the location just under this text!",
-        "You can grab yours right under here!", "Just scroll down a tiny bit to find it!", "Everything you need is a little further down!",
-        "I dropped the exact page right down there!", "We added the info right down there for you!", "I am leaving the spot right under here!",
-        "I secured the page right under this!", "We put the exact location just a step down!", "I attached it right down there!",
-        "I made sure to pin it right under this!", "We left the exact location waiting in the next section!", "I tucked it just a tiny scroll away!",
-        "I made sure to drop it right under here!", "We placed the exact page right down there!"
+        "I left the rest of the details right under here!", "I dropped the info just a quick scroll away!", "I put the rest of the info right down there!",
+        "I tucked the details just under this text!", "I left everything you need right under here!", "I made sure to drop the details down below!",
+        "I pinned the rest of the info right under this!", "I left the details just a step down!", "I put the info right under here for you!",
+        "I left the details just a tiny scroll away!", "I dropped the rest of the info right down there!", "We added the details right down there for you!"
     ];
     const linkLeads1st = [
-        "I left the page right here:", "My direct spot is here:", "I pinned the exact page here:", "See what we found right here:",
-        "I dropped it right here:", "We put it right here for you:", "I added the location here:", "We pinned it exactly here:",
-        "I secured the spot right here:", "My exact find is here:", "I attached the page here:", "We pinned it right here:",
-        "Grab it here:", "See it here:", "Check the exact page here:", "You can view it here:"
+        "Here you go:", "I left it right here:", "This is where I found it:", "I tracked it down here:",
+        "I put it right here for you:", "My exact find is here:", "I dropped the details here:", "I pinned the info here:",
+        "Here is what we found:", "I left the details here:", "This is the info:"
     ];
 
     // --- 3RD PERSON DICTIONARIES (HUMANIZED & CREDIBLE) ---
     const discoveries3rd = [
         "This is a crazy good find", "This dropped so low today", "This is such a good discovery",
-        "It's hard to believe how low this dropped", "This is a really solid grab right now", "This massive drop just went live",
-        "Look at this incredible value", "This is a fantastic drop to catch", "This current value is fantastic",
-        "This just hit a much lower total", "This fell and it is so good", "This is a perfect catch for anyone looking",
+        "It's hard to believe how low this dropped", "This is a really solid find right now", "This massive drop just went live",
+        "Look at this incredible value", "This is a fantastic drop to see", "This current value is fantastic",
+        "This just hit a much lower total", "This fell and it is so good", "This is a perfect find for anyone looking",
         "This drop is looking great right now", "This is such a highly requested drop", "This is a wonderful value today",
-        "This is a top-tier find right now", "This is a fantastic catch today", "This dropped beautifully just now",
-        "This is a spectacular drop to grab", "This is such a well-timed drop", "This is a brilliant catch today"
+        "This is a top-tier find right now", "This is a fantastic discovery today", "This dropped beautifully just now",
+        "This is a spectacular drop to see", "This is such a well-timed drop", "This is a brilliant find today"
     ];
     const pointers3rd = [
-        "The exact page is right under here!", "You can grab yours right under here!", "The page is right under this!",
-        "It's waiting for you right down there!", "Just scroll down a tiny bit to find it!", "The right spot is waiting just a step down!",
-        "Find the exact location ready in the next section!", "Everything you need is a little further down!", "Catch it just a quick scroll away!",
-        "The exact spot is pinned right under this text!", "The location is resting just under this text!", "Look just a little further down for the page!",
-        "It is tucked right down there!", "The exact page is waiting in the next section!", "The info is resting just a step down!",
-        "The exact location is pinned right down there!", "Catch the exact page right down there!"
+        "The rest of the details are right under here!", "The info is waiting just a quick scroll away!", "Everything you need is resting right down there!",
+        "The details are tucked just under this text!", "Look just a little further down for the rest of the info!", "The details are pinned right under this!",
+        "The rest of the info is just a step down!", "The details are waiting right down there!", "The info is resting just under this text!",
+        "The rest of the details are tucked right down there!", "Everything is waiting just a tiny scroll away!"
     ];
     const linkLeads3rd = [
-        "Grab it here:", "See it here:", "Find it here:", "Check the exact page here:", "The page is right here:",
-        "The direct spot is here:", "You can view it here:", "Catch it right here:", "Here is the exact location:", 
-        "The exact spot is here:", "The location is here:", "The exact page is pinned here:", "View the exact spot here:"
+        "Here you go:", "The details are right here:", "This is where to find it:", "The info is right here:", 
+        "Here is the info:", "View the details here:", "The exact find is here:", "The info is pinned here:",
+        "Here are the details:", "The details are pinned here:", "This is the info:"
     ];
 
     const shortPointers = [
@@ -597,7 +591,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - RULE 4 (MATH): ONLY if "math" is active AND "quantity" is "NONE", write a standalone sentence: "That makes it just [Math]!" (e.g., 'That makes it just $12.49 per jug!'). (If quantity is active, you are STRICTLY FORBIDDEN from generating this sentence, as it is already handled in Rule 2). You MUST apply this to ALL 4 strings.),
 "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. SHIPPING BLINDNESS: If the raw text just says 'Shipped', 'Shipped!', or 'Free Shipping' next to the price, you MUST ignore it and write "NONE". The system handles basic shipping automatically. Only extract shipping if it has a specific requirement like 'Walmart+ or $35 order'. If none, write "NONE"),
 "b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
-- RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths (e.g., 'Delivery is covered if you have a membership, otherwise just hit the $35 mark!').
+- RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths.
 - EXACT VALUE: Include the exact dollar amount if provided.
 Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting alphanumeric strings (e.g., 'CC1015B') if they are attached to the words 'works on', 'color', or 'model'. Those are variants, not promo codes. If no actual promo code or coupon exists, write "NONE"),
@@ -625,7 +619,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b9_verification": (String. BOTTOMLESS CATCH-ALL MANDATE: B8 takes the first leftover fact. You MUST extract ANY AND ALL remaining leftover lines here (e.g., Line 5, Line 6, Line 7). If there are multiple lines left, combine them into this one string. Do NOT leave any orphaned lines behind. If there are no leftover lines after B8, write "NONE".),
 "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST scrub the facts clean of any leetspeak or banned words, and rephrase them 4 unique ways using a very human, excited shopper tone. UNIVERSAL COMPOUNDING: You MUST include EVERY extracted fact in EVERY SINGLE POST. You are STRICTLY FORBIDDEN from dropping facts or rotating them across the 4 posts. If B9 caught multiple facts (e.g., Line 5 AND Line 6), you MUST combine all of them into every single sentence.),
 ${customLineInstruction}
-"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} LAZY HUMAN TEXTING: Write like a real person texting a friend. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI filler words like 'routine', 'elevate', 'seamless', 'perfect addition', 'game-changer', 'a breeze', 'essential', 'must-have', or 'look no further'. ANTI-PARROT LOCK: You MUST invent a phrase highly specific to the product's actual physical use-case. Do NOT use generic filler.),
+"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} LAZY HUMAN TEXTING: Write like a real person texting a friend. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI filler words like 'routine', 'elevate', 'seamless', 'perfect addition', or 'game-changer'. ANTI-PARROT LOCK: You MUST invent a phrase highly specific to the product's actual physical use-case. Do NOT use generic filler.),
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, marked down, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective. TEMPLATE OVERRIDE: This shield is your highest directive. If ANY rule or template in this prompt accidentally asks you to print a banned word (e.g., 'This deal is...'), you MUST override the template, scrub the banned word, and replace it with a safe generic noun (e.g., 'This one is...'). CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
@@ -995,7 +989,6 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 middleBlock.push(inf);
                 if (b2) middleBlock.push(b2);
                 if (bottomLine) middleBlock.push(bottomLine);
-                if (ptrLine) middleBlock.push(ptrLine);
                 
                 let customText = aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD" ? cleanText(aiData.custom_line_rephrases[i]) : "";
                 if (customText) middleBlock.push(customText);
@@ -1005,6 +998,9 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
+
+                // V9.6.73 POINTER LOCK: Always push the pointer absolute last so it points to the comments
+                if (ptrLine) rawLines.push(ptrLine);
 
                 let emojifiedLines = injectEmojisV8(rawLines, 3, 6);
                 let postText = joinWithSpaceChaos(emojifiedLines, 2, 4);
