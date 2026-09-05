@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.77</title>
+    <title>The CB Deal Generator v9.6.78</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.77</span>
+            <span class="version-tag">v9.6.78</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -999,7 +999,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.77 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.6.78 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1033,7 +1033,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.6.77 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.6.78 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1044,8 +1044,18 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
+                    // V9.6.78 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    const fallbackPhrases = [
+                        "Dropping the details right here:",
+                        "I left the info right here:",
+                        "Here is the direct path:",
+                        "This is where I found it:",
+                        "I pinned the details here:"
+                    ];
+                    let randomFallback = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
+                    
                     // Absolute fallback: If both text elements dropped, force the link to line 2
-                    rawLines.push("Dropping the details right here:");
+                    rawLines.push(randomFallback);
                     rawLines.push(cloakedURL); // Use raw cloaked URL to avoid double-stutter
                 } else if (textElements.length === 1) {
                     // 1 text element: Text goes first, link goes second
@@ -1223,7 +1233,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.6.77 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.6.78 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
