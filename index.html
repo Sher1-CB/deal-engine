@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.95</title>
+    <title>The CB Deal Generator v9.6.96</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -150,9 +150,9 @@
                         <span style="cursor:pointer; font-size: 14px;" onclick="fetchLiveModels()" title="Fetch latest models from Google">🔄 Refresh</span>
                     </label>
                     <select id="aiModel">
-                        <option value="gemini-2.0-flash" selected>gemini-2.0-flash (Best for Complex Logic / Fastest)</option>
+                        <option value="gemini-flash-lite-latest">gemini-flash-lite-latest (Defaulting...)</option>
+                        <option value="gemini-2.0-flash">gemini-2.0-flash (Best for Complex Logic / Fastest)</option>
                         <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (Stable)</option>
-                        <option value="gemini-flash-lite-latest">gemini-flash-lite-latest (Basic / May run slow)</option>
                     </select>
                 </div>
                 <div class="col">
@@ -190,7 +190,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.95</span>
+            <span class="version-tag">v9.6.96</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -341,6 +341,7 @@
             textModels.sort((a, b) => b.name.localeCompare(a.name));
 
             let liteModels = [];
+            let flashModels = [];
 
             textModels.forEach(m => {
                 const modelId = m.name.replace('models/', '');
@@ -349,17 +350,23 @@
                 opt.text = `${modelId} ${m.version ? '(v' + m.version + ')' : ''}`;
                 select.appendChild(opt);
 
-                // Collect all numbered 'lite' models (ignore omni, pro, and latest)
-                if (modelId.includes('flash') && modelId.includes('lite') && !modelId.includes('omni') && !modelId.includes('latest')) {
+                // V9.6.96: Broaden the collection to catch all Lite and Flash models
+                if (modelId.includes('lite')) {
                     liteModels.push(modelId);
+                } else if (modelId.includes('flash') && !modelId.includes('pro')) {
+                    flashModels.push(modelId);
                 }
             });
             
-            // Smart Selection: Pick the "N-1" model (the second newest) for maximum stability.
+            // V9.6.96 SMART SELECTION: Pick N-1 Lite, fallback to N-1 Flash
             if (liteModels.length > 1) {
-                select.value = liteModels[1]; // Grabs the second item in the sorted list
+                select.value = liteModels[1]; // Grabs the 2nd newest Lite model
             } else if (liteModels.length === 1) {
-                select.value = liteModels[0]; // Fallback if only one exists
+                select.value = liteModels[0]; 
+            } else if (flashModels.length > 1) {
+                select.value = flashModels[1]; // Fallback: Grabs the 2nd newest Flash model
+            } else if (flashModels.length === 1) {
+                select.value = flashModels[0];
             } else if (textModels.length > 0) {
                 select.value = textModels[0].name.replace('models/', ''); // Ultimate fallback
             }
@@ -465,7 +472,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.6.95 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.6.96 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -473,11 +480,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.6.95 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.6.96 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.6.95 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.6.96 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -487,7 +494,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.6.95 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.6.96 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -747,7 +754,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.6.95 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            // V9.6.96 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
             aiText = aiText.replace(/,\s*([\]}])/g, '$1');
             
             // Save to global variables for the Shuffle Engine
@@ -786,7 +793,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.6.95: UI Helper Logic for Fulfillment Style
+    // V9.6.96: UI Helper Logic for Fulfillment Style
     function updateFulfillmentHelper() {
         const style = document.getElementById('fulfillmentStyle').value;
         const helper = document.getElementById('fulfillmentHelper');
@@ -901,7 +908,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             return result;
         }
 
-        // V9.6.95 CONTEXTUAL FULFILLMENT ENGINE: Reads the UI Toggle
+        // V9.6.96 CONTEXTUAL FULFILLMENT ENGINE: Reads the UI Toggle
         const rLower = rawText.toLowerCase(); // Restored: Needed for the 'As low as' check below
         const fulfillmentChoice = document.getElementById('fulfillmentStyle').value;
         let dynamicStatuses = [];
@@ -1045,7 +1052,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.95 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.6.96 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1079,7 +1086,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.6.95 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.6.96 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1090,7 +1097,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.6.95 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.6.96 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1279,7 +1286,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.6.95 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.6.96 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
