@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.96</title>
+    <title>The CB Deal Generator v9.6.99</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -190,7 +190,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.96</span>
+            <span class="version-tag">v9.6.99</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -473,7 +473,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.6.96 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.6.99 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -481,11 +481,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.6.96 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.6.99 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.6.96 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.6.99 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -495,7 +495,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.6.96 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.6.99 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -628,7 +628,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - EXACT VALUE: You MUST include the exact dollar amount if provided in the raw text.
 Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting alphanumeric strings (e.g., 'CC1015B') if they are attached to the words 'works on', 'color', or 'model'. Those are variants, not promo codes. If no actual promo code or coupon exists, write "NONE"),
-"b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code. You are STRICTLY FORBIDDEN from using the word 'Tap'. Use safe phrasing like 'Make sure to check the little box!'),
+"b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to apply the savings. You are STRICTLY FORBIDDEN from using the words 'Tap', 'Coupon', 'Promo', 'Code', or 'Discount'. You MUST use ultra-safe phrasing like 'Make sure to check the little box!' or 'Do not forget to type in the letters at the end!'),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. EXACT LITERAL LOCK: You MUST print the exact timeline provided (e.g., '4 days before'). You are STRICTLY FORBIDDEN from dropping the numbers. Frame it casually: "This will show up 4 days before Father's Day!", "It arrives in time for Father's Day!". You are STRICTLY FORBIDDEN from using commercial words like 'gift', 'present', or 'celebration'. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
 "b8_verification": (String. EXHAUSTIVE EXTRACTION: You MUST act as a vacuum for unmapped lines. Look at EVERY line in the raw text. If a line was NOT used for the Title, Price, or B2, you MUST extract it here. This includes bundles, specs, use-cases, S&S, or 'Select accounts'.
 - B2 LINE EXCLUSION: If ANY part of a line was extracted for B2 (e.g., a color, size, or limit), you are STRICTLY FORBIDDEN from extracting the rest of that line into B8. The entire line is considered mapped. Do NOT double-dip. S&S EXCEPTION: If the line ALSO contains 'S&S' or 'Subscribe' (e.g., 'add 2 qty + cheaper under S&S'), you MUST extract the S&S portion into B8. Do NOT drop S&S.
@@ -700,7 +700,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - EXACT VALUE: You MUST include the exact dollar amount if provided in the raw text.
 Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting alphanumeric strings (e.g., 'CC1015B') if they are attached to the words 'works on', 'color', or 'model'. Those are variants, not promo codes. If no actual promo code or coupon exists, write "NONE"),
-"b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code. You are STRICTLY FORBIDDEN from using the word 'Tap'. Use safe phrasing like 'Make sure to check the little box!'),
+"b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to apply the savings. You are STRICTLY FORBIDDEN from using the words 'Tap', 'Coupon', 'Promo', 'Code', or 'Discount'. You MUST use ultra-safe phrasing like 'Make sure to check the little box!' or 'Do not forget to type in the letters at the end!'),
 "b7_occasions": (Array of 4 sentences. HOLIDAY LOCK: If the raw text EXPLICITLY says 'Arrives before [Holiday]', write 4 unique urgency sentences. EXACT LITERAL LOCK: You MUST print the exact timeline provided (e.g., '4 days before'). You are STRICTLY FORBIDDEN from dropping the numbers. Frame it casually: "This will show up 4 days before Father's Day!", "It arrives in time for Father's Day!". You are STRICTLY FORBIDDEN from using commercial words like 'gift', 'present', or 'celebration'. If no explicit arrival time, write ["DEAD","DEAD","DEAD","DEAD"]),
 "b8_verification": (String. EXHAUSTIVE EXTRACTION: You MUST act as a vacuum for unmapped lines. Look at EVERY line in the raw text. If a line was NOT used for the Title, Price, or B2, you MUST extract it here. This includes bundles, specs, use-cases, S&S, or 'Select accounts'.
 - B2 LINE EXCLUSION: If ANY part of a line was extracted for B2 (e.g., a color, size, or limit), you are STRICTLY FORBIDDEN from extracting the rest of that line into B8. The entire line is considered mapped. Do NOT double-dip. S&S EXCEPTION: If the line ALSO contains 'S&S' or 'Subscribe' (e.g., 'add 2 qty + cheaper under S&S'), you MUST extract the S&S portion into B8. Do NOT drop S&S.
@@ -755,7 +755,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.6.96 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            // V9.6.99 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
             aiText = aiText.replace(/,\s*([\]}])/g, '$1');
             
             // Save to global variables for the Shuffle Engine
@@ -794,7 +794,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.6.96: UI Helper Logic for Fulfillment Style
+    // V9.6.99: UI Helper Logic for Fulfillment Style
     function updateFulfillmentHelper() {
         const style = document.getElementById('fulfillmentStyle').value;
         const helper = document.getElementById('fulfillmentHelper');
@@ -909,7 +909,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             return result;
         }
 
-        // V9.6.96 CONTEXTUAL FULFILLMENT ENGINE: Reads the UI Toggle
+        // V9.6.99 CONTEXTUAL FULFILLMENT ENGINE: Reads the UI Toggle
         const rLower = rawText.toLowerCase(); // Restored: Needed for the 'As low as' check below
         const fulfillmentChoice = document.getElementById('fulfillmentStyle').value;
         let dynamicStatuses = [];
@@ -1053,7 +1053,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.96 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.6.99 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1087,7 +1087,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.6.96 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.6.99 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1098,7 +1098,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.6.96 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.6.99 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1287,7 +1287,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.6.96 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.6.99 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
