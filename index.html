@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.79</title>
+    <title>The CB Deal Generator v9.6.80</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.79</span>
+            <span class="version-tag">v9.6.80</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -460,9 +460,15 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.6.70 URL CLOAKING ENGINE: Zero-English Hashing & Native URL Parsing
+    // V9.6.80 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
+        
+        // V9.6.80 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        let cleanURL = baseURL.trim();
+        if (cleanURL.endsWith('/')) {
+            cleanURL = cleanURL.slice(0, -1);
+        }
         
         // Ultra-safe, non-English technical keys (Immune to banned word lists)
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
@@ -478,13 +484,17 @@
         
         try {
             // Native JS URL object safely handles '?', '&', and '#' placement automatically
-            let urlObj = new URL(baseURL);
+            let urlObj = new URL(cleanURL);
             urlObj.searchParams.append(randomKey, randomHash);
-            return urlObj.toString();
+            
+            // The native URL object might re-add a slash if the path is empty. We strip it again just to be safe.
+            let finalString = urlObj.toString();
+            return finalString.replace(/\/\?/, '?');
+            
         } catch (e) {
             // Absolute fallback just in case the URL is malformed
-            const separator = baseURL.includes('?') ? '&' : '?';
-            return `${baseURL}${separator}${randomKey}=${randomHash}`;
+            const separator = cleanURL.includes('?') ? '&' : '?';
+            return `${cleanURL}${separator}${randomKey}=${randomHash}`;
         }
     }
     
@@ -999,7 +1009,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.79 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.6.80 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1033,7 +1043,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.6.79 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.6.80 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1044,7 +1054,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.6.79 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.6.80 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1233,7 +1243,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.6.79 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.6.80 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
