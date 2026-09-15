@@ -324,10 +324,12 @@
             
             select.innerHTML = ''; 
             
+            // V9.6.98: Strict Model Filtering (BANS PRO MODELS COMPLETELY)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
-                (m.name.includes("flash") || m.name.includes("pro") || m.name.includes("lite")) && 
+                (m.name.includes("flash") || m.name.includes("lite")) && 
+                !m.name.includes("pro") && // ABSOLUTE BAN ON PRO MODELS
                 !m.name.includes("vision") &&
                 !m.name.includes("tts") &&
                 !m.name.includes("image") &&
@@ -350,15 +352,14 @@
                 opt.text = `${modelId} ${m.version ? '(v' + m.version + ')' : ''}`;
                 select.appendChild(opt);
 
-                // V9.6.96: Broaden the collection to catch all Lite and Flash models
                 if (modelId.includes('lite')) {
                     liteModels.push(modelId);
-                } else if (modelId.includes('flash') && !modelId.includes('pro')) {
+                } else if (modelId.includes('flash')) {
                     flashModels.push(modelId);
                 }
             });
             
-            // V9.6.96 SMART SELECTION: Pick N-1 Lite, fallback to N-1 Flash
+            // V9.6.98 SMART SELECTION: 1st Priority = Lite (2nd Newest), 2nd Priority = Flash (2nd Newest)
             if (liteModels.length > 1) {
                 select.value = liteModels[1]; // Grabs the 2nd newest Lite model
             } else if (liteModels.length === 1) {
