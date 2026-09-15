@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.87</title>
+    <title>The CB Deal Generator v9.6.88</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -179,7 +179,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.87</span>
+            <span class="version-tag">v9.6.88</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -454,7 +454,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.6.87 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.6.88 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -462,11 +462,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.6.87 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.6.88 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.6.87 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.6.88 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -476,7 +476,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.6.87 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.6.88 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -575,7 +575,7 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price. EXACT NUMBER LOCK: You MUST extract ONLY the numbers and $ signs. You are STRICTLY FORBIDDEN from extracting words like 'As low as', 'Starting at', or 'Cheapest'. You are STRICTLY FORBIDDEN from extracting the regular price here. HYPHEN LOCK: If the sale price is a range (e.g., '$17.99 - $20.51'), you MUST extract the entire range exactly as written. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". Do NOT mash the numbers together. HYPHEN LOCK: If the price is a range (e.g., '$3.67 - $5.81'), you MUST keep the hyphen exactly as written (e.g., '3 67 - 5 81'). If none, write "NONE"),
 "praises": (Array of 3 short hype phrases. PRONOUN ENFORCEMENT: ${pronounInstruction} FORMAT MIXER: You MUST randomly mix between asking a deep, open-ended question AND making a highly positive statement. 5-WORD RULE: Your questions MUST force the reader to type a long explanation (e.g., 'What would you use this for in your house?', 'How would you style this for the weekend?'). You are STRICTLY FORBIDDEN from asking questions that can be answered with 'Me', 'Yes', or 'I do'. AUTHENTICITY LOCK: Both the questions and the statements MUST be framed in a positive, upbeat way, BUT they must sound grounded and authentic. You are STRICTLY FORBIDDEN from using exaggerated, infomercial-style claims (e.g., do NOT say 'This is the absolute best thing ever!'). Sound like a real person giving a genuine recommendation. SURVEY BAN: Do NOT sound like a corporate brand survey. ANTI-PARROT LOCK: You MUST invent phrases highly specific to the product. You are STRICTLY FORBIDDEN from copying the examples provided in this prompt. You are STRICTLY FORBIDDEN from asking 'Yes/No' questions.),
-"inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: ONLY if the raw text contains a personal review, rephrase it. Otherwise, invent a standard statement. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. LAZY HUMAN TEXTING: Write like a real person texting a friend. You MUST use casual text-speak in at least one sentence to break AI grammar symmetry. Rotate randomly between abbreviations (e.g., 'rn', 'tbh', 'def', 'omg', 'lol', 'btw', 'imo') OR lazy phonetic words (e.g., 'kinda', 'sorta', 'gonna', 'super', 'literally', 'honestly', 'lowkey'). CREATIVE VARIANCE: You MUST invent highly specific, vivid, and distinct use-cases for each of the 3 sentences. PRIVATE VELOCITY: For at least ONE of the sentences, frame the use-case around sending or gifting it to a friend/family member. Do NOT use the banned words 'share' or 'tag'. FORUM SEO MANDATE: For at least ONE of the sentences, you MUST naturally weave in the generic product category (e.g., 'reading pillow', 'summer outfit', 'bug spray') so the post can be indexed by search algorithms. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the exact product name, brand, or pluralized versions of title words (e.g., if the title says 'Sprayer', do NOT say 'sprayers'). You MUST use natural, everyday nouns. You are STRICTLY FORBIDDEN from using clinical or robotic terms like 'clearing agent', 'solution', or 'apparatus'. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak or LLM filler words like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'oasis', 'ultimate', 'a breeze', 'essential', 'must-have', 'look no further', 'testament', 'delve', or 'upgrade your'. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
+"inferences": (Array of 3 short lifestyle statements. TESTIMONIAL HIJACK: ONLY if the raw text contains a personal review, rephrase it. Otherwise, invent a standard statement. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. LAZY HUMAN TEXTING: Write like a real person texting a friend. You MUST use casual text-speak in at least one sentence to break AI grammar symmetry. You MUST randomly rotate through this MASSIVE dictionary to prevent repetition: Abbreviations ('rn', 'tbh', 'def', 'omg', 'lol', 'lmao', 'btw', 'fyi', 'imo', 'idk', 'fr', 'ngl', 'obv', 'probs') OR lazy phonetic words ('kinda', 'sorta', 'gonna', 'wanna', 'super', 'literally', 'honestly', 'seriously', 'lowkey', 'legit', 'obsessed'). ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from overusing 'tbh' or 'rn'. You MUST use a different slang word every time. CREATIVE VARIANCE: You MUST invent highly specific, vivid, and distinct use-cases for each of the 3 sentences. PRIVATE VELOCITY: For at least ONE of the sentences, frame the use-case around sending or gifting it to a friend/family member. Do NOT use the banned words 'share' or 'tag'. FORUM SEO MANDATE: For at least ONE of the sentences, you MUST naturally weave in the generic product category (e.g., 'reading pillow', 'summer outfit', 'bug spray') so the post can be indexed by search algorithms. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the exact product name, brand, or pluralized versions of title words (e.g., if the title says 'Sprayer', do NOT say 'sprayers'). You MUST use natural, everyday nouns. You are STRICTLY FORBIDDEN from using clinical or robotic terms like 'clearing agent', 'solution', or 'apparatus'. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak or LLM filler words like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'oasis', 'ultimate', 'a breeze', 'essential', 'must-have', 'look no further', 'testament', 'delve', or 'upgrade your'. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
 "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. Focus ONLY on the dollar amount fluctuating. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (JSON Object. You MUST extract facts from the extra text and place them into these exact keys. If a fact does not exist, write "NONE".
   "limit": (String. MUST contain 'Limit', 'Max', or 'Maximum' plus a number. Overrides 'qty'. NEVER extract colors here.),
@@ -632,7 +632,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b9_verification": (String. BOTTOMLESS CATCH-ALL MANDATE: B8 takes the first leftover fact. You MUST extract ANY AND ALL remaining leftover lines here (e.g., Line 5, Line 6, Line 7). If there are multiple lines left, combine them into this one string. Do NOT leave any orphaned lines behind. If there are no leftover lines after B8, write "NONE".),
 "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST scrub the facts clean of any leetspeak or banned words, and rephrase them 4 unique ways using a very human, excited shopper tone. UNIVERSAL COMPOUNDING: You MUST include EVERY extracted fact in EVERY SINGLE POST. You are STRICTLY FORBIDDEN from dropping facts or rotating them across the 4 posts. If B9 caught multiple facts (e.g., Line 5 AND Line 6), you MUST combine all of them into every single sentence.),
 ${customLineInstruction}
-"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} LAZY HUMAN TEXTING: Write like a real person texting a friend. You MUST use casual text-speak to break AI grammar symmetry. Rotate randomly between abbreviations (e.g., 'rn', 'tbh', 'def', 'omg', 'lol', 'btw', 'imo') OR lazy phonetic words (e.g., 'kinda', 'sorta', 'gonna', 'super', 'literally', 'honestly', 'lowkey'). AI WORD BAN: You are STRICTLY FORBIDDEN from using AI filler words like 'routine', 'elevate', 'seamless', 'perfect addition', or 'game-changer'. ANTI-PARROT LOCK: You MUST invent a phrase highly specific to the product's actual physical use-case. Do NOT use generic filler.),
+"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} LAZY HUMAN TEXTING: Write like a real person texting a friend. You MUST use casual text-speak to break AI grammar symmetry. You MUST randomly rotate through this MASSIVE dictionary to prevent repetition: Abbreviations ('rn', 'tbh', 'def', 'omg', 'lol', 'lmao', 'btw', 'fyi', 'imo', 'idk', 'fr', 'ngl', 'obv', 'probs') OR lazy phonetic words ('kinda', 'sorta', 'gonna', 'wanna', 'super', 'literally', 'honestly', 'seriously', 'lowkey', 'legit', 'obsessed'). ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from overusing 'tbh' or 'rn'. You MUST use a different slang word every time. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI filler words like 'routine', 'elevate', 'seamless', 'perfect addition', or 'game-changer'. You MUST invent a phrase highly specific to the product's actual physical use-case. Do NOT use generic filler.),
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, marked down, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective. TEMPLATE OVERRIDE: This shield is your highest directive. If ANY rule or template in this prompt accidentally asks you to print a banned word (e.g., 'This deal is...'), you MUST override the template, scrub the banned word, and replace it with a safe generic noun (e.g., 'This one is...'). CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         } else {
@@ -703,7 +703,7 @@ Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b9_verification": (String. BOTTOMLESS CATCH-ALL MANDATE: B8 takes the first leftover fact. You MUST extract ANY AND ALL remaining leftover lines here (e.g., Line 5, Line 6, Line 7). If there are multiple lines left, combine them into this one string. Do NOT leave any orphaned lines behind. If there are no leftover lines after B8, write "NONE".),
 "b9_overflow": (Array of 4 sentences. DEPENDENCY LOCK: If b9_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, you MUST scrub the facts clean of any leetspeak or banned words, and rephrase them 4 unique ways using a very human, excited shopper tone. UNIVERSAL COMPOUNDING: You MUST include EVERY extracted fact in EVERY SINGLE POST. You are STRICTLY FORBIDDEN from dropping facts or rotating them across the 4 posts. If B9 caught multiple facts (e.g., Line 5 AND Line 6), you MUST combine all of them into every single sentence.),
 ${customLineInstruction}
-"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} LAZY HUMAN TEXTING: Write like a real person texting a friend. You MUST use casual text-speak to break AI grammar symmetry. Rotate randomly between abbreviations (e.g., 'rn', 'tbh', 'def', 'omg', 'lol', 'btw', 'imo') OR lazy phonetic words (e.g., 'kinda', 'sorta', 'gonna', 'super', 'literally', 'honestly', 'lowkey'). AI WORD BAN: You are STRICTLY FORBIDDEN from using AI filler words like 'routine', 'elevate', 'seamless', 'perfect addition', or 'game-changer'. ANTI-PARROT LOCK: You MUST invent a phrase highly specific to the product's actual physical use-case. Do NOT use generic filler.),
+"dt_signoff": (String. 1 short lifestyle sentence. PRONOUN ENFORCEMENT: ${pronounInstruction} LAZY HUMAN TEXTING: Write like a real person texting a friend. You MUST use casual text-speak to break AI grammar symmetry. You MUST randomly rotate through this MASSIVE dictionary to prevent repetition: Abbreviations ('rn', 'tbh', 'def', 'omg', 'lol', 'lmao', 'btw', 'fyi', 'imo', 'idk', 'fr', 'ngl', 'obv', 'probs') OR lazy phonetic words ('kinda', 'sorta', 'gonna', 'wanna', 'super', 'literally', 'honestly', 'seriously', 'lowkey', 'legit', 'obsessed'). ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from overusing 'tbh' or 'rn'. You MUST use a different slang word every time. AI WORD BAN: You are STRICTLY FORBIDDEN from using AI filler words like 'routine', 'elevate', 'seamless', 'perfect addition', or 'game-changer'. You MUST invent a phrase highly specific to the product's actual physical use-case. Do NOT use generic filler.),
 "emoji_pool": (Array of 15 to 20 literal Unicode emoji characters. FORMAT LOCK: Every single item MUST be a single visual emoji symbol (e.g., "🏺", "🌿", "✨"). ALPHANUMERIC BAN: You are STRICTLY FORBIDDEN from using letters, words, or text (e.g., do NOT write "vase" or "home"). FALLBACK RULE: If you run out of highly specific emojis for the product, fill the rest of the array with generic positive lifestyle emojis (e.g., "🤍", "💫", "☀️"). STRICT BAN: Do NOT use commercial/money emojis (e.g., 🛒, 💰) or negative emojis (e.g., 🚫, ❌).)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, marked down, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Let me know below, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective. TEMPLATE OVERRIDE: This shield is your highest directive. If ANY rule or template in this prompt accidentally asks you to print a banned word (e.g., 'This deal is...'), you MUST override the template, scrub the banned word, and replace it with a safe generic noun (e.g., 'This one is...'). CONTEXTUAL EXCEPTION: If a banned word is part of the literal product name or category (e.g., 'Stock pot', 'Card stock', 'Free People brand'), it is perfectly safe to use. You MUST keep it in the title and you may use it to describe the item. You are only banned from using 'stock' or 'free' when referring to inventory, scarcity, or pricing.`;
         }
@@ -1019,7 +1019,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.87 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.6.88 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1053,7 +1053,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.6.87 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.6.88 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1064,7 +1064,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.6.87 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.6.88 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1253,7 +1253,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.6.87 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.6.88 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
