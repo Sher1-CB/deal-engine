@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.6.89</title>
+    <title>The CB Deal Generator v9.6.90</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -120,6 +120,17 @@
                     <input type="hidden" id="dealType" value="regular">
                 </div>
                 <div class="col">
+                    <label>🚚 Fulfillment Style</label>
+                    <select id="fulfillmentStyle" onchange="updateFulfillmentHelper()">
+                        <option value="shipped">Shipped (Default)</option>
+                        <option value="pickup">Pickup / In-Store</option>
+                        <option value="conditional">Conditional / Digital</option>
+                    </select>
+                    <div id="fulfillmentHelper" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.2;">
+                        <i>Prints: "Shipped!", "To your door!" (Use for Amazon or guaranteed free shipping).</i>
+                    </div>
+                </div>
+                <div class="col">
                     <label>📅 Day of Week Reference</label>
                     <select id="currentDay">
                         <option value="Monday">Monday</option>
@@ -179,7 +190,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.6.89</span>
+            <span class="version-tag">v9.6.90</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -454,7 +465,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.6.89 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.6.90 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -462,11 +473,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.6.89 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.6.90 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.6.89 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.6.90 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -476,7 +487,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.6.89 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.6.90 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -603,9 +614,10 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
   * SYNONYM BAN: Do NOT use words like 'variant', 'version', or 'style'. You are STRICTLY FORBIDDEN from appending the word 'options' or 'option' to a variant unless explicitly instructed by the [Base] rules above.
 - RULE 4 (MATH): ONLY if "math" is active AND "quantity" is "NONE", write a standalone sentence: "That makes it just [Math]!" (e.g., 'That makes it just $12.49 per jug!'). (If quantity is active, you are STRICTLY FORBIDDEN from generating this sentence, as it is already handled in Rule 2). You MUST apply this to ALL 4 strings.),
 "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. SHIPPING BLINDNESS: If the raw text just says 'Shipped', 'Shipped!', or 'Free Shipping' next to the price, you MUST ignore it and write "NONE". The system handles basic shipping automatically. Only extract shipping if it has a specific requirement like 'Walmart+ or $35 order'. If none, write "NONE"),
-"b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
-- RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths.
-- EXACT VALUE: Include the exact dollar amount if provided.
+"b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping/pickup perk casually. 
+- UNIVERSAL FULFILLMENT: Rephrase ANY retailer-specific shipping rules, pickup minimums, or memberships (e.g., 'Walgreens $10 minimum', 'Walmart+ or $35 order', 'Target Circle'). Explain it naturally to the buyer.
+- MULTI-PATH: If there are multiple ways to get the perk (e.g., membership OR threshold), you MUST state both paths.
+- EXACT VALUE: You MUST include the exact dollar amount if provided in the raw text.
 Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting alphanumeric strings (e.g., 'CC1015B') if they are attached to the words 'works on', 'color', or 'model'. Those are variants, not promo codes. If no actual promo code or coupon exists, write "NONE"),
 "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code. You are STRICTLY FORBIDDEN from using the word 'Tap'. Use safe phrasing like 'Make sure to check the little box!'),
@@ -674,9 +686,10 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
   * SYNONYM BAN: Do NOT use words like 'variant', 'version', or 'style'. You are STRICTLY FORBIDDEN from appending the word 'options' or 'option' to a variant unless explicitly instructed by the [Base] rules above.
 - RULE 4 (MATH): ONLY if "math" is active AND "quantity" is "NONE", write a standalone sentence: "That makes it just [Math]!" (e.g., 'That makes it just $12.49 per jug!'). (If quantity is active, you are STRICTLY FORBIDDEN from generating this sentence, as it is already handled in Rule 2). You MUST apply this to ALL 4 strings.),
 "b5_verification": (String. Extract any retailer-specific shipping/pickup requirements. SHIPPING BLINDNESS: If the raw text just says 'Shipped', 'Shipped!', or 'Free Shipping' next to the price, you MUST ignore it and write "NONE". The system handles basic shipping automatically. Only extract shipping if it has a specific requirement like 'Walmart+ or $35 order'. If none, write "NONE"),
-"b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping perk casually. 
-- RULE 1 (MULTI-PATH): If there are multiple ways to get the perk (e.g., 'Walmart+ OR $35 order'), you MUST state both paths.
-- EXACT VALUE: Include the exact dollar amount if provided.
+"b5_perks": (Array of 4 sentences. DEPENDENCY LOCK: If b5_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. TASK: Rephrase the shipping/pickup perk casually. 
+- UNIVERSAL FULFILLMENT: Rephrase ANY retailer-specific shipping rules, pickup minimums, or memberships (e.g., 'Walgreens $10 minimum', 'Walmart+ or $35 order', 'Target Circle'). Explain it naturally to the buyer.
+- MULTI-PATH: If there are multiple ways to get the perk (e.g., membership OR threshold), you MUST state both paths.
+- EXACT VALUE: You MUST include the exact dollar amount if provided in the raw text.
 Do NOT use corporate words like 'threshold', 'qualify', or 'credentials'.),
 "b6_verification": (String. Does the text require a promo code, digital coupon, or clippable? If yes, note it. B2 COLLISION BAN: You are STRICTLY FORBIDDEN from extracting alphanumeric strings (e.g., 'CC1015B') if they are attached to the words 'works on', 'color', or 'model'. Those are variants, not promo codes. If no actual promo code or coupon exists, write "NONE"),
 "b6_savings": (Array of 4 sentences. DEPENDENCY LOCK: If b6_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"]. If active, dynamically write 4 casual reminders to check the box or enter the code. You are STRICTLY FORBIDDEN from using the word 'Tap'. Use safe phrasing like 'Make sure to check the little box!'),
@@ -770,15 +783,16 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.6.70: UI Toggle Logic for Deal Type Buttons
-    function setDealType(type) {
-        document.getElementById('dealType').value = type;
-        if(type === 'regular') {
-            document.getElementById('btn-regular').classList.add('active');
-            document.getElementById('btn-run').classList.remove('active');
-        } else {
-            document.getElementById('btn-run').classList.add('active');
-            document.getElementById('btn-regular').classList.remove('active');
+    // V9.6.90: UI Helper Logic for Fulfillment Style
+    function updateFulfillmentHelper() {
+        const style = document.getElementById('fulfillmentStyle').value;
+        const helper = document.getElementById('fulfillmentHelper');
+        if (style === 'shipped') {
+            helper.innerHTML = '<i>Prints: "Shipped!", "To your door!" (Use for Amazon or guaranteed free shipping).</i>';
+        } else if (style === 'pickup') {
+            helper.innerHTML = '<i>Prints: "Pickup!", "In-store!" (Use for Walgreens, CVS, or curbside).</i>';
+        } else if (style === 'conditional') {
+            helper.innerHTML = '<i>Prints: "Total!", "Right now!" (Use for Walmart $35 mins, Target Circle, or digital).</i>';
         }
     }
 
@@ -884,9 +898,17 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             return result;
         }
 
-        const rLower = rawText.toLowerCase();
-        const isPickup = rLower.includes('pickup') || rLower.includes('pick up') || rLower.includes('walgreens') || rLower.includes('w@lgreens');
-        const dynamicStatuses = isPickup ? ["Pickup!", "In-store!", "Grab at store!", "Local pickup!"] : ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
+        // V9.6.90 CONTEXTUAL FULFILLMENT ENGINE: Reads the UI Toggle
+        const fulfillmentChoice = document.getElementById('fulfillmentStyle').value;
+        let dynamicStatuses = [];
+        
+        if (fulfillmentChoice === 'pickup') {
+            dynamicStatuses = ["Pickup!", "In-store!", "Grab at store!", "Local pickup!"];
+        } else if (fulfillmentChoice === 'conditional') {
+            dynamicStatuses = ["Total!", "Right now!", "Final!", "For this!"];
+        } else {
+            dynamicStatuses = ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
+        }
 
         const isAsLowAs = rLower.includes('as low as') || rLower.includes('starting at') || rLower.includes('cheapest');
         const selectedLowPrefixes = shuffleArray(["As low as", "Starting at", "From", "Dropping to"]).slice(0, 4);
@@ -1019,7 +1041,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.89 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.6.90 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1053,7 +1075,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.6.89 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.6.90 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1064,7 +1086,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.6.89 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.6.90 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1253,7 +1275,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.6.89 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.6.90 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
