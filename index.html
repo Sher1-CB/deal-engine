@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.00</title>
+    <title>The CB Deal Generator v9.7.01</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -122,12 +122,13 @@
                 <div class="col">
                     <label>🚚 Fulfillment Style</label>
                     <select id="fulfillmentStyle" onchange="updateFulfillmentHelper()">
-                        <option value="shipped">Shipped (Default)</option>
-                        <option value="pickup">Pickup / In-Store</option>
-                        <option value="conditional">Conditional / Digital</option>
+                        <option value="auto" selected>Auto-Detect (Default)</option>
+                        <option value="shipped">Force: Shipped</option>
+                        <option value="pickup">Force: Pickup / In-Store</option>
+                        <option value="conditional">Force: Conditional / Digital</option>
                     </select>
                     <div id="fulfillmentHelper" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.2;">
-                        <i>Prints: "Shipped!", "To your door!" (Use for Amazon or guaranteed free shipping).</i>
+                        <i>Smart Auto: Scans text for 'pickup' or '$35' automatically.</i>
                     </div>
                 </div>
                 <div class="col">
@@ -190,7 +191,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.00</span>
+            <span class="version-tag">v9.7.01</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -473,7 +474,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.7.00 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.7.01 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -481,11 +482,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.7.00 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.7.01 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.7.00 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.7.01 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -495,7 +496,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.7.00 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.7.01 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -755,7 +756,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.7.00 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            // V9.7.01 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
             aiText = aiText.replace(/,\s*([\]}])/g, '$1');
             
             // Save to global variables for the Shuffle Engine
@@ -794,16 +795,18 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.7.00: UI Helper Logic for Fulfillment Style
+    // V9.7.01: UI Helper Logic for Fulfillment Style
     function updateFulfillmentHelper() {
         const style = document.getElementById('fulfillmentStyle').value;
         const helper = document.getElementById('fulfillmentHelper');
-        if (style === 'shipped') {
-            helper.innerHTML = '<i>Prints: "Shipped!", "To your door!" (Use for Amazon or guaranteed free shipping).</i>';
+        if (style === 'auto') {
+            helper.innerHTML = '<i>Smart Auto: Scans text for "pickup" or "$35" automatically.</i>';
+        } else if (style === 'shipped') {
+            helper.innerHTML = '<i>Forces: "Shipped!", "To your door!"</i>';
         } else if (style === 'pickup') {
-            helper.innerHTML = '<i>Prints: "Pickup!", "In-store!" (Use for Walgreens, CVS, or curbside).</i>';
+            helper.innerHTML = '<i>Forces: "Pickup!", "In-store!"</i>';
         } else if (style === 'conditional') {
-            helper.innerHTML = '<i>Prints: "Total!", "Right now!" (Use for Walmart $35 mins, Target Circle, or digital).</i>';
+            helper.innerHTML = '<i>Forces: "Total!", "Right now!" (Safe for thresholds).</i>';
         }
     }
 
@@ -824,7 +827,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         const extractedURL = extractURL(rawText);
         
         const cleanTitle = cleanText(aiData.cleaned_title);
-        // V9.7.00 TITLE CASE RETAILER: Forces proper capitalization (e.g., 'WALGREENS' becomes 'Walgreens')
+        // V9.7.01 TITLE CASE RETAILER: Forces proper capitalization (e.g., 'WALGREENS' becomes 'Walgreens')
         let rawRetailer = cleanText(aiData.retailer_name) || "Amazon";
         const retailer = rawRetailer.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         const dtSignoff = cleanText(aiData.dt_signoff);
@@ -911,14 +914,25 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             return result;
         }
 
-        // V9.7.00 CONTEXTUAL FULFILLMENT ENGINE: Reads the UI Toggle
-        const rLower = rawText.toLowerCase(); // Restored: Needed for the 'As low as' check below
+        // V9.7.01 SMART FULFILLMENT ENGINE: Auto-detects by default, allows manual override
+        const rLower = rawText.toLowerCase();
         const fulfillmentChoice = document.getElementById('fulfillmentStyle').value;
-        let dynamicStatuses = [];
+        let activeStyle = fulfillmentChoice;
         
-        if (fulfillmentChoice === 'pickup') {
+        // If set to Auto-Detect, scan the text automatically
+        if (activeStyle === 'auto') {
+            const isPickup = rLower.includes('pickup') || rLower.includes('pick up') || rLower.includes('walgreens') || rLower.includes('w@lgreens') || rLower.includes('cvs');
+            const isConditional = rLower.includes('$35') || rLower.includes('w+') || rLower.includes('walmart+') || rLower.includes('target circle') || rLower.includes('s&s') || rLower.includes('subscribe') || rLower.includes('digital');
+            
+            if (isPickup) activeStyle = 'pickup';
+            else if (isConditional) activeStyle = 'conditional';
+            else activeStyle = 'shipped';
+        }
+
+        let dynamicStatuses = [];
+        if (activeStyle === 'pickup') {
             dynamicStatuses = ["Pickup!", "In-store!", "Grab at store!", "Local pickup!"];
-        } else if (fulfillmentChoice === 'conditional') {
+        } else if (activeStyle === 'conditional') {
             dynamicStatuses = ["Total!", "Right now!", "Final!", "For this!"];
         } else {
             dynamicStatuses = ["Shipped!", "To your door!", "Delivery included!", "On its way!"];
@@ -1055,7 +1069,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.00 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.7.01 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1089,7 +1103,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.7.00 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.7.01 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1100,7 +1114,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.7.00 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.7.01 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1289,7 +1303,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.7.00 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.7.01 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
