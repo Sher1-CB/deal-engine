@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.10</title>
+    <title>The CB Deal Generator v9.7.11</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -191,7 +191,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.10</span>
+            <span class="version-tag">v9.7.11</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -474,7 +474,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.7.10 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.7.11 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -482,11 +482,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.7.10 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.7.11 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.7.10 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.7.11 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -496,7 +496,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.7.10 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.7.11 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -638,7 +638,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - LIST PRESERVATION: If specs are comma-separated, extract the ENTIRE list. Do not truncate.
 - TITLE BLINDNESS (SUPREME LAW): You are STRICTLY FORBIDDEN from extracting ANY words, specs, capacities, or numbers if they are EXACTLY the same as the main product title. Do NOT echo the title.
 - NUMBER EXCEPTION: For the EXTRA text ONLY (outside the title), you MUST extract capacities, dimensions, servings, or bundles even if they contain numbers or symbols (e.g., 'Serves 20', 'includes Gadget + 1 Refill', '660Lbs Capacity'). Do NOT drop a spec just because the title also has a number in it.
-- FIREWALLS: Do NOT extract B2 variants, sizes, or limits. Do NOT extract 'Shipped' or 'Free Shipping'. Do NOT extract DEAL hype phrases (e.g., 'Great Drop on Amazon', 'Amazing Find', 'Markdown', 'Good Find'). JUNK FILTER: You are STRICTLY FORBIDDEN from extracting group notifications, engagement bait, or social media instructions (e.g., 'LIKE our posts', 'COMMENT when you bought it', 'Turn on notifications'). Ignore them completely. FEATURE EXCEPTION: You MUST extract PRODUCT features or benefits (e.g., 'Lightweight & Comfortable All-Day Wear', 'BPA Free'). Do NOT confuse product features with deal hype. If none, write "NONE"),
+- FIREWALLS: Do NOT extract B2 variants, sizes, or limits. Do NOT extract 'Shipped' or 'Free Shipping'. DEAL HYPE FIREWALL: You are STRICTLY FORBIDDEN from extracting deal hype phrases (e.g., 'Great Drop on Amazon', 'Solid Catch on Amazon', 'Amazing Find', 'Markdown', 'Good Find', 'Solid Catch', 'Great Catch'). You MUST recognize that words like 'Catch', 'Drop', and 'Find' attached to a retailer are deal slang, NOT physical product hardware or features. JUNK FILTER: You are STRICTLY FORBIDDEN from extracting group notifications, engagement bait, or social media instructions (e.g., 'LIKE our posts', 'COMMENT when you bought it', 'Turn on notifications'). Ignore them completely. FEATURE EXCEPTION: You MUST extract PRODUCT features or benefits (e.g., 'Lightweight & Comfortable All-Day Wear', 'BPA Free'). Do NOT confuse product features with deal hype. If none, write "NONE"),
 "b8_overflow": (Array of 4 strings. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"].
 - UNIVERSAL INJECTION: You MUST inject EVERY extracted fact from b8_verification into EVERY SINGLE STRING in this array. You are STRICTLY FORBIDDEN from dropping facts or rotating them across the 4 posts. Print comma-separated lists entirely.
 - S&S OPTIONAL (PRIORITY): CASE INSENSITIVE. If text contains 'cheaper', 'extra', or '+ s&s', frame it ONLY as an optional bonus: "Set up routine delivery to drop the total even more!" (Rotate phrasing). This OVERRIDES any mandatory words in the same sentence.
@@ -710,7 +710,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - LIST PRESERVATION: If specs are comma-separated, extract the ENTIRE list. Do not truncate.
 - TITLE BLINDNESS (SUPREME LAW): You are STRICTLY FORBIDDEN from extracting ANY words, specs, capacities, or numbers if they are EXACTLY the same as the main product title. Do NOT echo the title.
 - NUMBER EXCEPTION: For the EXTRA text ONLY (outside the title), you MUST extract capacities, dimensions, servings, or bundles even if they contain numbers or symbols (e.g., 'Serves 20', 'includes Gadget + 1 Refill', '660Lbs Capacity'). Do NOT drop a spec just because the title also has a number in it.
-- FIREWALLS: Do NOT extract B2 variants, sizes, or limits. Do NOT extract 'Shipped' or 'Free Shipping'. Do NOT extract DEAL hype phrases (e.g., 'Great Drop on Amazon', 'Amazing Find', 'Markdown', 'Good Find'). JUNK FILTER: You are STRICTLY FORBIDDEN from extracting group notifications, engagement bait, or social media instructions (e.g., 'LIKE our posts', 'COMMENT when you bought it', 'Turn on notifications'). Ignore them completely. FEATURE EXCEPTION: You MUST extract PRODUCT features or benefits (e.g., 'Lightweight & Comfortable All-Day Wear', 'BPA Free'). Do NOT confuse product features with deal hype. If none, write "NONE"),
+- FIREWALLS: Do NOT extract B2 variants, sizes, or limits. Do NOT extract 'Shipped' or 'Free Shipping'. DEAL HYPE FIREWALL: You are STRICTLY FORBIDDEN from extracting deal hype phrases (e.g., 'Great Drop on Amazon', 'Solid Catch on Amazon', 'Amazing Find', 'Markdown', 'Good Find', 'Solid Catch', 'Great Catch'). You MUST recognize that words like 'Catch', 'Drop', and 'Find' attached to a retailer are deal slang, NOT physical product hardware or features. JUNK FILTER: You are STRICTLY FORBIDDEN from extracting group notifications, engagement bait, or social media instructions (e.g., 'LIKE our posts', 'COMMENT when you bought it', 'Turn on notifications'). Ignore them completely. FEATURE EXCEPTION: You MUST extract PRODUCT features or benefits (e.g., 'Lightweight & Comfortable All-Day Wear', 'BPA Free'). Do NOT confuse product features with deal hype. If none, write "NONE"),
 "b8_overflow": (Array of 4 strings. DEPENDENCY LOCK: If b8_verification is "NONE", write ["DEAD","DEAD","DEAD","DEAD"].
 - UNIVERSAL INJECTION: You MUST inject EVERY extracted fact from b8_verification into EVERY SINGLE STRING in this array. You are STRICTLY FORBIDDEN from dropping facts or rotating them across the 4 posts. Print comma-separated lists entirely.
 - S&S OPTIONAL (PRIORITY): CASE INSENSITIVE. If text contains 'cheaper', 'extra', or '+ s&s', frame it ONLY as an optional bonus: "Set up routine delivery to drop the total even more!" (Rotate phrasing). This OVERRIDES any mandatory words in the same sentence.
@@ -756,7 +756,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.7.10 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            // V9.7.11 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
             aiText = aiText.replace(/,\s*([\]}])/g, '$1');
             
             // Save to global variables for the Shuffle Engine
@@ -795,7 +795,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.7.10: UI Helper Logic for Fulfillment Style
+    // V9.7.11: UI Helper Logic for Fulfillment Style
     function updateFulfillmentHelper() {
         const style = document.getElementById('fulfillmentStyle').value;
         const helper = document.getElementById('fulfillmentHelper');
@@ -827,7 +827,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         const extractedURL = extractURL(rawText);
         
         const cleanTitle = cleanText(aiData.cleaned_title);
-        // V9.7.10 TITLE CASE RETAILER: Forces proper capitalization (e.g., 'WALGREENS' becomes 'Walgreens')
+        // V9.7.11 TITLE CASE RETAILER: Forces proper capitalization (e.g., 'WALGREENS' becomes 'Walgreens')
         let rawRetailer = cleanText(aiData.retailer_name) || "Amazon";
         const retailer = rawRetailer.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         const dtSignoff = cleanText(aiData.dt_signoff);
@@ -914,7 +914,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             return result;
         }
 
-        // V9.7.10 SMART FULFILLMENT ENGINE: Auto-detects by default, allows manual override
+        // V9.7.11 SMART FULFILLMENT ENGINE: Auto-detects by default, allows manual override
         const rLower = rawText.toLowerCase();
         const fulfillmentChoice = document.getElementById('fulfillmentStyle').value;
         let activeStyle = fulfillmentChoice;
@@ -1059,7 +1059,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // Shuffle the Middle Block
                 middleBlock = middleBlock.sort(() => 0.5 - Math.random());
 
-                // V9.7.10 HORIZONTAL MERGE: Ensure clean punctuation between merged thoughts
+                // V9.7.11 HORIZONTAL MERGE: Ensure clean punctuation between merged thoughts
                 if (middleBlock.length >= 2 && Math.random() > 0.5) {
                     let firstPart = middleBlock[0].trim();
                     // If the first thought has no ending punctuation, give it a clean period
@@ -1073,7 +1073,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.10 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.7.11 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1107,7 +1107,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.7.10 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.7.11 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1118,7 +1118,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.7.10 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.7.11 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1307,7 +1307,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.7.10 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.7.11 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
