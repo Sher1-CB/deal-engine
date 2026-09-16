@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.14</title>
+    <title>The CB Deal Generator v9.7.15</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -191,7 +191,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.14</span>
+            <span class="version-tag">v9.7.15</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -474,7 +474,7 @@
         return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu, '').trim();
     }
 
-    // V9.7.14 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
+    // V9.7.15 URL EXTRACTION LOCK: Ignores trailing punctuation to prevent broken links
     function extractURL(text) {
         // Regex looks for URL but explicitly excludes trailing punctuation (.,;:?!"')
         const urlRegex = /(https?:\/\/[^\s]+[^.,;:?!"'\s\)])/g;
@@ -482,11 +482,11 @@
         return match ? match[0] : "https://thecouponboutique.com/";
     }
     
-    // V9.7.14 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
+    // V9.7.15 URL CLOAKING ENGINE: Zero-English Hashing & Trailing Slash Eradication
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
         
-        // V9.7.14 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
+        // V9.7.15 FIX: Aggressively strip trailing slashes to prevent Facebook Open Graph preview failures
         let cleanURL = baseURL.trim();
         if (cleanURL.endsWith('/')) {
             cleanURL = cleanURL.slice(0, -1);
@@ -496,7 +496,7 @@
         const keys = ['ref', 'src', 'id', 'v', 'idx', 'req', 's', 'ts', 'uid', 'var', 'node'];
         
         // Generate a random 4-character alphanumeric hash (e.g., 'a7b9', 'x3k8')
-        // V9.7.14 VOWEL ERADICATION: Mathematically impossible to spell banned English words
+        // V9.7.15 VOWEL ERADICATION: Mathematically impossible to spell banned English words
         const chars = 'bcdfghjklmnpqrstvwxyz0123456789';
         let randomHash = '';
         for (let i = 0; i < 4; i++) {
@@ -611,7 +611,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - UNIVERSAL INJECTION: You MUST generate exactly 4 strings. EVERY SINGLE STRING in this array MUST contain the exact same facts from the b2_verification JSON object. You are STRICTLY FORBIDDEN from leaving strings 2, 3, or 4 empty. Do NOT drop facts across the 4 posts.
 - VARIANCE MANDATE: When using Structure 1 or 2, you MUST use a DIFFERENT starting verb (Grab, Choose, Pick, Select). (If using Structure 3 Conversational, you are STRICTLY FORBIDDEN from adding a starting verb to the sentence). You are STRICTLY FORBIDDEN from copy-pasting the exact same sentence 4 times.
 - EMPTY BUCKET MANDATE: If a key in b2_verification is "NONE", do NOT generate text for it. ONLY write sentences for active keys.
-- RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. You MUST map these exact templates to the 4 strings: String 1: "Please note, there is a strict limit of [X]!" String 2: "Keep in mind you can only get [X]!" String 3: "Just a reminder, these are limited to [X]!" String 4: "Just letting you know there is a limit of [X]!". (ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copy-pasting the same template across strings).
+- RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out so only the clean number prints (e.g., 'limit of 5'). You MUST map these exact templates to the 4 strings: String 1: "Please note, there is a strict limit of [X]!" String 2: "Keep in mind you can only get [X]!" String 3: "Just a reminder, these are limited to [X]!" String 4: "Just letting you know there is a limit of [X]!". (ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copy-pasting the same template across strings).
 - RULE 2 (QUANTITIES): ONLY if "quantity" is active. IF "math" is ALSO active, write: "You need to add [X] of these, making them just [Math]!". IF "math" is "NONE", write: "You need to add [X] of these!". You MUST apply this to ALL 4 STRINGS. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out.
 - RULE 3 (VARIANTS/OPTIONS): ONLY IF a variant, generic, or size is active, you MUST write EXACTLY ONE sentence combining them. NEVER write two separate sentences. You MUST apply this to ALL 4 strings in this array.
   * ONLY WARNING: Evaluate the extracted variant string. IF AND ONLY IF the literal word 'only' is present, you MUST map these exact templates to the 4 strings: String 1: "Heads up, this only works on the [Variant] option!" String 2: "I noticed this is only for the [Variant]!" String 3: "Make sure to grab the [Variant] since it's the only one working!" String 4: "This one is only for the [Variant] option!". (Strip the word 'only' from the variant first. STUTTER LOCK: If the variant already contains the word 'option', drop the appended word 'option' from the template). IF the word 'only' is NOT present, you are STRICTLY FORBIDDEN from using these templates and MUST proceed to STRUCTURAL CHAOS.
@@ -683,7 +683,7 @@ FIREWALLS: Ignore 'S&S', 'Subscribe', 'Accounts', 'Shipped', 'Free Shipping'. S&
 - UNIVERSAL INJECTION: You MUST generate exactly 4 strings. EVERY SINGLE STRING in this array MUST contain the exact same facts from the b2_verification JSON object. You are STRICTLY FORBIDDEN from leaving strings 2, 3, or 4 empty. Do NOT drop facts across the 4 posts.
 - VARIANCE MANDATE: When using Structure 1 or 2, you MUST use a DIFFERENT starting verb (Grab, Choose, Pick, Select). (If using Structure 3 Conversational, you are STRICTLY FORBIDDEN from adding a starting verb to the sentence). You are STRICTLY FORBIDDEN from copy-pasting the exact same sentence 4 times.
 - EMPTY BUCKET MANDATE: If a key in b2_verification is "NONE", do NOT generate text for it. ONLY write sentences for active keys.
-- RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. You MUST map these exact templates to the 4 strings: String 1: "Please note, there is a strict limit of [X]!" String 2: "Keep in mind you can only get [X]!" String 3: "Just a reminder, these are limited to [X]!" String 4: "Just letting you know there is a limit of [X]!". (ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copy-pasting the same template across strings).
+- RULE 1 (LIMITS): ONLY use this if the fact contains 'Limit' or 'Max'. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out so only the clean number prints (e.g., 'limit of 5'). You MUST map these exact templates to the 4 strings: String 1: "Please note, there is a strict limit of [X]!" String 2: "Keep in mind you can only get [X]!" String 3: "Just a reminder, these are limited to [X]!" String 4: "Just letting you know there is a limit of [X]!". (ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copy-pasting the same template across strings).
 - RULE 2 (QUANTITIES): ONLY if "quantity" is active. IF "math" is ALSO active, write: "You need to add [X] of these, making them just [Math]!". IF "math" is "NONE", write: "You need to add [X] of these!". You MUST apply this to ALL 4 STRINGS. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out.
 - RULE 3 (VARIANTS/OPTIONS): ONLY IF a variant, generic, or size is active, you MUST write EXACTLY ONE sentence combining them. NEVER write two separate sentences. You MUST apply this to ALL 4 strings in this array.
   * ONLY WARNING: Evaluate the extracted variant string. IF AND ONLY IF the literal word 'only' is present, you MUST map these exact templates to the 4 strings: String 1: "Heads up, this only works on the [Variant] option!" String 2: "I noticed this is only for the [Variant]!" String 3: "Make sure to grab the [Variant] since it's the only one working!" String 4: "This one is only for the [Variant] option!". (Strip the word 'only' from the variant first. STUTTER LOCK: If the variant already contains the word 'option', drop the appended word 'option' from the template). IF the word 'only' is NOT present, you are STRICTLY FORBIDDEN from using these templates and MUST proceed to STRUCTURAL CHAOS.
@@ -756,7 +756,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.7.14 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            // V9.7.15 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
             aiText = aiText.replace(/,\s*([\]}])/g, '$1');
             
             // Save to global variables for the Shuffle Engine
@@ -795,7 +795,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
     
-    // V9.7.14: UI Helper Logic for Fulfillment Style
+    // V9.7.15: UI Helper Logic for Fulfillment Style
     function updateFulfillmentHelper() {
         const style = document.getElementById('fulfillmentStyle').value;
         const helper = document.getElementById('fulfillmentHelper');
@@ -827,7 +827,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         const extractedURL = extractURL(rawText);
         
         const cleanTitle = cleanText(aiData.cleaned_title);
-        // V9.7.14 TITLE CASE RETAILER: Forces proper capitalization (e.g., 'WALGREENS' becomes 'Walgreens')
+        // V9.7.15 TITLE CASE RETAILER: Forces proper capitalization (e.g., 'WALGREENS' becomes 'Walgreens')
         let rawRetailer = cleanText(aiData.retailer_name) || "Amazon";
         const retailer = rawRetailer.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         const dtSignoff = cleanText(aiData.dt_signoff);
@@ -914,7 +914,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             return result;
         }
 
-        // V9.7.14 SMART FULFILLMENT ENGINE: Auto-detects by default, allows manual override
+        // V9.7.15 SMART FULFILLMENT ENGINE: Auto-detects by default, allows manual override
         const rLower = rawText.toLowerCase();
         const fulfillmentChoice = document.getElementById('fulfillmentStyle').value;
         let activeStyle = fulfillmentChoice;
@@ -1059,7 +1059,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // Shuffle the Middle Block
                 middleBlock = middleBlock.sort(() => 0.5 - Math.random());
 
-                // V9.7.14 HORIZONTAL MERGE: Ensure clean punctuation between merged thoughts
+                // V9.7.15 HORIZONTAL MERGE: Ensure clean punctuation between merged thoughts
                 if (middleBlock.length >= 2 && Math.random() > 0.5) {
                     let firstPart = middleBlock[0].trim();
                     // If the first thought has no ending punctuation, give it a clean period
@@ -1073,7 +1073,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.14 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.7.15 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
                 if (ptrLine) {
                     // 50% chance to be absolute last, 50% chance to be second-to-last
                     if (Math.random() > 0.5 && rawLines.length > 1) {
@@ -1107,7 +1107,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let cloakedURL = cloakURL(extractedURL);
                 let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
 
-                // V9.7.14 COMMENT GEOMETRY LOCK: Never put the link on Line 1
+                // V9.7.15 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
                 let textElements = [];
                 
@@ -1118,7 +1118,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
                 if (textElements.length === 0) {
-                    // V9.7.14 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
+                    // V9.7.15 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
                     const fallbackPhrases = [
                         "Dropping the details right here:",
                         "I left the info right here:",
@@ -1307,7 +1307,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         let cloakedDtURL = cloakURL(extractedURL);
         let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
         
-        // V9.7.14 DT BUFFER LOCK: Always place the human signoff above the link
+        // V9.7.15 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
             rawDtLines.push(dtHeader, dtSignoff, finalDtLink);
         } else {
