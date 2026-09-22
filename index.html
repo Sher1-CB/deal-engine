@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.18</title>
+    <title>The CB Deal Generator v9.7.19</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -192,7 +192,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.18</span>
+            <span class="version-tag">v9.7.19</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -326,12 +326,11 @@
             
             select.innerHTML = ''; 
             
-            // V9.6.98: Strict Model Filtering (BANS PRO MODELS COMPLETELY)
+            // V9.7.19: Emergency Override (Allows Pro models during Flash/Lite outages)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
-                (m.name.includes("flash") || m.name.includes("lite")) && 
-                !m.name.includes("pro") && // ABSOLUTE BAN ON PRO MODELS
+                (m.name.includes("flash") || m.name.includes("lite") || m.name.includes("pro")) && 
                 !m.name.includes("vision") &&
                 !m.name.includes("tts") &&
                 !m.name.includes("image") &&
@@ -347,6 +346,8 @@
             let liteModels = [];
             let flashModels = [];
 
+            let proModels = []; // Added array for Pro models
+
             textModels.forEach(m => {
                 const modelId = m.name.replace('models/', '');
                 const opt = document.createElement('option');
@@ -358,6 +359,8 @@
                     liteModels.push(modelId);
                 } else if (modelId.includes('flash')) {
                     flashModels.push(modelId);
+                } else if (modelId.includes('pro')) {
+                    proModels.push(modelId);
                 }
             });
             
