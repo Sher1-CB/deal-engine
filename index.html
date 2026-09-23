@@ -790,6 +790,19 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             currentAbortController = null;
         }
     }
+
+    // Restores the Deal Type Toggle (Regular vs Run Deal)
+    function setDealType(type) {
+        document.getElementById('dealType').value = type;
+        if(type === 'regular') {
+            document.getElementById('btn-regular').classList.add('active');
+            document.getElementById('btn-run').classList.remove('active');
+        } else {
+            document.getElementById('btn-run').classList.add('active');
+            document.getElementById('btn-regular').classList.remove('active');
+        }
+    }
+    
     function cancelGeneration() {
         if (currentAbortController) {
             currentAbortController.abort();
