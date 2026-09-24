@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.31</title>
+    <title>The CB Deal Generator v9.7.32</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -192,7 +192,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.31</span>
+            <span class="version-tag">v9.7.32</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -326,7 +326,7 @@
             
             select.innerHTML = ''; 
             
-            // V9.7.31: Emergency Override (Allows Pro models during Flash/Lite outages)
+            // V9.7.32: Emergency Override (Allows Pro models during Flash/Lite outages)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
@@ -771,10 +771,10 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             // V9.7.29 MISSING COMMA AUTO-HEALER: Detects missing commas between array strings and inserts them
             aiText = aiText.replace(/"\s*\n\s*"/g, '",\n"');
             
-            // V9.7.31 INTERNAL QUOTE SCRUBBER (PATCHED): Added '{' to the lookbehind to protect JSON property keys
+            // V9.7.32 INTERNAL QUOTE SCRUBBER (PATCHED): Added '{' to the lookbehind to protect JSON property keys
             aiText = aiText.replace(/(?<!^|[:,\[{]\s*)"(?![:,\]}\s])/g, "'");
 
-            // V9.7.31 JSON BOUNDARY EXTRACTOR: Ignores AI conversational filler before/after the JSON object
+            // V9.7.32 JSON BOUNDARY EXTRACTOR: Ignores AI conversational filler before/after the JSON object
             const startIndex = aiText.indexOf('{');
             const endIndex = aiText.lastIndexOf('}');
             if (startIndex !== -1 && endIndex !== -1) {
@@ -1021,7 +1021,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 // V9.6.70: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
-                // V9.7.31 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
+                // V9.7.32 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
                 let keepDiscovery = Math.random() > 0.40; // 40% chance to drop Discovery Phrase
                 let keepInference = Math.random() > 0.15; // 15% chance to drop Inference (creates ultra-short micro-posts)
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : ""; // 33% chance to drop Pointer
@@ -1109,7 +1109,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.31 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
+                // V9.7.32 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
                 if (ptrLine) {
                     // Only shuffle to second-to-last if the post has 4 or more elements
                     if (Math.random() > 0.5 && rawLines.length >= 4) {
@@ -1129,7 +1129,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.31 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.32 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1139,8 +1139,13 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
                 
+                // V9.7.32 RUN DEAL ANTI-NAKED LINK LOCK
                 let cloakedURL = cloakURL(extractedURL);
-                let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
+                if (!keepLead) {
+                    const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
+                    linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
+                }
+                let finalLink = `${linkLead} ${cloakedURL}`;
 
                 // V9.6.76 COMMENT GEOMETRY LOCK: Never put the link on Line 1
                 let rawLines = [];
@@ -1152,21 +1157,33 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // Shuffle the text elements so they aren't always in the same order
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
+                // V9.7.32 ANTI-NAKED LINK LOCK: Guarantees the URL is ALWAYS attached to a lead phrase
+                if (!keepLead) {
+                    const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
+                    linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
+                }
+                finalLink = `${linkLead} ${cloakedURL}`; // Hard-locks the text and URL together on ONE line
+
                 if (textElements.length === 0) {
-                    // V9.6.78 FALLBACK VARIANCE: Randomize the safety net to prevent footprinting
-                    const fallbackPhrases = [
-                        "Dropping the details right here:",
-                        "I left the info right here:",
-                        "Here is the direct path:",
-                        "This is where I found it:",
-                        "I pinned the details here:"
-                    ];
-                    let randomFallback = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
-                    
-                    // Absolute fallback: If both text elements dropped, force the link to line 2
-                    rawLines.push(randomFallback);
-                    rawLines.push(cloakedURL); // Use raw cloaked URL to avoid double-stutter
+                    // Absolute fallback: If both text elements dropped, force a generic line 1 so the link stays on line 2
+                    const line1Fallbacks = ["I left the details below!", "Dropping the info for this one!", "All the info is right here!"];
+                    rawLines.push(line1Fallbacks[Math.floor(Math.random() * line1Fallbacks.length)]);
+                    rawLines.push(finalLink); 
                 } else if (textElements.length === 1) {
+                    // 1 text element: Text goes first, link goes second
+                    rawLines.push(textElements[0]);
+                    rawLines.push(finalLink);
+                } else {
+                    // 2 text elements: Link goes in the middle or at the bottom
+                    rawLines.push(textElements[0]);
+                    if (Math.random() > 0.5) {
+                        rawLines.push(finalLink);
+                        rawLines.push(textElements[1]);
+                    } else {
+                        rawLines.push(textElements[1]);
+                        rawLines.push(finalLink);
+                    }
+                }
                     // 1 text element: Text goes first, link goes second
                     rawLines.push(textElements[0]);
                     rawLines.push(finalLink);
@@ -1238,7 +1255,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.31 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.32 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1278,8 +1295,13 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
                 
+                // V9.7.32 RUN DEAL ANTI-NAKED LINK LOCK
                 let cloakedURL = cloakURL(extractedURL);
-                let finalLink = keepLead ? `${linkLead} ${cloakedURL}` : cloakedURL;
+                if (!keepLead) {
+                    const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
+                    linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
+                }
+                let finalLink = `${linkLead} ${cloakedURL}`;
 
                 let rawLines = [];
                 rawLines.push(discLine);
@@ -1335,7 +1357,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.7.31 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
+        // V9.7.32 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
         let dtLinkLead = selectedLinkLeads[3] || "This is where I found it:"; 
         let rawDtLines = [];
         let cloakedDtURL = cloakURL(extractedURL);
