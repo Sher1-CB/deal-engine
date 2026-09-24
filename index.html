@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.23</title>
+    <title>The CB Deal Generator v9.7.24</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -192,7 +192,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.23</span>
+            <span class="version-tag">v9.7.24</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -326,7 +326,7 @@
             
             select.innerHTML = ''; 
             
-            // V9.7.23: Emergency Override (Allows Pro models during Flash/Lite outages)
+            // V9.7.24: Emergency Override (Allows Pro models during Flash/Lite outages)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
@@ -1003,7 +1003,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 // V9.6.70: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
-                // V9.7.23 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
+                // V9.7.24 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
                 let keepDiscovery = Math.random() > 0.40; // 40% chance to drop Discovery Phrase
                 let keepInference = Math.random() > 0.15; // 15% chance to drop Inference (creates ultra-short micro-posts)
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : ""; // 33% chance to drop Pointer
@@ -1091,14 +1091,12 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.6.77 PENULTIMATE POINTER SHUFFLE: Ultra-Paranoia Protocol
+                // V9.7.24 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
                 if (ptrLine) {
-                    // 50% chance to be absolute last, 50% chance to be second-to-last
-                    if (Math.random() > 0.5 && rawLines.length > 1) {
-                        // Insert it right before the last element in the array
+                    // Only shuffle to second-to-last if the post has 4 or more elements
+                    if (Math.random() > 0.5 && rawLines.length >= 4) {
                         rawLines.splice(rawLines.length - 1, 0, ptrLine);
                     } else {
-                        // Push it to the absolute bottom
                         rawLines.push(ptrLine);
                     }
                 }
@@ -1113,7 +1111,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.23 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.24 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1222,7 +1220,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.23 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.24 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1319,13 +1317,11 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.1.3 Daily Thread Link Scrub & 33% Drop Rate
-        let keepDtLead = Math.random() > 0.33;
-        let dtLinkLead = keepDtLead ? (selectedLinkLeads[3] || "Check it out right here:") : ""; 
-
+        // V9.7.24 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
+        let dtLinkLead = selectedLinkLeads[3] || "This is where I found it:"; 
         let rawDtLines = [];
         let cloakedDtURL = cloakURL(extractedURL);
-        let finalDtLink = dtLinkLead ? `${dtLinkLead} ${cloakedDtURL}` : cloakedDtURL;
+        let finalDtLink = `${dtLinkLead} ${cloakedDtURL}`;
         
         // V9.6.75 DT BUFFER LOCK: Always place the human signoff above the link
         if(isOdd) {
