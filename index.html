@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.27</title>
+    <title>The CB Deal Generator v9.7.28</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -192,7 +192,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.27</span>
+            <span class="version-tag">v9.7.28</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -326,7 +326,7 @@
             
             select.innerHTML = ''; 
             
-            // V9.7.27: Emergency Override (Allows Pro models during Flash/Lite outages)
+            // V9.7.28: Emergency Override (Allows Pro models during Flash/Lite outages)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
@@ -593,7 +593,7 @@
 
         if (dealType === 'regular') {
             prompt = `Analyze this deal: "${rawText}"
-Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \"). TRAILING COMMA BAN: You are STRICTLY FORBIDDEN from leaving a trailing comma at the end of an array or object (e.g., ["a", "b",] is illegal).
+Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \"). TRAILING COMMA BAN: You are STRICTLY FORBIDDEN from leaving a trailing comma at the end of an array or object. SINGLE-LINE STRING MANDATE: Every string value MUST be on a single line. Never hit enter inside quotes.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
 "cleaned_title": (String. Copy the primary product name line exactly as written. Remove emojis. LINE BOUNDARY LOCK: You MUST stop extracting at the end of the product name line. You are STRICTLY FORBIDDEN from merging multiple lines together or appending features from other lines into the title. The title MUST be exactly one line of text. VERBATIM OVERRIDE: If the product line contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Coca-Cola'), you MUST keep those exact words in the title. Do NOT strip them out to 'clean' the name.),
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price. EXACT NUMBER LOCK: You MUST extract ONLY the numbers and $ signs. You are STRICTLY FORBIDDEN from extracting words like 'As low as', 'Starting at', or 'Cheapest'. You are STRICTLY FORBIDDEN from extracting the regular price here. HYPHEN LOCK: If the sale price is a range (e.g., '$17.99 - $20.51'), you MUST extract the entire range exactly as written. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
@@ -663,7 +663,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         } else {
             // V9.6.70 RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
-Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \"). TRAILING COMMA BAN: You are STRICTLY FORBIDDEN from leaving a trailing comma at the end of an array or object (e.g., ["a", "b",] is illegal).
+Return ONLY a valid JSON object with these exact keys. Do NOT use markdown formatting. Do NOT include emojis in the text strings. JSON STRICT MODE: You MUST ensure perfect JSON syntax. Escape all internal double quotes (e.g., \"). TRAILING COMMA BAN: You are STRICTLY FORBIDDEN from leaving a trailing comma at the end of an array or object. SINGLE-LINE STRING MANDATE: Every string value MUST be on a single line. Never hit enter inside quotes.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Amazon Haul", "Target". Fix leetspeak like W@lm@rt. You MUST capture multi-word retailers exactly as written. Do NOT truncate them.),
 "cleaned_title": (String. Copy the primary product name line exactly as written. Remove emojis. LINE BOUNDARY LOCK: You MUST stop extracting at the end of the product name line. You are STRICTLY FORBIDDEN from merging multiple lines together or appending features from other lines into the title. The title MUST be exactly one line of text. VERBATIM OVERRIDE: If the product line contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Coca-Cola'), you MUST keep those exact words in the title. Do NOT strip them out to 'clean' the name.),
 "scrubbed_keyword": (String. Extract a generic noun for the product. STRICT LIMIT: Max 1 to 2 words. CONTEXTUAL MULTIPLIER MANDATE: If the deal includes a specific quantity multiplier like 2 QTY or 4-Pack, you MUST include it here, e.g., '2-Pack Microwave'.),
@@ -760,8 +760,13 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.7.15 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            // V9.6.92 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
             aiText = aiText.replace(/,\s*([\]}])/g, '$1');
+            
+            // V9.7.28 CONTROL CHARACTER SANITIZER: Deletes illegal line breaks/tabs inside quotes to prevent crashes
+            aiText = aiText.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
+                return match.replace(/[\r\n\t]/g, " ");
+            });
             
             // Save to global variables for the Shuffle Engine
             lastAiData = JSON.parse(aiText);
@@ -1003,7 +1008,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 // V9.6.70: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
-                // V9.7.27 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
+                // V9.7.28 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
                 let keepDiscovery = Math.random() > 0.40; // 40% chance to drop Discovery Phrase
                 let keepInference = Math.random() > 0.15; // 15% chance to drop Inference (creates ultra-short micro-posts)
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : ""; // 33% chance to drop Pointer
@@ -1091,7 +1096,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.27 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
+                // V9.7.28 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
                 if (ptrLine) {
                     // Only shuffle to second-to-last if the post has 4 or more elements
                     if (Math.random() > 0.5 && rawLines.length >= 4) {
@@ -1111,7 +1116,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.27 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.28 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1220,7 +1225,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.27 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.28 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1317,7 +1322,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.7.27 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
+        // V9.7.28 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
         let dtLinkLead = selectedLinkLeads[3] || "This is where I found it:"; 
         let rawDtLines = [];
         let cloakedDtURL = cloakURL(extractedURL);
