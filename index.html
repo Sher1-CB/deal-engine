@@ -1129,7 +1129,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.32 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.23 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1139,8 +1139,9 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
                 
-                // V9.7.32 RUN DEAL ANTI-NAKED LINK LOCK
                 let cloakedURL = cloakURL(extractedURL);
+                
+                // V9.7.32 ANTI-NAKED LINK LOCK
                 if (!keepLead) {
                     const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
                     linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
@@ -1157,33 +1158,12 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // Shuffle the text elements so they aren't always in the same order
                 textElements = textElements.sort(() => 0.5 - Math.random());
                 
-                // V9.7.32 ANTI-NAKED LINK LOCK: Guarantees the URL is ALWAYS attached to a lead phrase
-                if (!keepLead) {
-                    const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
-                    linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
-                }
-                finalLink = `${linkLead} ${cloakedURL}`; // Hard-locks the text and URL together on ONE line
-
                 if (textElements.length === 0) {
                     // Absolute fallback: If both text elements dropped, force a generic line 1 so the link stays on line 2
                     const line1Fallbacks = ["I left the details below!", "Dropping the info for this one!", "All the info is right here!"];
                     rawLines.push(line1Fallbacks[Math.floor(Math.random() * line1Fallbacks.length)]);
                     rawLines.push(finalLink); 
                 } else if (textElements.length === 1) {
-                    // 1 text element: Text goes first, link goes second
-                    rawLines.push(textElements[0]);
-                    rawLines.push(finalLink);
-                } else {
-                    // 2 text elements: Link goes in the middle or at the bottom
-                    rawLines.push(textElements[0]);
-                    if (Math.random() > 0.5) {
-                        rawLines.push(finalLink);
-                        rawLines.push(textElements[1]);
-                    } else {
-                        rawLines.push(textElements[1]);
-                        rawLines.push(finalLink);
-                    }
-                }
                     // 1 text element: Text goes first, link goes second
                     rawLines.push(textElements[0]);
                     rawLines.push(finalLink);
@@ -1255,7 +1235,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.32 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.23 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1295,8 +1275,9 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let keepDisc = Math.random() > 0.33; 
                 let keepLead = Math.random() > 0.33;
                 
-                // V9.7.32 RUN DEAL ANTI-NAKED LINK LOCK
                 let cloakedURL = cloakURL(extractedURL);
+                
+                // V9.7.32 RUN DEAL ANTI-NAKED LINK LOCK
                 if (!keepLead) {
                     const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
                     linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
