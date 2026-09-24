@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.30</title>
+    <title>The CB Deal Generator v9.7.29</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -192,7 +192,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.30</span>
+            <span class="version-tag">v9.7.29</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -326,7 +326,7 @@
             
             select.innerHTML = ''; 
             
-            // V9.7.30: Emergency Override (Allows Pro models during Flash/Lite outages)
+            // V9.7.29: Emergency Override (Allows Pro models during Flash/Lite outages)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
@@ -599,7 +599,7 @@ Return ONLY a valid JSON object with these exact keys. Do NOT use markdown forma
 "sale_price": (String. Scan the ENTIRE raw text to extract the sale price. EXACT NUMBER LOCK: You MUST extract ONLY the numbers and $ signs. You are STRICTLY FORBIDDEN from extracting words like 'As low as', 'Starting at', or 'Cheapest'. You are STRICTLY FORBIDDEN from extracting the regular price here. HYPHEN LOCK: If the sale price is a range (e.g., '$17.99 - $20.51'), you MUST extract the entire range exactly as written. MISSING PRICE LOCK: If there is NO price in the raw text, write "???". Do NOT hallucinate a price.),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". Do NOT mash the numbers together. HYPHEN LOCK: If the price is a range (e.g., '$3.67 - $5.81'), you MUST keep the hyphen exactly as written (e.g., '3 67 - 5 81'). If none, write "NONE"),
 "praises": (Array of 3 short hype phrases. PRONOUN ENFORCEMENT: ${pronounInstruction} FORMAT MIXER: You MUST randomly mix between making a highly positive statement AND asking a natural, casual question. CASUAL PREFERENCE RULE: Your audience rarely comments, so ask low-effort questions that feel like an organic group chat. Rotate between: 1) 'This or That' (e.g., 'Would you put this in the bedroom or the living room?', 'Are you picking the black one or the grey one?'). 2) 'Scenario/Utility' (e.g., 'What would you tackle first with this?', 'What is your favorite thing to make with something like this?'). 3) 'Gifting/Tagging' (e.g., 'Who is the hardest person on your list to shop for?'). ENGAGEMENT BAIT BAN: You are STRICTLY FORBIDDEN from telling users how to interact. You MUST NOT command users to 'drop an emoji', 'leave an emoji', 'react', 'vote', 'comment yes', or 'type a word'. Frame every question naturally.),
-"inferences": (Array of exactly 3 short lifestyle statements. JSON SYNTAX LOCK: You are STRICTLY FORBIDDEN from leaving a trailing comma after the 3rd string in this array. TESTIMONIAL HIJACK: ONLY if the raw text contains a personal review, rephrase it. Otherwise, invent a standard statement. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. POSITIVE GROUP-CHAT VIBE: Write like an excited shopper texting a group chat. Focus entirely on positive delight, cozy relief, or genuine obsession. VETTED 80+ HUMAN LEXICON: Pull dynamically from these 4 categories: 1) Starters & Vocal Impressions: 'ngl', 'tbh', 'tbf', 'imo', 'omg', 'btw', 'fyi', 'no lie', 'fr', 'hands down', 'hear me out', 'welp', 'hmm', 'wait', 'yall', 'trust me on this'. 2) Shopper Idioms & High Praise: 'chefs kiss', 'honestly elite', 'so clutch', 'my new hyperfixation', 'people are sleeping on this', '10/10', 'literally obsessed with', 'cannot get over how', 'straight up unreal', 'swear by this', 'living for this', 'so boujee', 'its giving'. 3) Casual Modifiers & Slang: 'lowkey', 'highkey', 'literally', 'honestly', 'seriously', 'super', 'insanely', 'kinda', 'sorta', 'majorly', 'straight up', 'beyond', 'legit', 'pure perfection'. 4) Phonetic Shortcuts & Trailing Slang: 'rn', 'lol', 'haha', 'probs', 'obv', 'bc', 'cuz', 'thru', 'fav', 'iykyk'. SLANG VARIANCE MANDATE (THE BREATHER): You MUST weave this casual text-speak into EXACTLY TWO of the three sentences. For the remaining ONE sentence, you are STRICTLY FORBIDDEN from using any slang, abbreviations, or text-speak. Write it as a clean, standard recommendation. ARRAY FORMAT LOCK: You MUST separate all 3 strings with commas. Do NOT use internal double quotes inside your sentences. ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from overusing 'tbh' or 'rn'. Rotate through different categories for the two slang strings. CREATIVE VARIANCE: You MUST invent highly specific, vivid, and distinct use-cases for each of the 3 sentences. PRIVATE VELOCITY: For at least ONE of the sentences, frame the use-case around sending or gifting it to a friend/family member. You are STRICTLY FORBIDDEN from using the banned words 'share', 'tag', or 'link' (e.g., say 'texted her about this' or 'sent this over to her'). FORUM SEO MANDATE: For at least ONE of the sentences, you MUST naturally weave in the generic product category (e.g., 'reading pillow', 'summer outfit', 'bug spray') so the post can be indexed by search algorithms. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the exact product name, brand, distinct title words, or specific clothing styles from the title. You MUST use broad, generic category nouns (e.g., 'matching set', 'loungewear', 'outfit', 'layering piece', 'basic top'). AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak, academic transitions, or LLM filler words like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'game changer', 'oasis', 'ultimate', 'a breeze', 'essential', 'must-have', 'look no further', 'testament', 'delve', 'upgrade your', 'truly', 'indeed', 'delightful', 'furthermore', 'moreover', or 'certainly'. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
+"inferences": (Array of exactly 3 short lifestyle statements. JSON SYNTAX LOCK: You are STRICTLY FORBIDDEN from leaving a trailing comma after the 3rd string in this array. TESTIMONIAL HIJACK: ONLY if the raw text contains a personal review, rephrase it. Otherwise, invent a standard statement. PRONOUN ENFORCEMENT: ${pronounInstruction} You MUST obey the pronoun rule above all else. POSITIVE GROUP-CHAT VIBE: Write like an excited shopper texting a group chat. Focus entirely on positive delight, cozy relief, or genuine obsession. VETTED 80+ HUMAN LEXICON: Pull dynamically from these 4 categories: 1) Starters & Vocal Impressions: 'ngl', 'tbh', 'tbf', 'imo', 'omg', 'btw', 'fyi', 'no lie', 'fr', 'hands down', 'hear me out', 'welp', 'hmm', 'wait', 'yall', 'trust me on this'. 2) Shopper Idioms & High Praise: 'chefs kiss', 'honestly elite', 'so clutch', 'my new hyperfixation', 'people are sleeping on this', '10/10', 'literally obsessed with', 'cannot get over how', 'straight up unreal', 'swear by this', 'living for this', 'so boujee', 'its giving'. 3) Casual Modifiers & Slang: 'lowkey', 'highkey', 'literally', 'honestly', 'seriously', 'super', 'insanely', 'kinda', 'sorta', 'majorly', 'straight up', 'beyond', 'legit', 'pure perfection'. 4) Phonetic Shortcuts & Trailing Slang: 'rn', 'lol', 'haha', 'probs', 'obv', 'bc', 'cuz', 'thru', 'fav', 'iykyk'. SLANG VARIANCE MANDATE (THE BREATHER): You MUST weave this casual text-speak into EXACTLY TWO of the three sentences. For the remaining ONE sentence, you are STRICTLY FORBIDDEN from using any slang, abbreviations, or text-speak. Write it as a clean, standard, but enthusiastic recommendation (e.g., 'This is such a wonderful find for the house.'). ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from overusing 'tbh' or 'rn'. Rotate through different categories for the two slang strings. CREATIVE VARIANCE: You MUST invent highly specific, vivid, and distinct use-cases for each of the 3 sentences. PRIVATE VELOCITY: For at least ONE of the sentences, frame the use-case around sending or gifting it to a friend/family member. You are STRICTLY FORBIDDEN from using the banned words 'share', 'tag', or 'link' (e.g., say 'texted her about this' or 'sent this over to her'). FORUM SEO MANDATE: For at least ONE of the sentences, you MUST naturally weave in the generic product category (e.g., 'reading pillow', 'summer outfit', 'bug spray') so the post can be indexed by search algorithms. TITLE ECHO BAN: You are STRICTLY FORBIDDEN from repeating the exact product name, brand, distinct title words, or specific clothing styles from the title. You MUST use broad, generic category nouns (e.g., 'matching set', 'loungewear', 'outfit', 'layering piece', 'basic top'). AI WORD BAN: You are STRICTLY FORBIDDEN from using AI corporate-speak, academic transitions, or LLM filler words like 'elevate', 'transform', 'seamless', 'companion', 'ideal', 'provides', 'ensures', 'perfect addition', 'game-changer', 'game changer', 'oasis', 'ultimate', 'a breeze', 'essential', 'must-have', 'look no further', 'testament', 'delve', 'upgrade your', 'truly', 'indeed', 'delightful', 'furthermore', 'moreover', or 'certainly'. AMAZON SPEC BAN: You are STRICTLY FORBIDDEN from listing product features. DATA BLEED BAN: You are STRICTLY FORBIDDEN from pulling specific colors, sizes, limits, accessories, or prices into these lifestyle statements.),
 "disclaimers": (Array of 3 casual warnings. SCARCITY BAN: You are STRICTLY FORBIDDEN from mentioning inventory, stock, shelves, items selling out, 'quantity on hand', or 'count'. COMMERCIAL BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from using the words 'price', 'cost', 'checkout', 'cart', 'order', 'buy', or 'purchase'. Focus ONLY on the 'dollar amount' or 'total' fluctuating naturally on the page (e.g., 'The total can shift at any moment', 'The dollar amount fluctuates throughout the day'). Do NOT mention the buying process. B2 LEAK BAN: Do NOT put limits, minimums, or quantity rules here.),
 "b2_verification": (JSON Object. You MUST extract facts from the extra text and place them into these exact keys. If a fact does not exist, write "NONE".
   "limit": (String. MUST contain 'Limit', 'Max', or 'Maximum' plus a number. Overrides 'qty'. NEVER extract colors here.),
@@ -760,11 +760,13 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.7.30 MISSING COMMA AUTO-HEALER: Detects missing commas between array strings and inserts them
-            aiText = aiText.replace(/"\s*\n\s*"/g, '",\n"');
+            // V9.6.92 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
+            aiText = aiText.replace(/,\s*([\]}])/g, '$1');
             
-            // V9.7.30 INTERNAL QUOTE SCRUBBER: Replaces unescaped double quotes inside strings with single quotes
-            aiText = aiText.replace(/(?<!^|[:,\[]\s*)"(?![:,\]}\s])/g, "'");
+            // V9.7.29 CONTROL CHARACTER SANITIZER: Deletes illegal line breaks/tabs inside quotes to prevent crashes
+            aiText = aiText.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
+                return match.replace(/[\r\n\t]/g, " ");
+            });
             
             // Save to global variables for the Shuffle Engine
             lastAiData = JSON.parse(aiText);
@@ -1006,7 +1008,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 // V9.6.70: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
-                // V9.7.30 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
+                // V9.7.29 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
                 let keepDiscovery = Math.random() > 0.40; // 40% chance to drop Discovery Phrase
                 let keepInference = Math.random() > 0.15; // 15% chance to drop Inference (creates ultra-short micro-posts)
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : ""; // 33% chance to drop Pointer
@@ -1094,7 +1096,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.30 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
+                // V9.7.29 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
                 if (ptrLine) {
                     // Only shuffle to second-to-last if the post has 4 or more elements
                     if (Math.random() > 0.5 && rawLines.length >= 4) {
@@ -1114,7 +1116,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.30 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.29 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1223,7 +1225,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             }
 
             for(let i=0; i<3; i++) {
-                // V9.7.30 FIX: Do not strip emojis from praises so Emoji Drops work properly
+                // V9.7.29 FIX: Do not strip emojis from praises so Emoji Drops work properly
                 let praise = aiData.praises[i] ? aiData.praises[i].trim() : "";
                 let disc = cleanText(aiData.disclaimers[i]);
                 let linkLead = selectedLinkLeads[i];
@@ -1320,7 +1322,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.7.30 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
+        // V9.7.29 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
         let dtLinkLead = selectedLinkLeads[3] || "This is where I found it:"; 
         let rawDtLines = [];
         let cloakedDtURL = cloakURL(extractedURL);
