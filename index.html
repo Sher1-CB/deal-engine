@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Deal Generator v9.7.34</title>
+    <title>The CB Deal Generator v9.7.37</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -192,7 +192,7 @@
 
     <div class="right-col">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -30px;">
-            <span class="version-tag">v9.7.34</span>
+            <span class="version-tag">v9.7.37</span>
         </div>
         <div class="card">
             <div class="card-header" id="sessionBaseHeaderContainer">
@@ -326,7 +326,7 @@
             
             select.innerHTML = ''; 
             
-            // V9.7.34: Emergency Override (Allows Pro models during Flash/Lite outages)
+            // V9.7.37: Emergency Override (Allows Pro models during Flash/Lite outages)
             const textModels = data.models.filter(m => 
                 m.supportedGenerationMethods.includes("generateContent") && 
                 m.name.includes("gemini") &&
@@ -760,26 +760,33 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let aiText = data.candidates[0].content.parts[0].text;
             aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
             
-            // V9.6.92 JSON SANITIZER: Automatically deletes illegal trailing commas before parsing
-            aiText = aiText.replace(/,\s*([\]}])/g, '$1');
-            
-            // V9.7.28 CONTROL CHARACTER SANITIZER: Deletes illegal line breaks/tabs inside quotes to prevent crashes
-            aiText = aiText.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
-                return match.replace(/[\r\n\t]/g, " ");
-            });
-            
-            // V9.7.29 MISSING COMMA AUTO-HEALER: Detects missing commas between array strings and inserts them
-            aiText = aiText.replace(/"\s*\n\s*"/g, '",\n"');
-            
-            // V9.7.34 INTERNAL QUOTE SCRUBBER (PATCHED): Added '{' to the lookbehind to protect JSON property keys
-            aiText = aiText.replace(/(?<!^|[:,\[{]\s*)"(?![:,\]}\s])/g, "'");
-
-            // V9.7.34 JSON BOUNDARY EXTRACTOR: Ignores AI conversational filler before/after the JSON object
+            // 1. JSON BOUNDARY EXTRACTOR
             const startIndex = aiText.indexOf('{');
             const endIndex = aiText.lastIndexOf('}');
             if (startIndex !== -1 && endIndex !== -1) {
                 aiText = aiText.substring(startIndex, endIndex + 1);
             }
+
+            // 2. MISSING COMMA HEALER
+            aiText = aiText.replace(/"\s*\n\s*"/g, '",\n"');
+
+            // 3. TRAILING COMMA HEALER
+            aiText = aiText.replace(/,\s*([\]}])/g, '$1');
+
+            // 4. ESCAPED QUOTE HEALER (Turns valid \" into single quotes)
+            aiText = aiText.replace(/\\"/g, "'");
+
+            // 5. DOUBLE BACKSLASH HEALER (Removes literal \\)
+            aiText = aiText.replace(/\\\\/g, "");
+
+            // 6. THE TRUE NUCLEAR BACKSLASH ANNIHILATOR (Deletes ALL backslashes except \n and \u)
+            aiText = aiText.replace(/\\(?![nu])/g, "");
+
+            // 7. INTERNAL QUOTE SCRUBBER
+            aiText = aiText.replace(/(?<!^|[:,\[{]\s*)"(?![:,\]}\s])/g, "'");
+
+            // 8. CONTROL CHARACTER NUKE
+            aiText = aiText.replace(/[\r\n\t]+/g, " ");
             
             // Save to global variables for the Shuffle Engine
             lastAiData = JSON.parse(aiText);
@@ -1021,9 +1028,9 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 // V9.6.70: MAXIMUM ENTROPY GEOMETRY RANDOMIZER
                 
-                // V9.7.34 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
+                // V9.7.37 ASYMMETRY ENGINE: Variable drop rates to destroy line-count footprints
                 let keepDiscovery = Math.random() > 0.40; // 40% chance to drop Discovery Phrase
-                // V9.7.34 INFERENCE LOCK: Guarantees the Slang/Breather payload ALWAYS prints to poison the algorithm
+                // V9.7.37 INFERENCE LOCK: Guarantees the Slang/Breather payload ALWAYS prints to poison the algorithm
                 let keepInference = true;
                 let ptrLine = Math.random() > 0.33 ? selectedPointers[i] : ""; // 33% chance to drop Pointer
                 
@@ -1110,7 +1117,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 // 6. Combine them (Top Block always stays on top)
                 let rawLines = topBlock.concat(middleBlock);
 
-                // V9.7.34 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
+                // V9.7.37 PENULTIMATE POINTER LOCK: Only shuffles on longer posts to prevent splitting Title and Price
                 if (ptrLine) {
                     // Only shuffle to second-to-last if the post has 4 or more elements
                     if (Math.random() > 0.5 && rawLines.length >= 4) {
@@ -1142,7 +1149,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 let cloakedURL = cloakURL(extractedURL);
                 
-                // V9.7.34 ANTI-NAKED LINK LOCK
+                // V9.7.37 ANTI-NAKED LINK LOCK
                 if (!keepLead) {
                     const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
                     linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
@@ -1278,7 +1285,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 
                 let cloakedURL = cloakURL(extractedURL);
                 
-                // V9.7.34 RUN DEAL ANTI-NAKED LINK LOCK
+                // V9.7.37 RUN DEAL ANTI-NAKED LINK LOCK
                 if (!keepLead) {
                     const fallbackPhrases = ["Here it is:", "Found it here:", "Direct path:", "Right here:", "Pinned here:"];
                     linkLead = fallbackPhrases[Math.floor(Math.random() * fallbackPhrases.length)];
@@ -1339,7 +1346,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         
         let dtOverflow = `${dtB5}${dtB6}${dtB7}${dtB8}${dtB9}`.trim();
 
-        // V9.7.34 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
+        // V9.7.37 DT LINK BUFFER: Guarantees 100% conversational padding to eliminate naked links
         let dtLinkLead = selectedLinkLeads[3] || "This is where I found it:"; 
         let rawDtLines = [];
         let cloakedDtURL = cloakURL(extractedURL);
