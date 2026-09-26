@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.10</title>
+    <title>The CB Command Center v10.0.11</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -114,7 +114,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.10</span>
+    <span class="version-tag">v10.0.11</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -594,11 +594,8 @@
 
         if(!rawText) { alert("Please provide Raw Text!"); return; }
         
-        // V10.0.10: Hard stop if duplicate is detected
-        if (checkDuplicates(rawText) && !isTestMode) {
-            alert("🚨 DUPLICATE DETECTED! Check the warning banner. If you still want to generate this, turn on 'Test Mode'.");
-            return;
-        }
+        // V10.0.11: Check duplicates to ensure the banner is visible, but DO NOT block generation.
+        checkDuplicates(rawText);
         
         ['key1', 'key2', 'key3', 'posterName', 'acctRotation'].forEach(id => {
             localStorage.setItem(`cb_${id}`, document.getElementById(id).value.trim());
