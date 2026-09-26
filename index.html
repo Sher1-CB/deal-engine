@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.48</title>
+    <title>The CB Command Center v10.0.49</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.48</span>
+    <span class="version-tag">v10.0.49</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -681,7 +681,7 @@
 
         if (dealType === 'regular') {
             prompt = `Analyze this deal: "${rawText}"
-Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes.
+Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): You are STRICTLY FORBIDDEN from adding any notes, explanations, commentary, or asterisks (*) inside or outside the JSON. Return pure JSON only.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart". Fix leetspeak.),
 "sale_price": (String. Extract the sale price. Extract ONLY numbers and $ signs, then ADD the word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. If none, write "???"),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". If none, write "NONE"),
@@ -704,7 +704,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         } else {
             // RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
-Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes.
+Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): You are STRICTLY FORBIDDEN from adding any notes, explanations, commentary, or asterisks (*) inside or outside the JSON. Return pure JSON only.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart". Fix leetspeak.),
 "sale_price": (String. Extract the sale price. Extract ONLY numbers and $ signs, then ADD the word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. If none, write "???"),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". If none, write "NONE"),
@@ -739,6 +739,10 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             aiText = aiText.replace(/\\(?![nu])/g, "");
             aiText = aiText.replace(/(?<!^|[:,\[{]\s*)"(?![:,\]}\s])/g, "'");
             aiText = aiText.replace(/[\r\n\t]+/g, " ");
+
+            // V10.0.49 AI NOTE SCRUBBER: Nukes unquoted notes and commentary inside arrays
+            aiText = aiText.replace(/(\[|\,)\s*\*Note:[^"\]]*"/gi, '$1 "');
+            aiText = aiText.replace(/\*Note:[^*]*\*/gi, "");
             
             const aiData = JSON.parse(aiText);
 
