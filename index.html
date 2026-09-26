@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.33</title>
+    <title>The CB Command Center v10.0.34</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.33</span>
+    <span class="version-tag">v10.0.34</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -876,7 +876,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 type: 'issue',
                 poster: posterName,
                 note: note.trim() || "Raw Output Only",
-                rawPayload: currentRawOutput
+                rawPayload: "'" + currentRawOutput // V10.0.34: Escapes formula parse error in Google Sheets
             })
         }).then(() => {
             btnElement.innerText = "✅ Issue Logged!";
