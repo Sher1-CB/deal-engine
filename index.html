@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.39</title>
+    <title>The CB Command Center v10.0.40</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.39</span>
+    <span class="version-tag">v10.0.40</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -806,9 +806,33 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('customLine').value = '';
             document.getElementById('duplicateWarning').style.display = 'none';
 
+            // V10.0.40: Reset outage timer and hide button on successful generation
+            localStorage.removeItem('cb_outage_start');
+            document.getElementById('emergencyFallbackBtn').style.display = 'none';
+
         } catch (error) {
             alert("Engine Error: " + error.message);
-            document.getElementById('emergencyFallbackBtn').style.display = 'flex';
+
+            // V10.0.40: 20-MINUTE OUTAGE GATE
+            const now = Date.now();
+            let firstFailure = localStorage.getItem('cb_outage_start');
+            
+            if (!firstFailure) {
+                // First failure logged
+                localStorage.setItem('cb_outage_start', now);
+                firstFailure = now;
+            }
+
+            const minutesElapsed = (now - parseInt(firstFailure)) / (1000 * 60);
+
+            if (minutesElapsed >= 20) {
+                // Outage has lasted 20+ minutes of active attempts
+                document.getElementById('emergencyFallbackBtn').style.display = "flex";
+            } else {
+                const remaining = Math.ceil(20 - minutesElapsed);
+                console.log(`Outage active: ${remaining} minutes remaining before Emergency Fallback unlocks.`);
+            }
+
         } finally {
             btn.innerHTML = "✨ Generate Deal";
             btn.disabled = false;
