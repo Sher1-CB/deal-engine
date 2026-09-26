@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.15</title>
+    <title>The CB Command Center v10.0.16</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -114,7 +114,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.15</span>
+    <span class="version-tag">v10.0.16</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -158,6 +158,10 @@
 
             <label>Raw Deal Context Text</label>
             <textarea id="rawText" placeholder="Paste raw deal information here..."></textarea>
+            
+            <!-- V10.0.16 RESTORED: Custom Injection Line -->
+            <label>✍️ Custom Injection Line (Optional)</label>
+            <textarea id="customLine" class="small-textarea" placeholder="Type a personal review, joke, or custom instruction here. The AI will scrub it for banned words and rephrase it 4 unique ways..."></textarea>
             
             <div class="row" style="margin-top: 15px;">
                 <div class="col">
@@ -507,6 +511,7 @@
 
     function clearWorkspace() {
         document.getElementById('rawText').value = '';
+        document.getElementById('customLine').value = ''; // V10.0.16
         document.getElementById('duplicateWarning').style.display = 'none';
         document.getElementById('priceWarning').style.display = 'none';
         document.getElementById('outputSection').style.display = 'none';
@@ -639,6 +644,14 @@
             ? "Use 1st Person pronouns (I, My, We, Our)." 
             : "Use 3rd Person pronouns (This, That, It). NEVER use I, My, We, or Our.";
 
+        // V10.0.16 RESTORED: Custom Line Instruction
+        const customLine = document.getElementById('customLine').value.trim();
+        let customLineInstruction = customLine 
+            ? `"custom_line_rephrases": (Array of 4 strings. The user provided a custom injection line: "${customLine}". TASK: Scrub banned words and rephrase this specific line 4 unique ways. Do NOT change the meaning.),` 
+            : `"custom_line_rephrases": (Array of 4 strings. Write ["DEAD","DEAD","DEAD","DEAD"]),`;
+
+        // V10.0.6 FULFILLMENT LOGIC (No exclamation marks)        
+
         let rLower = rawText.toLowerCase();
         let activeStyle = fulfillmentChoice;
         if (activeStyle === 'auto') {
@@ -669,7 +682,8 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE LOCK (ABSOLUTE): You MUST include the exact sale_price and reg_price in EVERY SINGLE paragraph. If you drop the price, the system will crash. You MUST weave the sale_price, reg_price, cleaned_title, retailer_name, AND EVERY SINGLE FACT extracted in b2, b5, b8, and features_catchall naturally into a fluid, casual paragraph. Do NOT use rigid hyphens or bullet points. S&S RULE: If b8 contains Subscribe & Save or S&S, you MUST frame it casually (e.g., 'use the subscribe option', 'set up routine delivery'). Do NOT say 'active plan' or 'active routine'. PRONOUNS: ${pronounInstruction} SLANG RULE: Use casual text-speak (ngl, tbh, lowkey, rn) in EXACTLY TWO of the strings. The remaining ONE string MUST be clean with zero slang. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy. Make each of the 3 paragraphs structurally different. You MUST write at least 3 distinct sentences per paragraph so they can be separated by line breaks.),
 "comments": (Array of 3 strings. Write a casual comment. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. If you use the word 'share', the system will crash. You MUST include the exact placeholder "[URL]" naturally inside the sentence (e.g., 'Found it right here [URL] and it looks great'). You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences.),
 "daily_thread": (String. Weave the price, title, retailer_name, all extracted facts (including features_catchall), and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. S&S RULE: If S&S is required, frame it casually (e.g., 'use the subscribe option'). Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'.),
-"emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.)
+"emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
+${customLineInstruction}
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words OR ANY OF THEIR VARIATIONS (e.g., stocking, restocked, markdowns, pricing, sales): Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
         } else {
             prompt = `Analyze this deal: "${rawText}"
@@ -683,7 +697,8 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE LOCK (ABSOLUTE): You MUST include the exact sale_price in EVERY SINGLE string. Write a short, urgent, 2-sentence Run Deal post. Sentence 1 MUST be a curiosity hook (e.g., 'Did they type this wrong?!'). Sentence 2 MUST weave the sale_price, scrubbed_keyword, features_catchall, and a physical action verb (e.g., 'Grab this washable microwave for $15.99 to heat up dinner!'). Do NOT use pronouns like I, My, We. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy.),
 "comments": (Array of 3 strings. Write a casual comment. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. If you use the word 'share', the system will crash. You MUST include the exact placeholder "[URL]" naturally inside the sentence (e.g., 'Found it right here [URL] and it looks great'). You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences.),
 "daily_thread": (String. Weave the price, title, retailer_name, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'.),
-"emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.)
+"emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
+${customLineInstruction}
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words OR ANY OF THEIR VARIATIONS (e.g., stocking, restocked, markdowns, pricing, sales): Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
         }
 
@@ -724,6 +739,11 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
 
             for(let i=0; i<3; i++) {
                 let postLines = aiData.post_variations[i].split(/(?<=[.!?])\s+/).filter(line => line.trim().length > 0); 
+                
+                // V10.0.16: Inject Custom Line if it exists
+                let customText = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD") ? aiData.custom_line_rephrases[i] : "";
+                if (customText) postLines.push(customText);
+
                 let emojifiedPost = postLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
                 let finalPost = joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
@@ -745,6 +765,11 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let dtCloaked = cloakURL(extractedURL);
             let dtText = aiData.daily_thread.replace('[URL]', dtCloaked);
             let dtLines = dtText.split(/(?<=[.!?])\s+/).filter(line => line.trim().length > 0);
+            
+            // V10.0.16: Inject Custom Line into Daily Thread
+            let customTextDt = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[3] !== "DEAD") ? aiData.custom_line_rephrases[3] : "";
+            if (customTextDt) dtLines.push(customTextDt);
+
             let emojifiedDt = dtLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
             let finalDt = joinWithSpaceChaos(emojifiedDt, 1, 2);
 
