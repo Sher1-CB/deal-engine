@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.23</title>
+    <title>The CB Command Center v10.0.24</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.23</span>
+    <span class="version-tag">v10.0.24</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -696,8 +696,8 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "cleaned_title": (String. Copy the primary product name exactly. Remove emojis.),
 "scrubbed_keyword": (String. Extract a generic noun for the product. Max 2 words.),
 "features_catchall": (String. Extract ANY remaining bullet points, features, or specs from the raw text. Example: 'Washable & Reusable'. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE BAN: You are STRICTLY FORBIDDEN from putting the price in this string. Write a short, urgent 2-sentence Run Deal post. Sentence 1: A curiosity hook (e.g., 'Did they type this wrong?!'). Sentence 2: A physical action verb + the scrubbed_keyword + features_catchall + a casual value phrase. ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from repeating the same value phrase across the 3 variations. You MUST rotate between different phrases (e.g., 'for way less', 'on a serious budget', 'without breaking the bank', 'for an unreal total'). QUANTITY RULE: If the raw text requires adding a specific quantity (e.g., ADD 2), explicitly say 'add [X] to your order'. NEVER invent weird phrases like 'holding area' or 'order bag'. Do NOT use the word 'cart'. Do NOT use pronouns like I, My, We. BANNED VERB: Do NOT use the word 'grab'. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab. CHARACTER LIMIT: The entire string MUST be under 120 characters. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || " and ensure proper punctuation before the delimiter. Example: "First sentence here. || Second sentence here."),
-"comments": (Array of 3 strings. Write a casual comment. FULL PAYLOAD LOCK (ABSOLUTE): Because the main post is a teaser, you MUST weave the sale_price, reg_price, cleaned_title, retailer_name, AND all facts from b2 (quantity and per-item math), b5, b8, and features_catchall into EVERY comment so the buyer gets the full deal breakdown. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. You MUST include the exact placeholder "[URL]" naturally inside the sentence. You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. QUESTION FIREWALL: Do NOT ask about colors, sizes, or options unless they are explicitly mentioned in the raw text. Write at least 2 distinct sentences. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
+"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE BAN: You are STRICTLY FORBIDDEN from putting the price in this string. Write a short, urgent 2-sentence Run Deal post. Sentence 1: A curiosity hook (e.g., 'Did they type this wrong?!'). Sentence 2: You MUST explicitly include the scrubbed_keyword (e.g., 'retro microwave') so the reader knows WHAT the item is! Combine a physical action verb + the scrubbed_keyword + the quantity rule + a casual value phrase. BANNED PHRASES: Do NOT use 'act fast', 'hurry', or 'grab'. QUANTITY RULE: Say 'add [X] to your order'. ANTI-PARROT LOCK: Rotate different value phrases (e.g., 'for way less', 'on a serious budget', 'without breaking the bank'). Do NOT use pronouns like I, My, We. NUCLEAR BAN: 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, Act fast, Hurry. CHARACTER LIMIT: Under 120 characters. DELIMITER LOCK: Separate sentences with ' || ' and use proper punctuation. Example: "First sentence here. || Second sentence here."),
+"comments": (Array of 3 strings. Write a casual comment. STRUCTURE: Start with a short, excited discovery opener (e.g., 'Look at this drop!', 'I am stunned by this total!'). Then weave the sale_price, reg_price, cleaned_title, retailer_name, and all facts from b2 (quantity and per-item math), b5, b8, and features_catchall into the text. BANNED WORDS: Do NOT use 'marked down', 'markdown', 'share', 'discount', or 'sale'. You MUST include the exact placeholder "[URL]" naturally inside the sentence. You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. QUESTION FIREWALL: Do NOT ask about colors, sizes, or options unless they are explicitly mentioned in the raw text. DELIMITER LOCK: Separate sentences with ' || ' and use proper punctuation.),
 "daily_thread": (String. Weave the sale_price, reg_price, cleaned_title, retailer_name, features_catchall, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. QUANTITY RULE: If required, say 'add [X] to your order'. NEVER say 'holding area' or 'cart'. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
