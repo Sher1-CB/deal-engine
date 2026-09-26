@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.9</title>
+    <title>The CB Command Center v10.0.10</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -114,7 +114,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.9</span>
+    <span class="version-tag">v10.0.10</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -354,19 +354,21 @@
         fetchLiveModels(); 
     });
 
-    // V10.0.9 REAL-TIME DUPLICATE CHECKER
-    document.getElementById('rawText').addEventListener('input', function() {
-        const text = this.value.trim();
+    // V10.0.10 BULLETPROOF DUPLICATE CHECKER
+    function checkDuplicates(text) {
         const dupWarning = document.getElementById('duplicateWarning');
-        if(!text) { dupWarning.style.display = 'none'; return; }
+        if(!text) { dupWarning.style.display = 'none'; return false; }
         
-        const extractedURL = extractURL(text);
-        if(extractedURL === "https://thecouponboutique.com/") return;
+        let extractedURL = extractURL(text).replace(/\/$/, ''); // Strip trailing slash for perfect matching
+        if(extractedURL === "https://thecouponboutique.com") return false;
 
-        const sessionDuplicate = sessionHistory.find(deal => deal.url === extractedURL);
+        const sessionDuplicate = sessionHistory.find(deal => deal.url.replace(/\/$/, '') === extractedURL);
         const todayET = new Date().toLocaleDateString("en-US", {timeZone: "America/New_York"});
+        
         const cloudDuplicate = globalDealHistory.find(row => {
-            if (row[3] !== extractedURL) return false;
+            if (!row[3]) return false;
+            let rowUrl = row[3].replace(/\/$/, '');
+            if (rowUrl !== extractedURL) return false;
             try {
                 const rowDate = new Date(row[0]).toLocaleDateString("en-US", {timeZone: "America/New_York"});
                 return rowDate === todayET;
@@ -377,13 +379,20 @@
             dupWarning.innerHTML = `<span>🚨</span> <strong>SESSION COLLISION:</strong> You already generated this exact link in this current session!`;
             dupWarning.className = "alert-banner alert-danger";
             dupWarning.style.display = 'flex';
+            return true;
         } else if (cloudDuplicate) {
             dupWarning.innerHTML = `<span>⚠️</span> <strong>CLOUD COLLISION:</strong> This was already posted TODAY by <strong>${cloudDuplicate[1]}</strong>!`;
             dupWarning.className = "alert-banner alert-warning";
             dupWarning.style.display = 'flex';
+            return true;
         } else {
             dupWarning.style.display = 'none';
+            return false;
         }
+    }
+
+    document.getElementById('rawText').addEventListener('input', function() {
+        checkDuplicates(this.value.trim());
     });
 
     function setDealType(type) {
@@ -585,6 +594,12 @@
 
         if(!rawText) { alert("Please provide Raw Text!"); return; }
         
+        // V10.0.10: Hard stop if duplicate is detected
+        if (checkDuplicates(rawText) && !isTestMode) {
+            alert("🚨 DUPLICATE DETECTED! Check the warning banner. If you still want to generate this, turn on 'Test Mode'.");
+            return;
+        }
+        
         ['key1', 'key2', 'key3', 'posterName', 'acctRotation'].forEach(id => {
             localStorage.setItem(`cb_${id}`, document.getElementById(id).value.trim());
         });
@@ -628,7 +643,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "comments": (Array of 3 strings. Write a casual comment. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. If you use the word 'share', the system will crash. You MUST include the exact placeholder "[URL]" naturally inside the sentence (e.g., 'Found it right here [URL] and it looks great'). You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences.),
 "daily_thread": (String. Weave the price, title, retailer_name, all extracted facts, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.)
-GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory.`;
+GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
         } else {
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes.
@@ -641,7 +656,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "comments": (Array of 3 strings. Write a casual comment. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. If you use the word 'share', the system will crash. You MUST include the exact placeholder "[URL]" naturally inside the sentence (e.g., 'Found it right here [URL] and it looks great'). You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences.),
 "daily_thread": (String. Weave the price, title, retailer_name, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.)
-GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory.`;
+GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
         }
 
         try {
