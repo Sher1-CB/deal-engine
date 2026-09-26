@@ -67,11 +67,13 @@
         .row { display: flex; gap: 10px; flex-wrap: wrap; }
         .col { flex: 1; min-width: 150px; }
         
+        /* API KEY RING */
         .api-ring { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 15px; }
         .api-ring-header { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between;}
         .api-inputs { display: flex; gap: 10px; }
         .api-inputs input { padding: 6px 10px; font-size: 12px; }
 
+        /* WARNING BANNERS */
         .alert-banner { display: none; padding: 10px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 15px; align-items: center; gap: 8px; }
         .alert-warning { background: #fff8e1; border: 1px solid #fbbc04; color: #b06000; }
         .alert-danger { background: #fce8e6; border: 1px solid #ea4335; color: #c5221f; }
@@ -157,7 +159,6 @@
             <label>Raw Deal Context Text</label>
             <textarea id="rawText" placeholder="Paste raw deal information here..."></textarea>
             
-            <!-- V10.0.3 RESTORED: Deal Type & Fulfillment -->
             <div class="row" style="margin-top: 15px;">
                 <div class="col">
                     <label>🚨 Deal Type</label>
@@ -171,9 +172,9 @@
                     <label>🚚 Fulfillment Style</label>
                     <select id="fulfillmentStyle">
                         <option value="auto" selected>Auto-Detect (Default)</option>
-                        <option value="shipped">Force: Shipped!</option>
-                        <option value="pickup">Force: Pickup / In-Store!</option>
-                        <option value="conditional">Force: Total! (Thresholds)</option>
+                        <option value="shipped">Force: Shipped</option>
+                        <option value="pickup">Force: Pickup / In-Store</option>
+                        <option value="conditional">Force: Total (Thresholds)</option>
                     </select>
                 </div>
             </div>
@@ -204,6 +205,9 @@
                         <option value="possessive">3rd Person (This / That / It)</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="row" style="margin-top: 15px;">
                 <div class="col">
                     <label>🔄 Account Rotation</label>
                     <select id="acctRotation" onchange="updateRoutingBanner()">
@@ -333,24 +337,24 @@
 
     const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbz2afSYMMGUg-BCdMiiXZskBjlt-j5nq1smwF0-LDlVwn1YOpsWzC-DIaJQxnbVIwW7mg/exec";
 
-    const routingPatterns = [
-        { acct: "ACCOUNT 1", color: "route-acct1", text: "Start with DAILY THREAD ➔ Then Groups 1, 2, 3" },
-        { acct: "ACCOUNT 2", color: "route-acct2", text: "Start with GROUP 1 ➔ Then Groups 2, 3, Daily Thread" },
-        { acct: "ACCOUNT 1", color: "route-acct1", text: "Start with GROUP 1 ➔ Then Groups 2, 3, Daily Thread" },
-        { acct: "ACCOUNT 2", color: "route-acct2", text: "Start with GROUP 2 ➔ Then Group 3, Daily Thread, Group 1" }
+    const routeOptions = [
+        "Start with DAILY THREAD ➔ Then Groups 1, 2, 3",
+        "Start with GROUP 1 ➔ Then Groups 2, 3, Daily Thread",
+        "Start with GROUP 2 ➔ Then Group 3, Daily Thread, Group 1",
+        "Start with GROUP 3 ➔ Then Daily Thread, Group 1, Group 2"
     ];
 
     document.addEventListener("DOMContentLoaded", () => {
-        ['key1', 'key2', 'key3', 'posterName'].forEach(id => {
+        ['key1', 'key2', 'key3', 'posterName', 'acctRotation'].forEach(id => {
             const saved = localStorage.getItem(`cb_${id}`);
             if(saved) document.getElementById(id).value = saved;
         });
-        randomizeRoute(); // V10.0.5: Auto-shuffles the route the moment the app opens
+        randomizeRoute(); 
         fetchCloudHistory(); 
         fetchLiveModels(); 
     });
-    
-    // V10.0.9 REAL-TIME DUPLICATE CHECKER (Triggers the second you paste text)
+
+    // V10.0.9 REAL-TIME DUPLICATE CHECKER
     document.getElementById('rawText').addEventListener('input', function() {
         const text = this.value.trim();
         const dupWarning = document.getElementById('duplicateWarning');
@@ -428,18 +432,17 @@
 
     async function fetchCloudHistory() {
         try {
-            const routeOptions = [
-        "Start with DAILY THREAD ➔ Then Groups 1, 2, 3",
-        "Start with GROUP 1 ➔ Then Groups 2, 3, Daily Thread",
-        "Start with GROUP 2 ➔ Then Group 3, Daily Thread, Group 1",
-        "Start with GROUP 3 ➔ Then Daily Thread, Group 1, Group 2"
-    ];
+            const response = await fetch(GOOGLE_SHEET_API);
+            globalDealHistory = await response.json();
+        } catch (e) {
+            console.log("Cloud sync failed.", e);
+        }
+    }
 
     function updateRoutingBanner() {
         const num = parseInt(document.getElementById('dealNumber').value);
         const rotation = parseInt(document.getElementById('acctRotation').value);
         
-        // Mathematically cycle the account (1-2 or 1-2-3)
         let acctNum = ((num - 1) % rotation) + 1;
         let randomRoute = routeOptions[Math.floor(Math.random() * routeOptions.length)];
         
@@ -582,7 +585,7 @@
 
         if(!rawText) { alert("Please provide Raw Text!"); return; }
         
-        ['key1', 'key2', 'key3', 'posterName'].forEach(id => {
+        ['key1', 'key2', 'key3', 'posterName', 'acctRotation'].forEach(id => {
             localStorage.setItem(`cb_${id}`, document.getElementById(id).value.trim());
         });
 
@@ -595,7 +598,6 @@
             ? "Use 1st Person pronouns (I, My, We, Our)." 
             : "Use 3rd Person pronouns (This, That, It). NEVER use I, My, We, or Our.";
 
-        // V10.0.6 FULFILLMENT LOGIC (No exclamation marks)
         let rLower = rawText.toLowerCase();
         let activeStyle = fulfillmentChoice;
         if (activeStyle === 'auto') {
@@ -628,7 +630,6 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory.`;
         } else {
-            // RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart". Fix leetspeak.),
@@ -715,7 +716,6 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 const fullTimestampET = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
                 
-                // V10.0.8: Instantly update local and cloud memory arrays
                 sessionHistory.push({ url: extractedURL, title: aiData.cleaned_title });
                 globalDealHistory.push([fullTimestampET, posterName, aiData.cleaned_title, extractedURL]);
                 
