@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.47</title>
+    <title>The CB Command Center v10.0.48</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.47</span>
+    <span class="version-tag">v10.0.48</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -761,7 +761,18 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             const extractedURL = extractURL(rawText);
 
             for(let i=0; i<3; i++) {
-                let postLines = aiData.post_variations[i].split('||').map(s => s.trim()).filter(line => line.length > 0); 
+                // V10.0.48 TYPE-SAFE POST NORMALIZER
+                let rawPost = aiData.post_variations && aiData.post_variations[i] ? aiData.post_variations[i] : "";
+                let postLines = [];
+                if (Array.isArray(rawPost)) {
+                    postLines = rawPost.map(s => String(s).trim()).filter(s => s.length > 0);
+                } else if (typeof rawPost === 'object') {
+                    postLines = Object.values(rawPost).map(s => String(s).trim()).filter(s => s.length > 0);
+                } else {
+                    let str = String(rawPost);
+                    postLines = str.includes('||') ? str.split('||').map(s => s.trim()) : str.split(/(?<=[.!?])\s+/).map(s => s.trim());
+                    postLines = postLines.filter(line => line.length > 0);
+                }
                 
                 let customText = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD") ? aiData.custom_line_rephrases[i] : "";
                 if (customText) {
@@ -776,9 +787,15 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 document.getElementById(`out-post${i+1}`).setAttribute('data-raw', finalPost);
                 currentRawOutput += `=== POST VARIATION ${i+1} ===\n${finalPost}\n\n`;
                 
+                // V10.0.48 TYPE-SAFE COMMENT NORMALIZER
                 let cloaked = cloakURL(extractedURL);
-                let commentText = aiData.comments[i].replace('[TARGET_SLOT]', cloaked).replace('[URL]', cloaked);
-                let commentLines = commentText.split('||').map(s => s.trim()).filter(line => line.length > 0);
+                let rawComment = aiData.comments && aiData.comments[i] ? aiData.comments[i] : "";
+                let commentText = typeof rawComment === 'object' ? Object.values(rawComment).join(' ') : String(rawComment);
+                commentText = commentText.replace('[TARGET_SLOT]', cloaked).replace('[URL]', cloaked);
+                
+                let commentLines = commentText.includes('||') ? commentText.split('||').map(s => s.trim()) : commentText.split(/(?<=[.!?])\s+/).map(s => s.trim());
+                commentLines = commentLines.filter(line => line.length > 0);
+
                 let emojifiedComment = commentLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
                 let finalComment = joinWithSpaceChaos(emojifiedComment, 1, 2);
 
@@ -787,9 +804,14 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 currentRawOutput += `=== COMMENT ${i+1} ===\n${finalComment}\n\n`;
             }
 
+            // V10.0.48 TYPE-SAFE DAILY THREAD NORMALIZER
             let dtCloaked = cloakURL(extractedURL);
-            let dtText = aiData.daily_thread.replace('[TARGET_SLOT]', dtCloaked).replace('[URL]', dtCloaked);
-            let dtLines = dtText.split('||').map(s => s.trim()).filter(line => line.length > 0);
+            let rawDt = aiData.daily_thread ? aiData.daily_thread : "";
+            let dtText = typeof rawDt === 'object' ? Object.values(rawDt).join(' ') : String(rawDt);
+            dtText = dtText.replace('[TARGET_SLOT]', dtCloaked).replace('[URL]', dtCloaked);
+            
+            let dtLines = dtText.includes('||') ? dtText.split('||').map(s => s.trim()) : dtText.split(/(?<=[.!?])\s+/).map(s => s.trim());
+            dtLines = dtLines.filter(line => line.length > 0);
             
             let customTextDt = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[3] !== "DEAD") ? aiData.custom_line_rephrases[3] : "";
             if (customTextDt) {
