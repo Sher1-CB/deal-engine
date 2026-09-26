@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.11</title>
+    <title>The CB Command Center v10.0.12</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -114,7 +114,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.11</span>
+    <span class="version-tag">v10.0.12</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -354,34 +354,59 @@
         fetchLiveModels(); 
     });
 
-    // V10.0.10 BULLETPROOF DUPLICATE CHECKER
+    // V10.0.12 SMART DUPLICATE CHECKER (URL vs Title)
     function checkDuplicates(text) {
         const dupWarning = document.getElementById('duplicateWarning');
         if(!text) { dupWarning.style.display = 'none'; return false; }
         
-        let extractedURL = extractURL(text).replace(/\/$/, ''); // Strip trailing slash for perfect matching
+        let extractedURL = extractURL(text).replace(/\/$/, ''); 
         if(extractedURL === "https://thecouponboutique.com") return false;
 
-        const sessionDuplicate = sessionHistory.find(deal => deal.url.replace(/\/$/, '') === extractedURL);
         const todayET = new Date().toLocaleDateString("en-US", {timeZone: "America/New_York"});
+        const textLower = text.toLowerCase();
         
-        const cloudDuplicate = globalDealHistory.find(row => {
-            if (!row[3]) return false;
-            let rowUrl = row[3].replace(/\/$/, '');
-            if (rowUrl !== extractedURL) return false;
-            try {
-                const rowDate = new Date(row[0]).toLocaleDateString("en-US", {timeZone: "America/New_York"});
-                return rowDate === todayET;
-            } catch(e) { return false; }
-        });
+        let foundUrlMatch = null;
+        let foundTitleMatch = null;
 
-        if (sessionDuplicate) {
-            dupWarning.innerHTML = `<span>🚨</span> <strong>SESSION COLLISION:</strong> You already generated this exact link in this current session!`;
+        // 1. Check Cloud History for TODAY
+        for (let i = 0; i < globalDealHistory.length; i++) {
+            let row = globalDealHistory[i];
+            if (!row[0] || !row[2] || !row[3]) continue;
+            
+            try {
+                let rowDate = new Date(row[0]).toLocaleDateString("en-US", {timeZone: "America/New_York"});
+                if (rowDate !== todayET) continue; // Only check today's deals
+                
+                let rowUrl = row[3].replace(/\/$/, '');
+                let rowTitle = row[2];
+
+                if (rowUrl === extractedURL) {
+                    foundUrlMatch = row;
+                    break; // URL match is the highest priority, stop looking
+                }
+                
+                // If URL doesn't match, check if the raw text contains a title from today
+                if (textLower.includes(rowTitle.toLowerCase())) {
+                    foundTitleMatch = row;
+                }
+            } catch(e) {}
+        }
+
+        // 2. Check Local Session History (Fallback)
+        const sessionUrlMatch = sessionHistory.find(deal => deal.url.replace(/\/$/, '') === extractedURL);
+        const sessionTitleMatch = sessionHistory.find(deal => textLower.includes(deal.title.toLowerCase()));
+
+        // 3. Display the correct warning
+        if (foundUrlMatch || sessionUrlMatch) {
+            let poster = foundUrlMatch ? foundUrlMatch[1] : "You (Session)";
+            dupWarning.innerHTML = `<span>🚨</span> <strong>DUPLICATE LINK:</strong> The same link was used today by <strong>${poster}</strong>. This is a duplicate!`;
             dupWarning.className = "alert-banner alert-danger";
             dupWarning.style.display = 'flex';
             return true;
-        } else if (cloudDuplicate) {
-            dupWarning.innerHTML = `<span>⚠️</span> <strong>CLOUD COLLISION:</strong> This was already posted TODAY by <strong>${cloudDuplicate[1]}</strong>!`;
+        } else if (foundTitleMatch || sessionTitleMatch) {
+            let poster = foundTitleMatch ? foundTitleMatch[1] : "You (Session)";
+            let title = foundTitleMatch ? foundTitleMatch[2] : sessionTitleMatch.title;
+            dupWarning.innerHTML = `<span>⚠️</span> <strong>SAME TITLE TODAY:</strong> The title "<em>${title}</em>" was already used today by <strong>${poster}</strong>.`;
             dupWarning.className = "alert-banner alert-warning";
             dupWarning.style.display = 'flex';
             return true;
@@ -443,6 +468,10 @@
         try {
             const response = await fetch(GOOGLE_SHEET_API);
             globalDealHistory = await response.json();
+            // V10.0.12: Re-check for duplicates the second the cloud data finishes loading
+            if (typeof checkDuplicates === "function") {
+                checkDuplicates(document.getElementById('rawText').value.trim());
+            }
         } catch (e) {
             console.log("Cloud sync failed.", e);
         }
