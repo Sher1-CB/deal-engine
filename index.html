@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.12</title>
+    <title>The CB Command Center v10.0.13</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -114,7 +114,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.12</span>
+    <span class="version-tag">v10.0.13</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -399,14 +399,14 @@
         // 3. Display the correct warning
         if (foundUrlMatch || sessionUrlMatch) {
             let poster = foundUrlMatch ? foundUrlMatch[1] : "You (Session)";
-            dupWarning.innerHTML = `<span>🚨</span> <strong>DUPLICATE LINK:</strong> The same link was used today by <strong>${poster}</strong>. This is a duplicate!`;
+            dupWarning.innerHTML = `<span>🚨</span> <div><strong>DUPLICATE LINK:</strong> The same link was used today by <strong>${poster}</strong>. This is a duplicate!</div>`;
             dupWarning.className = "alert-banner alert-danger";
             dupWarning.style.display = 'flex';
             return true;
         } else if (foundTitleMatch || sessionTitleMatch) {
             let poster = foundTitleMatch ? foundTitleMatch[1] : "You (Session)";
             let title = foundTitleMatch ? foundTitleMatch[2] : sessionTitleMatch.title;
-            dupWarning.innerHTML = `<span>⚠️</span> <strong>SAME TITLE TODAY:</strong> The title "<em>${title}</em>" was already used today by <strong>${poster}</strong>.`;
+            dupWarning.innerHTML = `<span>⚠️</span> <div><strong>SAME TITLE TODAY:</strong> The title "<em>${title}</em>" was already used today by <strong>${poster}</strong>. You can still continue to generate this deal.</div>`;
             dupWarning.className = "alert-banner alert-warning";
             dupWarning.style.display = 'flex';
             return true;
@@ -782,6 +782,10 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 document.getElementById('dealNumber').value = currentNum < 8 ? currentNum + 1 : 1;
                 updateRoutingBanner();
             }
+
+            // V10.0.13: Auto-clear raw text box and warnings after successful generation
+            document.getElementById('rawText').value = '';
+            document.getElementById('duplicateWarning').style.display = 'none';
 
         } catch (error) {
             alert("Engine Error: " + error.message);
