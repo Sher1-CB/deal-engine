@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.34</title>
+    <title>The CB Command Center v10.0.37</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.34</span>
+    <span class="version-tag">v10.0.37</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -150,9 +150,7 @@
             </div>
             
             <!-- V10 WARNING BANNERS -->
-            <div id="duplicateWarning" class="alert-banner alert-warning">
-                <span>⚠️</span> <strong>URL Collision:</strong> This link was already generated in this session!
-            </div>
+            <div id="duplicateWarning" class="alert-banner alert-warning"></div>
             <div id="priceWarning" class="alert-banner alert-danger">
                 <span>🚨</span> <strong>Price Audit:</strong> AI generated a price not found in the raw text. Verify before posting!
             </div>
@@ -160,9 +158,8 @@
             <label>Raw Deal Context Text</label>
             <textarea id="rawText" placeholder="Paste raw deal information here..."></textarea>
             
-            <!-- V10.0.16 RESTORED: Custom Injection Line -->
             <label>✍️ Custom Injection Line (Optional)</label>
-            <textarea id="customLine" class="small-textarea" placeholder="Type a personal review, joke, or custom instruction here. The AI will scrub it for banned words and rephrase it 4 unique ways..."></textarea>
+            <textarea id="customLine" class="small-textarea" placeholder="Type a personal review, joke, or custom instruction here..."></textarea>
             
             <div class="row" style="margin-top: 15px;">
                 <div class="col">
@@ -343,7 +340,8 @@
     let globalDealHistory = []; 
     let currentRawOutput = ""; 
 
-    const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbz_HcF-zKssSffD7y2aWLCKh_tYAEekj6En0E_uxviQK--rB2gPksE0zm-wQXSRM7KeZw/exec";
+    // YOUR GOOGLE APPS SCRIPT WEB APP URL
+    const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbz2afSYMMGUg-BCdMiiXZskBjlt-j5nq1smwF0-LDlVwn1YOpsWzC-DIaJQxnbVIwW7mg/exec";
 
     const routeOptions = [
         "Start with DAILY THREAD ➔ Then Groups 1, 2, 3",
@@ -376,7 +374,6 @@
         let foundUrlMatch = null;
         let foundTitleMatchToday = null;
 
-        // 1. Scan Cloud History (Entire 7-Day Sheet Memory)
         for (let i = 0; i < globalDealHistory.length; i++) {
             let row = globalDealHistory[i];
             if (!row[0] || !row[2] || !row[3]) continue;
@@ -391,23 +388,19 @@
                 isToday = (rowDateString === todayET);
             } catch(e) {}
 
-            // CHECK A: 7-Day Unique Link Check (Scans ALL 7 days in the database)
             if (rowUrl === extractedURL) {
                 foundUrlMatch = { poster: row[1], timestamp: row[0] };
-                break; // Hard link match found, stop searching
+                break; 
             }
             
-            // CHECK B: Same-Day Title Check (Only checks deals posted TODAY in ET)
             if (isToday && textLower.includes(rowTitle.toLowerCase())) {
                 foundTitleMatchToday = { poster: row[1], title: rowTitle };
             }
         }
 
-        // 2. Check Local Session History (Fallback)
         const sessionUrlMatch = sessionHistory.find(deal => deal.url.replace(/\/$/, '') === extractedURL);
         const sessionTitleMatch = sessionHistory.find(deal => textLower.includes(deal.title.toLowerCase()));
 
-        // 3. Render the Appropriate Warning
         if (foundUrlMatch || sessionUrlMatch) {
             let poster = foundUrlMatch ? foundUrlMatch.poster : "You (Session)";
             let when = foundUrlMatch ? foundUrlMatch.timestamp : "earlier in this session";
@@ -480,7 +473,6 @@
         try {
             const response = await fetch(GOOGLE_SHEET_API);
             globalDealHistory = await response.json();
-            // V10.0.12: Re-check for duplicates the second the cloud data finishes loading
             if (typeof checkDuplicates === "function") {
                 checkDuplicates(document.getElementById('rawText').value.trim());
             }
@@ -519,7 +511,7 @@
 
     function clearWorkspace() {
         document.getElementById('rawText').value = '';
-        document.getElementById('customLine').value = ''; // V10.0.16
+        document.getElementById('customLine').value = '';
         document.getElementById('duplicateWarning').style.display = 'none';
         document.getElementById('priceWarning').style.display = 'none';
         document.getElementById('outputSection').style.display = 'none';
@@ -584,7 +576,7 @@
 
         const payload = {
             contents: [{ parts: [{ text: promptText }] }],
-            generationConfig: { temperature: 0.6 },
+            generationConfig: { temperature: 0.65 },
             safetySettings: [
                 { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
                 { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
@@ -636,12 +628,11 @@
 
         if(!rawText) { alert("Please provide Raw Text!"); return; }
         
-        // V10.0.11: Check duplicates to ensure the banner is visible, but DO NOT block generation.
-        checkDuplicates(rawText);
-        
         ['key1', 'key2', 'key3', 'posterName', 'acctRotation'].forEach(id => {
             localStorage.setItem(`cb_${id}`, document.getElementById(id).value.trim());
         });
+
+        checkDuplicates(rawText);
 
         btn.innerHTML = "⏳ Compiling Polymorphic Engine...";
         btn.disabled = true;
@@ -652,13 +643,10 @@
             ? "Use 1st Person pronouns (I, My, We, Our)." 
             : "Use 3rd Person pronouns (This, That, It). NEVER use I, My, We, or Our.";
 
-        // V10.0.16 RESTORED: Custom Line Instruction
         const customLine = document.getElementById('customLine').value.trim();
         let customLineInstruction = customLine 
             ? `"custom_line_rephrases": (Array of 4 strings. The user provided a custom injection line: "${customLine}". TASK: Scrub banned words and rephrase this specific line 4 unique ways. Do NOT change the meaning.),` 
             : `"custom_line_rephrases": (Array of 4 strings. Write ["DEAD","DEAD","DEAD","DEAD"]),`;
-
-        // V10.0.6 FULFILLMENT LOGIC (No exclamation marks)        
 
         let rLower = rawText.toLowerCase();
         let activeStyle = fulfillmentChoice;
@@ -675,24 +663,12 @@
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart". Fix leetspeak.),
-"sale_price": (String. Extract the sale price. Extract ONLY numbers and $ signs, then ADD the word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. If none, write "???"),
-"reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". If none, write "NONE"),
-"cleaned_title": (String. Copy the primary product name exactly. Remove emojis.),
-"b2_verification": (JSON Object. Extract facts from the extra text. If none, write "NONE".
-  "limit": (String. MUST contain 'Limit' or 'Max' plus a number. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out.),
-  "variant": (String. Extract specific colors, models, or 'works on' phrases. Ignore S&S here.),
-  "size": (String. Extract exact sizes/dimensions, e.g., '44"L x 19"W', 'S-XXL'),
-  "math": (String. Extract per-item math, e.g., '$16.88 per jug')
-),
-"b5_verification": (String. Extract retailer-specific shipping/pickup rules like 'Walmart+ or $35 order', 'Walgreens Pickup'. Ignore basic 'Free Shipping'. If none, write "NONE"),
-"b8_verification": (String. Extract S&S, Subscribe & Save, or Promo Codes. If none, write "NONE"),
-"features_catchall": (String. Extract ANY remaining bullet points, features, or specs from the raw text that were not caught by b2, b5, or b8. Example: 'Washable & Reusable', 'Includes 2 Batteries'. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE LOCK (ABSOLUTE): You MUST include the exact sale_price and reg_price in EVERY SINGLE paragraph. If you drop the price, the system will crash. You MUST weave the sale_price, reg_price, cleaned_title, retailer_name, AND EVERY SINGLE FACT extracted in b2, b5, b8, and features_catchall naturally into a fluid, casual paragraph. Do NOT use rigid hyphens or bullet points. QUANTITY RULE: If the raw text requires adding a specific quantity (e.g., ADD 2), explicitly tell the reader to add that exact number to their order. Do NOT use the word 'cart'. S&S RULE: If b8 contains Subscribe & Save or S&S, you MUST frame it casually. ROBOTIC POINTER BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using the words 'URL', 'destination', 'website', 'page', 'visitors', or 'coupon boutique'. If you write a pointer, say 'details are right below' or end the post naturally. PRONOUNS: ${pronounInstruction} SLANG RULE: Use casual text-speak (ngl, tbh, lowkey, rn) in EXACTLY TWO of the strings. The remaining ONE string MUST be clean with zero slang. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, URL. Make each of the 3 paragraphs structurally different. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ". Example: "First sentence here. || Second sentence here. || Third sentence here."),
-"comments": (Array of 3 strings. Write a casual comment. TITLE BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the product title in the comments. Use generic words like 'this one', 'it', or a broad category noun. ENGAGEMENT BAIT BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using phrases like 'let me know', 'tell me below', 'thoughts?', 'comment below', or 'what do you think'. Ask the question as a natural standalone sentence. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. You MUST include the exact placeholder "[TARGET_SLOT]" naturally inside the sentence. You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. QUESTION FIREWALL: Do NOT ask about colors, sizes, or options unless they are explicitly mentioned in the raw text. Write at least 2 distinct sentences. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
+"sale_price": (String. Extract the sale price. Extract ONLY numbers and $ signs, then ADD the word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. If none, write "???"),"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE LOCK (ABSOLUTE): You MUST include the exact sale_price and reg_price in EVERY SINGLE paragraph. If you drop the price, the system will crash. You MUST weave the sale_price, reg_price, cleaned_title, retailer_name, AND all facts from b2, b5, b8, and features_catchall naturally into the text. Do NOT use rigid hyphens. QUANTITY RULE: If a quantity is required, explicitly say 'add [X] to your order'. Do NOT use 'cart'. S&S RULE: If S&S is required, frame it casually. BRAND & LINK BAN (NUCLEAR): You are STRICTLY FORBIDDEN from putting any link, website name, 'coupon boutique', or the placeholder '[TARGET_SLOT]' in post variations! That placeholder belongs ONLY in comments and the daily thread. SYNTACTIC ENTROPY MANDATE (ABSOLUTE): You are STRICTLY FORBIDDEN from using the formula '[Title] is currently available on [Retailer] for [Price]' across your posts. You MUST use 3 completely different opening styles: Variation 1 MUST open with the price/discovery hook (e.g., 'Spotted a massive drop on...'). Variation 2 MUST open with a lifestyle scenario/problem (e.g., 'If your house needs...'). Variation 3 MUST open with a personal/collective recommendation (e.g., 'We've been keeping tabs on...'). POINTER SUPPRESSION: At least TWO of the variations MUST end naturally on a lifestyle sentence without any pointer at all! PRONOUNS: ${pronounInstruction} SLANG RULE: Use casual text-speak (ngl, tbh, lowkey, rn) in EXACTLY TWO of the strings. The remaining ONE string MUST be clean with zero slang. NUCLEAR BAN: 'game changer', 'grab'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, URL. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ". Example: "First sentence here. || Second sentence here. || Third sentence here."),
+"comments": (Array of 3 strings. Write a casual comment. TITLE BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the product title in the comments. Use generic words like 'this one', 'it', or a broad category noun. IN-LINE EMBEDDING LOCK (ABSOLUTE): You MUST wrap the placeholder [TARGET_SLOT] inside a sentence with words before and after it (e.g., 'Found it right over at [TARGET_SLOT] for anyone looking'). You are STRICTLY FORBIDDEN from outputting [TARGET_SLOT] as its own standalone line! ENGAGEMENT BAIT BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using phrases like 'let me know', 'tell me below', 'thoughts?', 'comment below', or 'what do you think'. Ask the question as a natural standalone sentence. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. QUESTION FIREWALL: Do NOT ask about colors, sizes, or options unless they are explicitly mentioned in the raw text. Write at least 2 distinct sentences. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".), 
 "daily_thread": (String. Weave the price, title, retailer_name, all extracted facts (including features_catchall), and the exact placeholder "[TARGET_SLOT]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. QUANTITY RULE: Explicitly state if they need to add a specific quantity to their order. S&S RULE: If S&S is required, frame it casually. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
-GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words OR ANY OF THEIR VARIATIONS (e.g., stocking, restocked, markdowns, pricing, sales, grabbing, grabs): Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
+GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words OR ANY OF THEIR VARIATIONS (e.g., stocking, restocked, markdowns, pricing, sales): Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free (BANNED in all contexts, NEVER write 'free of' or 'fur-free'), Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
         } else {
             // RUN DEAL PROMPT
             prompt = `Analyze this deal: "${rawText}"
@@ -702,13 +678,13 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". If none, write "NONE"),
 "cleaned_title": (String. Copy the primary product name exactly. Remove emojis.),
 "scrubbed_keyword": (String. Extract a generic noun for the product. Max 2 words.),
-"features_catchall": (String. Extract ANY remaining bullet points, features, or specs from the raw text. Example: 'Washable & Reusable'. If none, write "NONE"),
+"features_catchall": (String. Extract ANY remaining bullet points, features, or specs from the raw text. If none, write "NONE"),
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE BAN: You are STRICTLY FORBIDDEN from putting the price in this string. Write a short, urgent 2-sentence Run Deal post. Sentence 1: A curiosity hook (e.g., 'Did they type this wrong?!'). Sentence 2: VERB WHITELIST: You MUST start sentence 2 with one of these verbs: 'Snag', 'Pick up', 'Score', or 'Secure'. You are STRICTLY FORBIDDEN from using 'Grab'. Combine the verb + the scrubbed_keyword + the quantity rule + a casual value phrase. ROBOTIC POINTER BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using the words 'URL', 'destination', 'website', 'page', 'visitors', or 'coupon boutique'. QUANTITY RULE: Say 'add [X] to your order'. ANTI-PARROT LOCK: Rotate different value phrases (e.g., 'for way less', 'on a serious budget', 'without breaking the bank'). Do NOT use pronouns like I, My, We. NUCLEAR BAN: 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, Act fast, Hurry, URL. CHARACTER LIMIT: Under 120 characters. DELIMITER LOCK: Separate sentences with ' || ' and use proper punctuation. Example: "First sentence here. || Second sentence here."),
 "comments": (Array of 3 strings. Write a casual comment. DATA LOCK: You MUST include the exact sale_price AND the cleaned_title in EVERY comment so the buyer knows what the deal is. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. You MUST include the exact placeholder "[TARGET_SLOT]" naturally inside the sentence. You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. QUESTION FIREWALL: Do NOT ask about colors, sizes, or options unless they are explicitly mentioned in the raw text. Write at least 2 distinct sentences. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
 "daily_thread": (String. Weave the sale_price, reg_price, cleaned_title, retailer_name, features_catchall, and the exact placeholder "[TARGET_SLOT]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. QUANTITY RULE: If required, say 'add [X] to your order'. NEVER say 'holding area' or 'cart'. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
-GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words OR ANY OF THEIR VARIATIONS (e.g., stocking, restocked, markdowns, pricing, sales, grabbing, grabs): Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
+GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words OR ANY OF THEIR VARIATIONS (e.g., stocking, restocked, markdowns, pricing, sales): Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free (BANNED in all contexts, NEVER write 'free of' or 'fur-free'), Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory, elevate, transform, seamless, oasis, upgrade, must-have, essential, perfect addition.`;
         }
 
         try {
@@ -756,8 +732,6 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 }
 
                 let emojifiedPost = postLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
-                
-                // V10.0.20: Run Deals must be a single continuous line for Colored Backgrounds
                 let finalPost = dealType === 'run' ? emojifiedPost.join(' ') : joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
                 document.getElementById(`out-post${i+1}`).innerText = finalPost;
@@ -825,8 +799,8 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 updateRoutingBanner();
             }
 
-            // V10.0.13: Auto-clear raw text box and warnings after successful generation
             document.getElementById('rawText').value = '';
+            document.getElementById('customLine').value = '';
             document.getElementById('duplicateWarning').style.display = 'none';
 
         } catch (error) {
@@ -838,9 +812,54 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
         }
     }
 
+    function copyToClipboard(elementId, btnElement) {
+        const el = document.getElementById(elementId);
+        const textToCopy = el.getAttribute('data-raw') || el.innerText;
+        if (!textToCopy) { alert("Nothing to copy yet!"); return; }
+
+        const handleSuccess = () => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "✅ Copied!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#00a400";
+            btnElement.style.borderColor = "#00a400";
+            setTimeout(() => { 
+                btnElement.innerText = originalText; 
+                btnElement.style.background = "#f8f9fa"; 
+                btnElement.style.color = "var(--text-muted)";
+                btnElement.style.borderColor = "var(--border)";
+            }, 2000);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy).then(handleSuccess).catch(() => fallbackCopy(textToCopy, handleSuccess));
+        } else {
+            fallbackCopy(textToCopy, handleSuccess);
+        }
+    }
+
+    function fallbackCopy(text, callback) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            if (callback) callback();
+        } catch (err) {
+            alert("Failed to copy. Please select the text manually.");
+        }
+        document.body.removeChild(textArea);
+    }
+
     function copyRawOutput(btnElement) {
-        if(!currentRawOutput) { alert("No output generated yet!"); return; }
-        navigator.clipboard.writeText(currentRawOutput).then(() => {
+        if (!currentRawOutput) { alert("No output generated yet!"); return; }
+
+        const handleSuccess = () => {
             const originalText = btnElement.innerText;
             btnElement.innerText = "✅ Copied Raw Output!";
             btnElement.style.background = "#e6f4ea";
@@ -852,17 +871,20 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 btnElement.style.color = "var(--text-main)";
                 btnElement.style.borderColor = "var(--border)";
             }, 2000);
-        });
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(currentRawOutput).then(handleSuccess).catch(() => fallbackCopy(currentRawOutput, handleSuccess));
+        } else {
+            fallbackCopy(currentRawOutput, handleSuccess);
+        }
     }
 
-    // V10.0.32: 1-Click Issue Reporter (Optional Note, Routes to Sheet2)
     function reportIssue(btnElement) {
         if(!currentRawOutput) { alert("No output generated yet to report!"); return; }
         const posterName = document.getElementById('posterName').value;
-        
-        // Optional note: posters can just press Enter or type a note
         const note = prompt("Optional: Type a quick note, or just click OK to submit the raw output:");
-        if (note === null) return; // User clicked Cancel
+        if (note === null) return; 
         
         const originalText = btnElement.innerText;
         btnElement.innerText = "⏳ Submitting...";
@@ -876,7 +898,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 type: 'issue',
                 poster: posterName,
                 note: note.trim() || "Raw Output Only",
-                rawPayload: "'" + currentRawOutput // V10.0.34: Escapes formula parse error in Google Sheets
+                rawPayload: "'" + currentRawOutput
             })
         }).then(() => {
             btnElement.innerText = "✅ Issue Logged!";
@@ -908,76 +930,6 @@ RULES:
             alert("🚨 V7 Emergency Prompt copied to clipboard! Paste this into ChatGPT.");
         });
     }
-
-    // V10.0.29 UNIVERSAL CLIPBOARD ENGINE (Restored)
-    function fallbackCopy(text, callback) {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-999999px";
-        textArea.style.top = "-999999px";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            if (callback) callback();
-        } catch (err) {
-            alert("Failed to copy. Please select the text manually.");
-        }
-        document.body.removeChild(textArea);
-    }
-
-    function copyToClipboard(elementId, btnElement) {
-        const el = document.getElementById(elementId);
-        const textToCopy = el.getAttribute('data-raw') || el.innerText;
-        if (!textToCopy) { alert("Nothing to copy yet!"); return; }
-
-        const handleSuccess = () => {
-            const originalText = btnElement.innerText;
-            btnElement.innerText = "✅ Copied!";
-            btnElement.style.background = "#e6f4ea";
-            btnElement.style.color = "#00a400";
-            btnElement.style.borderColor = "#00a400";
-            setTimeout(() => { 
-                btnElement.innerText = originalText; 
-                btnElement.style.background = "#f8f9fa"; 
-                btnElement.style.color = "var(--text-muted)";
-                btnElement.style.borderColor = "var(--border)";
-            }, 2000);
-        };
-
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(textToCopy).then(handleSuccess).catch(() => fallbackCopy(textToCopy, handleSuccess));
-        } else {
-            fallbackCopy(textToCopy, handleSuccess);
-        }
-    }
-
-    function copyRawOutput(btnElement) {
-        if (!currentRawOutput) { alert("No output generated yet!"); return; }
-
-        const handleSuccess = () => {
-            const originalText = btnElement.innerText;
-            btnElement.innerText = "✅ Copied Raw Output!";
-            btnElement.style.background = "#e6f4ea";
-            btnElement.style.color = "#00a400";
-            btnElement.style.borderColor = "#00a400";
-            setTimeout(() => { 
-                btnElement.innerText = originalText; 
-                btnElement.style.background = "#f8f9fa"; 
-                btnElement.style.color = "var(--text-main)";
-                btnElement.style.borderColor = "var(--border)";
-            }, 2000);
-        };
-
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(currentRawOutput).then(handleSuccess).catch(() => fallbackCopy(currentRawOutput, handleSuccess));
-        } else {
-            fallbackCopy(currentRawOutput, handleSuccess);
-        }
-    }
-    
 </script>
 
 </body>
