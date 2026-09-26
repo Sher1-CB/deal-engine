@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.28</title>
+    <title>The CB Command Center v10.0.29</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.28</span>
+    <span class="version-tag">v10.0.29</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -859,6 +859,76 @@ RULES:
             alert("🚨 V7 Emergency Prompt copied to clipboard! Paste this into ChatGPT.");
         });
     }
+
+    // V10.0.29 UNIVERSAL CLIPBOARD ENGINE (Restored)
+    function fallbackCopy(text, callback) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            if (callback) callback();
+        } catch (err) {
+            alert("Failed to copy. Please select the text manually.");
+        }
+        document.body.removeChild(textArea);
+    }
+
+    function copyToClipboard(elementId, btnElement) {
+        const el = document.getElementById(elementId);
+        const textToCopy = el.getAttribute('data-raw') || el.innerText;
+        if (!textToCopy) { alert("Nothing to copy yet!"); return; }
+
+        const handleSuccess = () => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "✅ Copied!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#00a400";
+            btnElement.style.borderColor = "#00a400";
+            setTimeout(() => { 
+                btnElement.innerText = originalText; 
+                btnElement.style.background = "#f8f9fa"; 
+                btnElement.style.color = "var(--text-muted)";
+                btnElement.style.borderColor = "var(--border)";
+            }, 2000);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy).then(handleSuccess).catch(() => fallbackCopy(textToCopy, handleSuccess));
+        } else {
+            fallbackCopy(textToCopy, handleSuccess);
+        }
+    }
+
+    function copyRawOutput(btnElement) {
+        if (!currentRawOutput) { alert("No output generated yet!"); return; }
+
+        const handleSuccess = () => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "✅ Copied Raw Output!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#00a400";
+            btnElement.style.borderColor = "#00a400";
+            setTimeout(() => { 
+                btnElement.innerText = originalText; 
+                btnElement.style.background = "#f8f9fa"; 
+                btnElement.style.color = "var(--text-main)";
+                btnElement.style.borderColor = "var(--border)";
+            }, 2000);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(currentRawOutput).then(handleSuccess).catch(() => fallbackCopy(currentRawOutput, handleSuccess));
+        } else {
+            fallbackCopy(currentRawOutput, handleSuccess);
+        }
+    }
+    
 </script>
 
 </body>
