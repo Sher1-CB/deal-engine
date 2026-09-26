@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.16</title>
+    <title>The CB Command Center v10.0.17</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -49,6 +49,7 @@
         textarea, input, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #f8f9fa; color: var(--text-main); font-family: inherit; box-sizing: border-box; font-size: 13px; transition: border 0.2s; }
         textarea:focus, input:focus, select:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
         textarea { height: 100px; resize: vertical; }
+        .small-textarea { height: 60px; }
         
         button { background: var(--primary); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
         button:hover { background: var(--primary-hover); box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
@@ -114,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.16</span>
+    <span class="version-tag">v10.0.17</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -671,7 +672,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". If none, write "NONE"),
 "cleaned_title": (String. Copy the primary product name exactly. Remove emojis.),
 "b2_verification": (JSON Object. Extract facts from the extra text. If none, write "NONE".
-  "limit": (String. MUST contain 'Limit' or 'Max' plus a number),
+  "limit": (String. MUST contain 'Limit' or 'Max' plus a number. ACRONYM SCRUB: You are STRICTLY FORBIDDEN from printing the letters 'QTY'. Strip them out.),
   "variant": (String. Extract specific colors, models, or 'works on' phrases. Ignore S&S here.),
   "size": (String. Extract exact sizes/dimensions, e.g., '44"L x 19"W', 'S-XXL'),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
@@ -740,9 +741,12 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             for(let i=0; i<3; i++) {
                 let postLines = aiData.post_variations[i].split(/(?<=[.!?])\s+/).filter(line => line.trim().length > 0); 
                 
-                // V10.0.16: Inject Custom Line if it exists
+                // V10.0.17: Inject Custom Line randomly into the paragraph
                 let customText = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD") ? aiData.custom_line_rephrases[i] : "";
-                if (customText) postLines.push(customText);
+                if (customText) {
+                    const randIdx = Math.floor(Math.random() * (postLines.length + 1));
+                    postLines.splice(randIdx, 0, customText);
+                }
 
                 let emojifiedPost = postLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
                 let finalPost = joinWithSpaceChaos(emojifiedPost, 1, 2);
@@ -766,9 +770,12 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             let dtText = aiData.daily_thread.replace('[URL]', dtCloaked);
             let dtLines = dtText.split(/(?<=[.!?])\s+/).filter(line => line.trim().length > 0);
             
-            // V10.0.16: Inject Custom Line into Daily Thread
+            // V10.0.17: Inject Custom Line randomly into Daily Thread
             let customTextDt = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[3] !== "DEAD") ? aiData.custom_line_rephrases[3] : "";
-            if (customTextDt) dtLines.push(customTextDt);
+            if (customTextDt) {
+                const randIdxDt = Math.floor(Math.random() * (dtLines.length + 1));
+                dtLines.splice(randIdxDt, 0, customTextDt);
+            }
 
             let emojifiedDt = dtLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
             let finalDt = joinWithSpaceChaos(emojifiedDt, 1, 2);
