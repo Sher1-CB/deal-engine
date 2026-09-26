@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.19</title>
+    <title>The CB Command Center v10.0.20</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.19</span>
+    <span class="version-tag">v10.0.20</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -695,8 +695,8 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "cleaned_title": (String. Copy the primary product name exactly. Remove emojis.),
 "scrubbed_keyword": (String. Extract a generic noun for the product. Max 2 words.),
 "features_catchall": (String. Extract ANY remaining bullet points, features, or specs from the raw text. Example: 'Washable & Reusable'. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE LOCK (ABSOLUTE): You MUST include the exact sale_price in EVERY SINGLE string. Write a short, urgent, 2-sentence Run Deal post. Sentence 1 MUST be a curiosity hook (e.g., 'Did they type this wrong?!'). Sentence 2 MUST weave the sale_price, scrubbed_keyword, features_catchall, and a physical action verb (e.g., 'Grab this washable microwave for $15.99 to heat up dinner!'). QUANTITY RULE: If the raw text requires adding a specific quantity (e.g., ADD 2), you MUST explicitly tell the reader to add that exact number to their order. Do NOT use the word 'cart'. Do NOT use pronouns like I, My, We. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy. CHARACTER LIMIT (ABSOLUTE): The entire string MUST be under 120 characters so it fits on a Facebook colored background. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ". Example: "First sentence here. || Second sentence here."),
-"comments": (Array of 3 strings. Write a casual comment. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. If you use the word 'share', the system will crash. You MUST include the exact placeholder "[URL]" naturally inside the sentence (e.g., 'Found it right here [URL] and it looks great'). You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
+"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE BAN: You are STRICTLY FORBIDDEN from putting the price in this string. Write a short, urgent Run Deal post. You MUST weave a curiosity hook (e.g., 'Did they type this wrong?!'), the scrubbed_keyword, features_catchall, and a physical action verb. VALUE RULE: End the post by casually mentioning it's a great value or budget-friendly (e.g., 'for way less', 'on a serious budget', or invent your own casual phrase). QUANTITY RULE: If the raw text requires adding a specific quantity (e.g., ADD 2), explicitly tell the reader to add that exact number. Do NOT use the word 'cart'. Do NOT use pronouns like I, My, We. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy. CHARACTER LIMIT: The entire string MUST be under 120 characters. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
+"comments": (Array of 3 strings. Write a casual comment. PRICE LOCK: You MUST include the exact sale_price in EVERY comment so the buyer knows the cost. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'. You MUST include the exact placeholder "[URL]" naturally inside the sentence. You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences. DELIMITER LOCK: You MUST separate every single sentence with the exact characters " || ".),
 "daily_thread": (String. Weave the price, title, retailer_name, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
@@ -748,7 +748,9 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 }
 
                 let emojifiedPost = postLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
-                let finalPost = joinWithSpaceChaos(emojifiedPost, 1, 2);
+                
+                // V10.0.20: Run Deals must be a single continuous line for Colored Backgrounds
+                let finalPost = dealType === 'run' ? emojifiedPost.join(' ') : joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
                 document.getElementById(`out-post${i+1}`).innerText = finalPost;
                 document.getElementById(`out-post${i+1}`).setAttribute('data-raw', finalPost);
