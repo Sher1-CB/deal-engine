@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.37</title>
+    <title>The CB Command Center v10.0.38</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.37</span>
+    <span class="version-tag">v10.0.38</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -710,7 +710,10 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             
             const aiData = JSON.parse(aiText);
 
-            const cleanAiPrice = aiData.sale_price.replace('$', '').replace(fulfillmentStatus, '').trim();
+            // V10.0.38 MULTI-KEY TITLE SHIELD: Prevents "undefined" in ledger
+            const cleanTitle = (aiData.cleaned_title || aiData.title || aiData.product_name || aiData.product_title || "Featured Deal").trim();
+
+            const cleanAiPrice = aiData.sale_price ? aiData.sale_price.replace('$', '').replace(fulfillmentStatus, '').trim() : "???";
             if (cleanAiPrice !== "???" && !rawText.includes(cleanAiPrice)) {
                 document.getElementById('priceWarning').style.display = 'flex';
             }
@@ -773,15 +776,15 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 const fullTimestampET = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
                 
-                sessionHistory.push({ url: extractedURL, title: aiData.cleaned_title });
-                globalDealHistory.push([fullTimestampET, posterName, aiData.cleaned_title, extractedURL]);
+                sessionHistory.push({ url: extractedURL, title: cleanTitle });
+                globalDealHistory.push([fullTimestampET, posterName, cleanTitle, extractedURL]);
                 
                 const historyLog = document.getElementById('historyLog');
                 if(document.getElementById('emptyHistory')) document.getElementById('emptyHistory').remove();
                 const historyCard = `
                     <div class="history-card">
                         <div class="history-meta"><span>${posterName}</span><span>${timestamp}</span></div>
-                        <div class="history-title">Deal ${document.getElementById('dealNumber').value}: ${aiData.cleaned_title}</div>
+                        <div class="history-title">Deal ${document.getElementById('dealNumber').value}: ${cleanTitle}</div>
                     </div>
                 `;
                 historyLog.innerHTML = historyCard + historyLog.innerHTML;
@@ -791,7 +794,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ poster: posterName, title: aiData.cleaned_title, url: extractedURL })
+                    body: JSON.stringify({ poster: posterName, title: cleanTitle, url: extractedURL })
                 }).catch(err => console.log("Cloud save error", err));
 
                 let currentNum = parseInt(document.getElementById('dealNumber').value);
