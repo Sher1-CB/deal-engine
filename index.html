@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.8</title>
+    <title>The CB Command Center v10.0.9</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -18,6 +18,7 @@
             --danger: #fa383e;
             --acct1: #1877f2;
             --acct2: #00a400;
+            --acct3: #8a2be2;
         }
 
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 15px; }
@@ -33,6 +34,7 @@
         .routing-banner { max-width: 1200px; margin: 0 auto 15px auto; padding: 12px 20px; border-radius: 8px; font-weight: 700; font-size: 15px; color: #fff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s;}
         .route-acct1 { background: linear-gradient(135deg, var(--acct1), #0b51c5); }
         .route-acct2 { background: linear-gradient(135deg, var(--acct2), #007a00); }
+        .route-acct3 { background: linear-gradient(135deg, var(--acct3), #4b0082); }
         .shuffle-route-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s;}
         .shuffle-route-btn:hover { background: rgba(255,255,255,0.4); }
 
@@ -110,7 +112,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.8</span>
+    <span class="version-tag">v10.0.9</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -200,6 +202,13 @@
                     <select id="pronounStyle">
                         <option value="subject">1st Person (I / My / We)</option>
                         <option value="possessive">3rd Person (This / That / It)</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>🔄 Account Rotation</label>
+                    <select id="acctRotation" onchange="updateRoutingBanner()">
+                        <option value="2">2 Accounts</option>
+                        <option value="3">3 Accounts</option>
                     </select>
                 </div>
                 <div class="col">
@@ -340,6 +349,38 @@
         fetchCloudHistory(); 
         fetchLiveModels(); 
     });
+    
+    // V10.0.9 REAL-TIME DUPLICATE CHECKER (Triggers the second you paste text)
+    document.getElementById('rawText').addEventListener('input', function() {
+        const text = this.value.trim();
+        const dupWarning = document.getElementById('duplicateWarning');
+        if(!text) { dupWarning.style.display = 'none'; return; }
+        
+        const extractedURL = extractURL(text);
+        if(extractedURL === "https://thecouponboutique.com/") return;
+
+        const sessionDuplicate = sessionHistory.find(deal => deal.url === extractedURL);
+        const todayET = new Date().toLocaleDateString("en-US", {timeZone: "America/New_York"});
+        const cloudDuplicate = globalDealHistory.find(row => {
+            if (row[3] !== extractedURL) return false;
+            try {
+                const rowDate = new Date(row[0]).toLocaleDateString("en-US", {timeZone: "America/New_York"});
+                return rowDate === todayET;
+            } catch(e) { return false; }
+        });
+
+        if (sessionDuplicate) {
+            dupWarning.innerHTML = `<span>🚨</span> <strong>SESSION COLLISION:</strong> You already generated this exact link in this current session!`;
+            dupWarning.className = "alert-banner alert-danger";
+            dupWarning.style.display = 'flex';
+        } else if (cloudDuplicate) {
+            dupWarning.innerHTML = `<span>⚠️</span> <strong>CLOUD COLLISION:</strong> This was already posted TODAY by <strong>${cloudDuplicate[1]}</strong>!`;
+            dupWarning.className = "alert-banner alert-warning";
+            dupWarning.style.display = 'flex';
+        } else {
+            dupWarning.style.display = 'none';
+        }
+    });
 
     function setDealType(type) {
         document.getElementById('dealType').value = type;
@@ -387,31 +428,40 @@
 
     async function fetchCloudHistory() {
         try {
-            const response = await fetch(GOOGLE_SHEET_API);
-            globalDealHistory = await response.json();
-        } catch (e) {
-            console.log("Cloud sync failed.", e);
-        }
-    }
+            const routeOptions = [
+        "Start with DAILY THREAD ➔ Then Groups 1, 2, 3",
+        "Start with GROUP 1 ➔ Then Groups 2, 3, Daily Thread",
+        "Start with GROUP 2 ➔ Then Group 3, Daily Thread, Group 1",
+        "Start with GROUP 3 ➔ Then Daily Thread, Group 1, Group 2"
+    ];
 
     function updateRoutingBanner() {
         const num = parseInt(document.getElementById('dealNumber').value);
-        const patternIndex = (num - 1) % 4; 
-        const pattern = routingPatterns[patternIndex];
+        const rotation = parseInt(document.getElementById('acctRotation').value);
+        
+        // Mathematically cycle the account (1-2 or 1-2-3)
+        let acctNum = ((num - 1) % rotation) + 1;
+        let randomRoute = routeOptions[Math.floor(Math.random() * routeOptions.length)];
         
         const banner = document.getElementById('routingBanner');
         const text = document.getElementById('routingText');
         
-        banner.className = `routing-banner ${pattern.color}`;
-        text.innerHTML = `DEAL ${num}: [${pattern.acct}] ➔ ${pattern.text}`;
+        if(acctNum === 1) banner.className = `routing-banner route-acct1`;
+        else if(acctNum === 2) banner.className = `routing-banner route-acct2`;
+        else banner.className = `routing-banner route-acct3`;
+        
+        text.innerHTML = `DEAL ${num}: [ACCOUNT ${acctNum}] ➔ ${randomRoute}`;
+        banner.setAttribute('data-acct', acctNum);
     }
 
     function randomizeRoute() {
-        const pattern = routingPatterns[Math.floor(Math.random() * routingPatterns.length)];
         const banner = document.getElementById('routingBanner');
         const text = document.getElementById('routingText');
-        banner.className = `routing-banner ${pattern.color}`;
-        text.innerHTML = `🔀 RANDOM: [${pattern.acct}] ➔ ${pattern.text}`;
+        const acctNum = banner.getAttribute('data-acct') || "1";
+        const num = document.getElementById('dealNumber').value;
+        
+        let randomRoute = routeOptions[Math.floor(Math.random() * routeOptions.length)];
+        text.innerHTML = `DEAL ${num}: [ACCOUNT ${acctNum}] ➔ ${randomRoute}`;
     }
 
     function clearWorkspace() {
@@ -603,7 +653,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "b8_verification": (String. Extract S&S, Subscribe & Save, or Promo Codes. If none, write "NONE"),
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE LOCK (ABSOLUTE): You MUST include the exact sale_price and reg_price in EVERY SINGLE paragraph. If you drop the price, the system will crash. You MUST weave the sale_price, reg_price, cleaned_title, retailer_name, AND EVERY SINGLE FACT extracted in b2, b5, and b8 naturally into a fluid, casual paragraph. Do NOT use rigid hyphens or bullet points. PRONOUNS: ${pronounInstruction} SLANG RULE: Use casual text-speak (ngl, tbh, lowkey, rn) in EXACTLY TWO of the strings. The remaining ONE string MUST be clean with zero slang. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the phrase 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy. Make each of the 3 paragraphs structurally different. You MUST write at least 3 distinct sentences per paragraph so they can be separated by line breaks.),
 "comments": (Array of 3 strings. Write a casual comment. You MUST include the exact placeholder "[URL]" naturally inside the sentence (e.g., 'Found it right here [URL] and it looks great'). You are STRICTLY FORBIDDEN from using the phrase 'Here is the link'. Ask a low-effort question in 2 of the comments. Write at least 2 distinct sentences.),
-"daily_thread": (String. Weave the price, title, retailer_name, all extracted facts, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. Write at least 3 distinct sentences.),
+"daily_thread": (String. Weave the price, title, retailer_name, all extracted facts, and the exact placeholder "[URL]" into a single natural, conversational message. Do NOT use hyphens to separate the price and title. Write at least 3 distinct sentences. NUCLEAR BAN: You are STRICTLY FORBIDDEN from using the word 'share'.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.)
 GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any of these banned words: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Sold out, Miss out, Rare, Exclusive, Restock, Gone, Run, Grab it now, Like, Share, Tag, Comment, React, Vote, Link, URL, Website, Click, Tap, Bio, DM, Alert, Shocking, Mind-blowing, Secret, Hack, viral, Game changer, Stock, Inventory.`;
         } else {
