@@ -267,7 +267,10 @@
     <div class="card">
         <div class="card-header">
             <h3 style="color: var(--success);">✅ POLYMORPHIC OUTPUT GENERATED</h3>
-            <button class="raw-output-btn" onclick="copyRawOutput(this)">📄 Copy Raw Output</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-outline btn-danger" onclick="reportIssue(this)">🐞 Report Issue</button>
+                <button class="raw-output-btn" onclick="copyRawOutput(this)">📄 Copy Raw Output</button>
+            </div>
         </div>
         
         <div class="output-layout">
@@ -845,6 +848,46 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 btnElement.style.color = "var(--text-main)";
                 btnElement.style.borderColor = "var(--border)";
             }, 2000);
+        });
+    }
+
+    // V10.0.27: 1-Click Issue Reporter (Routes to Google Sheets Tab 2)
+    function reportIssue(btnElement) {
+        if(!currentRawOutput) { alert("No output generated yet to report!"); return; }
+        const posterName = document.getElementById('posterName').value;
+        const note = prompt("What is wrong with this generation? (e.g., Wrong price, Banned word, Awkward phrasing):");
+        if (note === null) return; // User clicked Cancel
+        
+        const originalText = btnElement.innerText;
+        btnElement.innerText = "⏳ Submitting...";
+        btnElement.disabled = true;
+
+        fetch(GOOGLE_SHEET_API, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'issue',
+                poster: posterName,
+                note: note.trim() || "No description provided",
+                rawPayload: currentRawOutput
+            })
+        }).then(() => {
+            btnElement.innerText = "✅ Issue Logged!";
+            btnElement.style.background = "#e6f4ea";
+            btnElement.style.color = "#00a400";
+            btnElement.style.borderColor = "#00a400";
+            setTimeout(() => {
+                btnElement.innerText = originalText;
+                btnElement.style.background = "#fff";
+                btnElement.style.color = "var(--danger)";
+                btnElement.style.borderColor = "var(--danger)";
+                btnElement.disabled = false;
+            }, 2500);
+        }).catch(err => {
+            alert("Failed to submit report: " + err);
+            btnElement.innerText = originalText;
+            btnElement.disabled = false;
         });
     }
 
