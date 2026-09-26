@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.32</title>
+    <title>The CB Command Center v10.0.33</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.32</span>
+    <span class="version-tag">v10.0.33</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -362,7 +362,7 @@
         fetchLiveModels(); 
     });
 
-    // V10.0.12 SMART DUPLICATE CHECKER (URL vs Title)
+    // V10.0.33 7-DAY UNIQUE LINK GUARD & SAME-DAY TITLE CHECKER
     function checkDuplicates(text) {
         const dupWarning = document.getElementById('duplicateWarning');
         if(!text) { dupWarning.style.display = 'none'; return false; }
@@ -374,46 +374,50 @@
         const textLower = text.toLowerCase();
         
         let foundUrlMatch = null;
-        let foundTitleMatch = null;
+        let foundTitleMatchToday = null;
 
-        // 1. Check Cloud History for TODAY
+        // 1. Scan Cloud History (Entire 7-Day Sheet Memory)
         for (let i = 0; i < globalDealHistory.length; i++) {
             let row = globalDealHistory[i];
             if (!row[0] || !row[2] || !row[3]) continue;
             
-            try {
-                let rowDate = new Date(row[0]).toLocaleDateString("en-US", {timeZone: "America/New_York"});
-                if (rowDate !== todayET) continue; // Only check today's deals
-                
-                let rowUrl = row[3].replace(/\/$/, '');
-                let rowTitle = row[2];
+            let rowUrl = row[3].replace(/\/$/, '');
+            let rowTitle = row[2];
+            let rowDateString = "";
+            let isToday = false;
 
-                if (rowUrl === extractedURL) {
-                    foundUrlMatch = row;
-                    break; // URL match is the highest priority, stop looking
-                }
-                
-                // If URL doesn't match, check if the raw text contains a title from today
-                if (textLower.includes(rowTitle.toLowerCase())) {
-                    foundTitleMatch = row;
-                }
+            try {
+                rowDateString = new Date(row[0]).toLocaleDateString("en-US", {timeZone: "America/New_York"});
+                isToday = (rowDateString === todayET);
             } catch(e) {}
+
+            // CHECK A: 7-Day Unique Link Check (Scans ALL 7 days in the database)
+            if (rowUrl === extractedURL) {
+                foundUrlMatch = { poster: row[1], timestamp: row[0] };
+                break; // Hard link match found, stop searching
+            }
+            
+            // CHECK B: Same-Day Title Check (Only checks deals posted TODAY in ET)
+            if (isToday && textLower.includes(rowTitle.toLowerCase())) {
+                foundTitleMatchToday = { poster: row[1], title: rowTitle };
+            }
         }
 
         // 2. Check Local Session History (Fallback)
         const sessionUrlMatch = sessionHistory.find(deal => deal.url.replace(/\/$/, '') === extractedURL);
         const sessionTitleMatch = sessionHistory.find(deal => textLower.includes(deal.title.toLowerCase()));
 
-        // 3. Display the correct warning
+        // 3. Render the Appropriate Warning
         if (foundUrlMatch || sessionUrlMatch) {
-            let poster = foundUrlMatch ? foundUrlMatch[1] : "You (Session)";
-            dupWarning.innerHTML = `<span>🚨</span> <div><strong>DUPLICATE LINK:</strong> The same link was used today by <strong>${poster}</strong>. This is a duplicate!</div>`;
+            let poster = foundUrlMatch ? foundUrlMatch.poster : "You (Session)";
+            let when = foundUrlMatch ? foundUrlMatch.timestamp : "earlier in this session";
+            dupWarning.innerHTML = `<span>🚨</span> <div><strong>DUPLICATE LINK DETECTED:</strong> This exact link was already posted on <strong>${when}</strong> by <strong>${poster}</strong>! (7-Day Memory)</div>`;
             dupWarning.className = "alert-banner alert-danger";
             dupWarning.style.display = 'flex';
             return true;
-        } else if (foundTitleMatch || sessionTitleMatch) {
-            let poster = foundTitleMatch ? foundTitleMatch[1] : "You (Session)";
-            let title = foundTitleMatch ? foundTitleMatch[2] : sessionTitleMatch.title;
+        } else if (foundTitleMatchToday || sessionTitleMatch) {
+            let poster = foundTitleMatchToday ? foundTitleMatchToday.poster : "You (Session)";
+            let title = foundTitleMatchToday ? foundTitleMatchToday.title : sessionTitleMatch.title;
             dupWarning.innerHTML = `<span>⚠️</span> <div><strong>SAME TITLE TODAY:</strong> The title "<em>${title}</em>" was already used today by <strong>${poster}</strong>. You can still continue to generate this deal.</div>`;
             dupWarning.className = "alert-banner alert-warning";
             dupWarning.style.display = 'flex';
