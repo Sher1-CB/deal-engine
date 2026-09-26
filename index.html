@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.40</title>
+    <title>The CB Command Center v10.0.41</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.40</span>
+    <span class="version-tag">v10.0.41</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -524,6 +524,26 @@
         const match = text.match(urlRegex);
         return match ? match[0] : "https://thecouponboutique.com/";
     }
+
+    // V10.0.41 LOCAL RAW-TEXT TITLE EXTRACTOR (Bypasses AI Hallucinations)
+    function extractTitleFromRawText(raw) {
+        if (!raw) return "Featured Deal";
+        const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        for (let line of lines) {
+            let clean = line.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}]/gu, '').trim();
+            if (/^https?:\/\//i.test(clean)) continue;
+            if (/^(on woot|on amazon|on walmart|good find|solid find|great find|markdown)/i.test(clean)) continue;
+            if (/^(\$|regular|was \$|shipped|total)/i.test(clean)) continue;
+            if (/^(make sure|add \d|sign in|limit of|works on)/i.test(clean)) continue;
+            
+            // Strip attached prices if title and price are on the same line
+            clean = clean.replace(/\$\d+(\.\d{2})?.*$/i, '').trim();
+            clean = clean.replace(/\(was .*\)$/i, '').trim();
+
+            if (clean.length > 3) return clean;
+        }
+        return "Featured Deal";
+    }
     
     function cloakURL(baseURL) {
         if (!baseURL || baseURL === "https://thecouponboutique.com/") return baseURL;
@@ -676,7 +696,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart". Fix leetspeak.),
 "sale_price": (String. Extract the sale price. Extract ONLY numbers and $ signs, then ADD the word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. If none, write "???"),
 "reg_price": (String. Extract regular price. Strip the $ sign and REPLACE the decimal with a space, e.g. "34 99". If none, write "NONE"),
-"cleaned_title": (String. Copy the primary product name exactly. Remove emojis.),
+"cleaned_title": (String. MANDATORY TITLE LOCK: You MUST copy the primary product name line exactly as written. NEVER leave this blank or omit it.),
 "scrubbed_keyword": (String. Extract a generic noun for the product. Max 2 words.),
 "features_catchall": (String. Extract ANY remaining bullet points, features, or specs from the raw text. If none, write "NONE"),
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE BAN: You are STRICTLY FORBIDDEN from putting the price in this string. Write a short, urgent 2-sentence Run Deal post. Sentence 1: A curiosity hook (e.g., 'Did they type this wrong?!'). Sentence 2: VERB WHITELIST: You MUST start sentence 2 with one of these verbs: 'Snag', 'Pick up', 'Score', or 'Secure'. You are STRICTLY FORBIDDEN from using 'Grab'. Combine the verb + the scrubbed_keyword + the quantity rule + a casual value phrase. ROBOTIC POINTER BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using the words 'URL', 'destination', 'website', 'page', 'visitors', or 'coupon boutique'. QUANTITY RULE: Say 'add [X] to your order'. ANTI-PARROT LOCK: Rotate different value phrases (e.g., 'for way less', 'on a serious budget', 'without breaking the bank'). Do NOT use pronouns like I, My, We. NUCLEAR BAN: 'game changer'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, Act fast, Hurry, URL. CHARACTER LIMIT: Under 120 characters. DELIMITER LOCK: Separate sentences with ' || ' and use proper punctuation. Example: "First sentence here. || Second sentence here."),
@@ -710,8 +730,11 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             
             const aiData = JSON.parse(aiText);
 
-            // V10.0.38 MULTI-KEY TITLE SHIELD: Prevents "undefined" in ledger
-            const cleanTitle = (aiData.cleaned_title || aiData.title || aiData.product_name || aiData.product_title || "Featured Deal").trim();
+            // V10.0.41 BULLETPROOF TITLE SHIELD: AI Extraction + Local Raw-Text Fallback
+            let cleanTitle = (aiData.cleaned_title || aiData.title || aiData.product_name || aiData.product_title || "").trim();
+            if (!cleanTitle || cleanTitle.toLowerCase() === "featured deal") {
+                cleanTitle = extractTitleFromRawText(rawText);
+            } 
 
             const cleanAiPrice = aiData.sale_price ? aiData.sale_price.replace('$', '').replace(fulfillmentStatus, '').trim() : "???";
             if (cleanAiPrice !== "???" && !rawText.includes(cleanAiPrice)) {
