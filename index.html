@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.52</title>
+    <title>The CB Command Center v10.0.53</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.52</span>
+    <span class="version-tag">v10.0.53</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -764,8 +764,14 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 document.getElementById('priceWarning').style.display = 'flex';
             }
 
-            const emojis = aiData.emoji_pool && aiData.emoji_pool.length > 0 ? aiData.emoji_pool : ["✨","🔥","📦","👇","🌿"];
-            const getEmoji = () => emojis[Math.floor(Math.random() * emojis.length)];
+            // V10.0.53 STRICT EMOJI SCRUBBER: Purges numbers (like 1, 3) and letters from AI emoji pool
+            const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu;
+            
+            let rawEmojis = Array.isArray(aiData.emoji_pool) ? aiData.emoji_pool : [];
+            let cleanEmojis = rawEmojis.map(item => String(item).match(emojiRegex)).filter(Boolean).map(m => m[0]);
+            const fallbackEmojis = ["✨","🔥","📦","👇","🌿","🧼","🧴","🛁","🌸","💧","🫧","🧺"];
+            const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
+            const getEmoji = () => finalEmojis[Math.floor(Math.random() * finalEmojis.length)];
 
             currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName}]\n${rawText}\n\n`;
 
