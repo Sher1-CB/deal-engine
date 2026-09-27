@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.55</title>
+    <title>The CB Command Center v10.0.56</title>
+    <!-- V10.0.56 ANTI-CACHE HEADERS -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +119,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.55</span>
+    <span class="version-tag">v10.0.56</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -365,7 +369,31 @@
         randomizeRoute(); 
         fetchCloudHistory(); 
         fetchLiveModels(); 
+        checkServerForUpdates(); // V10.0.56: Checks if a newer version is on GitHub
     });
+
+    // V10.0.56 LIVE AUTO-UPDATE WATCHDOG: Forces all users to refresh when you push code
+    async function checkServerForUpdates() {
+        try {
+            const currentLocalVer = document.querySelector('.version-tag').innerText.trim();
+            // Fetch live HTML file directly from GitHub bypassing all browser cache
+            const response = await fetch(window.location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' });
+            const liveHtml = await response.text();
+            
+            // Extract the version from GitHub's live file
+            const match = liveHtml.match(/class="version-tag">([^<]+)<\/span>/);
+            if (match && match[1]) {
+                const liveServerVer = match[1].trim();
+                if (liveServerVer !== currentLocalVer) {
+                    alert(`🔄 NEW UPDATE DEPLOYED (${liveServerVer})!\n\nYour app will now reload automatically to install the latest patches.`);
+                    // Force hard cache-busting reload
+                    window.location.replace(window.location.pathname + '?v=' + Date.now());
+                }
+            }
+        } catch (e) {
+            console.log("Update check skipped.", e);
+        }
+    }
 
     // V10.0.33 7-DAY UNIQUE LINK GUARD & SAME-DAY TITLE CHECKER
     function checkDuplicates(text) {
@@ -524,6 +552,7 @@
         document.getElementById('outputSection').style.display = 'none';
         document.getElementById('emergencyFallbackBtn').style.display = 'none';
         fetchCloudHistory(); 
+        checkServerForUpdates(); // V10.0.56: Checks for updates when clearing
     }
 
     function extractURL(text) {
