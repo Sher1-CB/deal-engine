@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.53</title>
+    <title>The CB Command Center v10.0.54</title>
     <style>
         :root {
             --primary: #1a73e8; 
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag">v10.0.53</span>
+    <span class="version-tag">v10.0.54</span>
 </div>
 
 <!-- V10 SEQUENCE & ROUTING BANNER -->
@@ -764,21 +764,34 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 document.getElementById('priceWarning').style.display = 'flex';
             }
 
-            // V10.0.53 STRICT EMOJI SCRUBBER: Purges numbers (like 1, 3) and letters from AI emoji pool
+            // V10.0.53 STRICT EMOJI SCRUBBER
             const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu;
-            
             let rawEmojis = Array.isArray(aiData.emoji_pool) ? aiData.emoji_pool : [];
             let cleanEmojis = rawEmojis.map(item => String(item).match(emojiRegex)).filter(Boolean).map(m => m[0]);
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","🧼","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
             const getEmoji = () => finalEmojis[Math.floor(Math.random() * finalEmojis.length)];
 
+            // V10.0.54 EMOJI DENSITY CONTROLLER: Enforces exact min/max limits per section
+            function applyEmojiDensity(lines, min, max) {
+                if (!lines || lines.length === 0) return [];
+                let targetCount = Math.floor(Math.random() * (max - min + 1)) + min;
+                if (targetCount === 0) return [...lines]; // Zero emojis applied
+
+                let result = [...lines];
+                for (let e = 0; e < targetCount; e++) {
+                    let randIdx = Math.floor(Math.random() * result.length);
+                    result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${getEmoji()}` : `${getEmoji()} ${result[randIdx]}`;
+                }
+                return result;
+            }
+
             currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
             for(let i=0; i<3; i++) {
-                // V10.0.48 TYPE-SAFE POST NORMALIZER
+                // Post Normalizer
                 let rawPost = aiData.post_variations && aiData.post_variations[i] ? aiData.post_variations[i] : "";
                 let postLines = [];
                 if (Array.isArray(rawPost)) {
@@ -797,14 +810,15 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     postLines.splice(randIdx, 0, customText);
                 }
 
-                let emojifiedPost = postLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
+                // V10.0.54: Posts get 0 to 4 emojis
+                let emojifiedPost = applyEmojiDensity(postLines, 0, 4);
                 let finalPost = dealType === 'run' ? emojifiedPost.join(' ') : joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
                 document.getElementById(`out-post${i+1}`).innerText = finalPost;
                 document.getElementById(`out-post${i+1}`).setAttribute('data-raw', finalPost);
                 currentRawOutput += `=== POST VARIATION ${i+1} ===\n${finalPost}\n\n`;
                 
-                // V10.0.48 TYPE-SAFE COMMENT NORMALIZER
+                // Comment Normalizer
                 let cloaked = cloakURL(extractedURL);
                 let rawComment = aiData.comments && aiData.comments[i] ? aiData.comments[i] : "";
                 let commentText = typeof rawComment === 'object' ? Object.values(rawComment).join(' ') : String(rawComment);
@@ -813,7 +827,8 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 let commentLines = commentText.includes('||') ? commentText.split('||').map(s => s.trim()) : commentText.split(/(?<=[.!?])\s+/).map(s => s.trim());
                 commentLines = commentLines.filter(line => line.length > 0);
 
-                let emojifiedComment = commentLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
+                // V10.0.54: Comments get 0 to 2 emojis
+                let emojifiedComment = applyEmojiDensity(commentLines, 0, 2);
                 let finalComment = joinWithSpaceChaos(emojifiedComment, 1, 2);
 
                 document.getElementById(`out-com${i+1}`).innerText = finalComment;
@@ -821,7 +836,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 currentRawOutput += `=== COMMENT ${i+1} ===\n${finalComment}\n\n`;
             }
 
-            // V10.0.48 TYPE-SAFE DAILY THREAD NORMALIZER
+            // Daily Thread Normalizer
             let dtCloaked = cloakURL(extractedURL);
             let rawDt = aiData.daily_thread ? aiData.daily_thread : "";
             let dtText = typeof rawDt === 'object' ? Object.values(rawDt).join(' ') : String(rawDt);
@@ -836,7 +851,8 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 dtLines.splice(randIdxDt, 0, customTextDt);
             }
 
-            let emojifiedDt = dtLines.map(line => Math.random() > 0.5 ? `${line} ${getEmoji()}` : `${getEmoji()} ${line}`);
+            // V10.0.54: Daily Thread gets 0 to 3 emojis
+            let emojifiedDt = applyEmojiDensity(dtLines, 0, 3);
             let finalDt = joinWithSpaceChaos(emojifiedDt, 1, 2);
 
             document.getElementById('out-dt').innerText = finalDt;
