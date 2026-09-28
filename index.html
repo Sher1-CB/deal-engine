@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.1.03</title>
+    <title>The CB Command Center v10.1.04</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.1.03 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.1.04 🔄</span>
 </div>
 
 <div id="routingBanner" class="routing-banner route-acct1">
@@ -785,7 +785,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 • Variation 3: Focus on a calm personal reflection or lifestyle comfort with ZERO slang (NEVER start Variation 3 with the product title!).
 Weave the product title in naturally second for Variations 2 and 3! TERMINATION LAW (ABSOLUTE): The final sentence of every post variation MUST be a casual lifestyle, functional, or emotional thought. UNIQUE ENDING MANDATE: You MUST write a completely different ending thought for each variation (NEVER repeat the same final sentence across variations!). You are STRICTLY FORBIDDEN from ending the post with a call-to-action pointer (e.g. NEVER write 'Head over to Amazon to check it out', NEVER write 'Find it on Amazon for $XX'). State the deal info ONCE in the body, and end strictly on lifestyle! PRONOUNS: ${pronounInstruction} SLANG DIVERSITY MATRIX: Variations 1 and 2 each contain strictly ONE slang term. Variation 3 is The Breather and is STRICTLY FORBIDDEN from containing any slang (Variation 3 MUST be 100% clean standard English with ZERO slang terms like 'tbf', 'ngl', or 'lowkey'). ANTI-PARROT LOCK (ABSOLUTE): You are STRICTLY FORBIDDEN from overusing 'tbh' or 'rn'. Do NOT repeat the same slang word across variations! SLANG STACKING BAN: Use strictly ONE slang term per variation—NEVER stack or pair multiple slang words together (do NOT write 'legit super', 'rn tbh', or 'lowkey kinda'). SLANG INTEGRATION (ABSOLUTE): You are STRICTLY FORBIDDEN from putting a slang word on its own line or separating it with '||' (NEVER output '|| ngl ||' or '|| tbf ||')! The slang word MUST be woven smoothly inside a complete sentence (e.g., 'ngl my winter wardrobe is totally set...'). TRANSACTIONAL NOUN BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using the word 'offer', 'deal', 'bargain', or 'promo' anywhere in the text! (NEVER say 'this offer', 'an offer', or 'this offer is legit'—write 'this find is legit', 'this set is legit', or 'this find only works on'). NUCLEAR BAN: 'game changer', 'grab', 'markdown', 'marked down', 'breeze', 'link', 'savings', 'saving', 'elevate', 'elevating'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, URL, Promotion, Markdown, Marked down, Link, Savings, Save. DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation.),
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE & PRICE BAN (ABSOLUTE): Never repeat the product title, and never mention prices, dollar amounts, or numbers in comments! LINK POSITION LAW (ABSOLUTE): The link [TARGET_SLOT] MUST NEVER be at the very beginning of a comment and MUST NEVER be on Line 1! Line 1 MUST ALWAYS open with human words. GEOMETRY RANDOMIZER: Randomly mix and match different layouts across the 3 comments—never make them follow the same structure:
-• Style A (Fluid Paragraph - Inline Wrapped): A single flowing paragraph with human words BEFORE and AFTER [TARGET_SLOT] (e.g., 'I always keep these in the pantry, and finding [TARGET_SLOT] makes morning coffee much easier. What time do you usually drink yours?').
+• Style A (Fluid Paragraph - Inline Wrapped): A single flowing paragraph tailored directly to this specific item, with human words BEFORE and AFTER [TARGET_SLOT], concluding with an organic question relevant to the item. (NEVER output words about 'coffee' or 'drinking' unless the item is coffee! Never put the question at the start of the paragraph).
 • Style B (Fluid Paragraph - End Anchor): A single flowing paragraph opening with human thoughts and an organic question, with [TARGET_SLOT] placed naturally at the very end of the paragraph.
 • Style C (Multi-Line Spaced): Line 1 human statement || Line 2 [TARGET_SLOT] || Line 3 organic preference question.
 • Style D (Fast 2-Line Drop): Line 1 quick human thought || Line 2 [TARGET_SLOT] (question completely dropped!).
@@ -1006,7 +1006,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.1.03]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.1.04]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1253,7 +1253,7 @@ RULES:
 4. COMMENTS (1, 2, 3):
    - TITLE & PRICE BAN: Never repeat the product title, and never repeat the price, dollar amounts, or numbers in comments!
    - LINK POSITION LAW (ABSOLUTE): The link MUST NEVER be at the very beginning of a comment and MUST NEVER be on Line 1! Line 1 is ALWAYS human text.
-   - GEOMETRY RANDOMIZER: Randomly vary structures across comments: some as single fluid paragraphs with words before and after the link, some with the link at the end of the paragraph, and some with separate lines. Never make all 3 comments follow the exact same layout!
+   - GEOMETRY RANDOMIZER: Randomly vary structures across comments: some as single fluid paragraphs with words before and after the link, some with the link at the end of the paragraph, and some with separate lines. Keep comments tailored to the specific item (never copy generic coffee examples onto other items!).
    - QUESTION QUOTA: Ask an organic preference question in 2 of the comments; 1 comment MUST drop the question completely!
    - PLAIN TEXT LINKS ONLY: Output clean, raw URLs only (NEVER use markdown brackets like [URL](URL)). Append unique random 4-character parameters (e.g. ?ref=a1b2, ?ts=c3d4) to each link.
    - QUESTION FIREWALL: If the deal only works on the pictured color or a single size, you are STRICTLY FORBIDDEN from asking about colors or sizes!
