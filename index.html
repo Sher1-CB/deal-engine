@@ -636,14 +636,16 @@
         let targetCount = Math.floor(Math.random() * (max - min + 1)) + min;
         if (targetCount === 0) return [...arr];
 
+        const emojis = ["✨","🔥","📦","👇","🌿","🧼","🧴","🛁","🌸","💧","🫧","🧺","☕","🧵","🧦"];
         let result = [...arr];
         for (let e = 0; e < targetCount; e++) {
             let randIdx = Math.floor(Math.random() * result.length);
-            result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${getEmoji()}` : `${getEmoji()} ${result[randIdx]}`;
+            let randEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${randEmoji}` : `${randEmoji} ${result[randIdx]}`;
         }
         return result;
     }
-
+    
     function joinWithSpaceChaos(linesArray, minBlank, maxBlank) {
         if (!linesArray || linesArray.length === 0) return "";
         let arr = Array.isArray(linesArray) ? linesArray : typeof linesArray === 'object' ? Object.values(linesArray) : [String(linesArray)];
