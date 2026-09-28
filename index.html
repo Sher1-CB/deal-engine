@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.88</title>
+    <title>The CB Command Center v10.0.89</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.0.88 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.0.89 🔄</span>
 </div>
 
 <div id="routingBanner" class="routing-banner route-acct1">
@@ -756,37 +756,44 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
 
             while (attempts < maxAttempts) {
                 attempts++;
-                const data = await fetchWithRetry(prompt, selectedModel);
-                let aiText = data.candidates[0].content.parts[0].text;
-                
-                aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
-                const startIndex = aiText.indexOf('{');
-                const endIndex = aiText.lastIndexOf('}');
-                if (startIndex !== -1 && endIndex !== -1) aiText = aiText.substring(startIndex, endIndex + 1);
-                aiText = aiText.replace(/"\s*\n\s*"/g, '",\n"');
-                aiText = aiText.replace(/,\s*([\]}])/g, '$1');
-                aiText = aiText.replace(/\\"/g, "'");
-                aiText = aiText.replace(/\\\\/g, "");
-                aiText = aiText.replace(/\\(?![nu])/g, "");
-                aiText = aiText.replace(/(?<!^|[:,\[{]\s*)"(?![:,\]}\s])/g, "'");
-                aiText = aiText.replace(/[\r\n\t]+/g, " ");
-                aiText = aiText.replace(/(\[|\,)\s*\*Note:[^"\]]*"/gi, '$1 "');
-                aiText = aiText.replace(/\*Note:[^*]*\*/gi, "");
-                
-                const parsed = JSON.parse(aiText);
+                try {
+                    const data = await fetchWithRetry(prompt, selectedModel);
+                    let aiText = data.candidates[0].content.parts[0].text;
+                    
+                    aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    const startIndex = aiText.indexOf('{');
+                    const endIndex = aiText.lastIndexOf('}');
+                    if (startIndex !== -1 && endIndex !== -1) aiText = aiText.substring(startIndex, endIndex + 1);
+                    aiText = aiText.replace(/\*Note:[^*]*\*/gi, "");
 
-                let rawComments = parsed.comments || parsed.comment_variations || parsed.comments_list || [];
-                let commentsArr = Array.isArray(rawComments) ? rawComments : typeof rawComments === 'object' && rawComments !== null ? Object.values(rawComments) : [];
-                commentsArr = commentsArr.filter(c => String(c).trim().length > 0);
+                    let parsed = null;
+                    try {
+                        parsed = JSON.parse(aiText);
+                    } catch (e1) {
+                        let repaired = aiText.replace(/,\s*([\]}])/g, '$1')
+                                             .replace(/"\s*[\r\n]+\s*"/g, '",\n"')
+                                             .replace(/(?<=[^\\])\\(?!["\\/bfnrtu])/g, '')
+                                             .replace(/[\t]+/g, ' ');
+                        parsed = JSON.parse(repaired);
+                    }
 
-                if (commentsArr.length >= 3) {
-                    aiData = parsed;
-                    break; 
-                } else if (attempts < maxAttempts) {
-                    console.log(`Comments missing on attempt ${attempts}. Silently retrying API...`);
-                    await new Promise(r => setTimeout(r, 1000));
-                } else {
-                    aiData = parsed;
+                    let rawComments = parsed.comments || parsed.comment_variations || parsed.comments_list || [];
+                    let commentsArr = Array.isArray(rawComments) ? rawComments : typeof rawComments === 'object' && rawComments !== null ? Object.values(rawComments) : [];
+                    commentsArr = commentsArr.filter(c => String(c).trim().length > 0);
+
+                    if (commentsArr.length >= 3) {
+                        aiData = parsed;
+                        break; 
+                    } else if (attempts < maxAttempts) {
+                        console.log(`Incomplete response on attempt ${attempts}. Silently retrying API...`);
+                        await new Promise(r => setTimeout(r, 1200));
+                    } else {
+                        aiData = parsed;
+                    }
+                } catch (err) {
+                    if (attempts >= maxAttempts) throw new Error("AI returned malformed deal format. Please click 'Generate Deal' again.");
+                    console.log(`Parse error on attempt ${attempts}. Silently retrying fresh API payload...`, err);
+                    await new Promise(r => setTimeout(r, 1200));
                 }
             }
 
@@ -947,7 +954,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.0.88]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.0.89]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
