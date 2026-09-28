@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.87</title>
+    <title>The CB Command Center v10.0.88</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.0.87 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.0.88 🔄</span>
 </div>
 
 <div id="routingBanner" class="routing-banner route-acct1">
@@ -816,18 +816,21 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             const getEmoji = () => finalEmojis[Math.floor(Math.random() * finalEmojis.length)];
 
             function applyEmojiDensity(lines, min, max) {
-                if (!lines || lines.length === 0) return [];
-                let targetCount = Math.floor(Math.random() * (max - min + 1)) + min;
-                if (targetCount === 0) return [...lines];
+        if (!lines) return [];
+        let arr = Array.isArray(lines) ? [...lines] : typeof lines === 'object' ? Object.values(lines) : [String(lines)];
+        arr = arr.map(s => String(s).trim()).filter(s => s.length > 0);
+        if (arr.length === 0) return [];
 
-                let result = [...lines];
-                for (let e = 0; e < targetCount; e++) {
-                    let randIdx = Math.floor(Math.random() * result.length);
-                    result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${getEmoji()}` : `${getEmoji()} ${result[randIdx]}`;
-                }
-                return result;
-            }
+        let targetCount = Math.floor(Math.random() * (max - min + 1)) + min;
+        if (targetCount === 0) return arr;
 
+        let result = [...arr];
+        for (let e = 0; e < targetCount; e++) {
+            let randIdx = Math.floor(Math.random() * result.length);
+            result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${getEmoji()}` : `${getEmoji()} ${result[randIdx]}`;
+        }
+        return result;
+    }
             currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
@@ -886,7 +889,21 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     commentText = commentText.replace(extractedURL, cloaked);
                 }
                 
-                let commentLines = commentText.split
+                let commentLines = commentText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
+
+                if (!commentLines.some(l => l.includes(cloaked))) {
+                    if (commentLines.length > 1) {
+                        commentLines.splice(1, 0, cloaked);
+                    } else {
+                        commentLines.push(cloaked);
+                    }
+                }
+                
+                if (commentLines.length > 1 && commentLines[0].includes("http")) {
+                    let temp = commentLines[0];
+                    commentLines[0] = commentLines[1];
+                    commentLines[1] = temp;
+                }
 
                 let emojifiedComment = applyEmojiDensity(commentLines, 0, 2);
                 let finalComment = joinWithSpaceChaos(emojifiedComment, 1, 2);
@@ -930,7 +947,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.0.87]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.0.88]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
