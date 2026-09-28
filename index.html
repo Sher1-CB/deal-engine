@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.1.05</title>
+    <title>The CB Command Center v10.1.06</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.1.05 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.1.06 🔄</span>
 </div>
 
 <div id="routingBanner" class="routing-banner route-acct1">
@@ -629,7 +629,9 @@
             // 6. Purge marketing clichés ('breeze' -> 'effortless')
             .replace(/\bfeels like a (total )?breeze\b/gi, 'feels completely effortless')
             .replace(/\ba (total )?breeze\b/gi, 'effortless')
-            .replace(/\bbreeze\b/gi, 'simple');
+            .replace(/\bbreeze\b/gi, 'simple')
+            // 7. De-duplicate accidental repeating regular price clauses (e.g. 'from 16 42, down from 16 42' -> 'down from 16 42')
+            .replace(/\b(from|down from|previously|was)\s+(\d+\s+\d{2})\s*,\s*(down from|previously|was)\s+\2\b/gi, '$3 $2');
     }
 
     // CRASH-PROOF EMOJI DENSITY ENGINE
@@ -1010,7 +1012,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.1.05]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.1.06]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
