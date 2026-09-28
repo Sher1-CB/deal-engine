@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.0.85</title>
+    <title>The CB Command Center v10.0.86</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.0.85 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.0.86 🔄</span>
 </div>
 
 <div id="routingBanner" class="routing-banner route-acct1">
@@ -886,8 +886,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     commentText = commentText.replace(extractedURL, cloaked);
                 }
                 
-                let commentLines = commentText.includes('||') ? commentText.split('||').map(s => s.trim()) : commentText.split(/(?<=[.!?])\s+/).map(s => s.trim());
-                commentLines = commentLines.filter(line => line.length > 0);
+                let commentLines = commentText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
 
                 if (commentLines.length > 1 && commentLines[0].includes("http")) {
                     let temp = commentLines[0];
@@ -916,8 +915,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 dtText = dtText.replace(extractedURL, dtCloaked);
             }
 
-            let dtLines = dtText.includes('||') ? dtText.split('||').map(s => s.trim()) : dtText.split(/(?<=[.!?])\s+/).map(s => s.trim());
-            dtLines = dtLines.filter(line => line.length > 0);
+            let dtLines = dtText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
             
             let customTextDt = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[3] !== "DEAD") ? aiData.custom_line_rephrases[3] : "";
             if (customTextDt) {
@@ -938,7 +936,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.0.85]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.0.86]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
