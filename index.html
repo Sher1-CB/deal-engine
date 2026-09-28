@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.1.01</title>
+    <title>The CB Command Center v10.1.02</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.1.01 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.1.02 🔄</span>
 </div>
 
 <div id="routingBanner" class="routing-banner route-acct1">
@@ -621,9 +621,11 @@
             // 4. Purge standalone 'free' attached to shipping/pickup
             .replace(/\bfree\s+(shipping|delivery)\b/gi, 'complimentary delivery')
             .replace(/\bfree\s+(store\s+)?pickup\b/gi, 'pickup is included')
-            // 5. Purge transactional nouns ('offer' -> 'find')
+            // 5. Purge transactional nouns ('offer' & 'discount' -> 'find')
             .replace(/\b(this|the|an|great|special)\s+offer\b/gi, '$1 find')
-            .replace(/\boffer\b/gi, 'find');
+            .replace(/\boffer\b/gi, 'find')
+            .replace(/\b(this|the|an|great|special)\s+discount\b/gi, '$1 find')
+            .replace(/\bdiscounts?\b/gi, 'find');
     }
 
     // CRASH-PROOF EMOJI DENSITY ENGINE
@@ -999,7 +1001,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.1.01]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.1.02]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
