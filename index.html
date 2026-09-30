@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.24</title>
+    <title>The CB Command Center v10.2.25</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.24 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.25 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -670,7 +670,7 @@
             .replace(/\b(seriously|literally|honestly|lowkey|highkey|tbh|fr)\s+(super|legit|clutch|insane|insanely)\b/gi, '$2')
             .replace(/\btbh\s+([a-z\s]+?)\s+super\b/gi, '$1 super')
             .replace(/\bsuper\s+([a-z\s]+?)\s+rn\b/gi, 'super $1')
-            .replace(/\b(super|kinda|lowkey|honestly)\s+([a-z\s]+?),\s*(ngl|tbh|rn)\b/gi, '$1 $2')
+            .replace(/\b(super|kinda|lowkey|honestly|insanely)\s+([a-z\s]+?),\s*(ngl|tbh|rn)\b/gi, '$1 $2')
             .replace(/\bessentials\b/gi, 'supplies')
             .replace(/\bessential\b/gi, 'staple');
     }
@@ -1106,7 +1106,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.24]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.25]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
