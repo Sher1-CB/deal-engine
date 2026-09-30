@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.15</title>
+    <title>The CB Command Center v10.2.16</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.15 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.16 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -632,7 +632,7 @@
             .replace(/\bfeels like a (total )?breeze\b/gi, 'feels completely effortless')
             .replace(/\ban absolute breeze\b/gi, 'completely effortless')
             .replace(/\ba (total )?breeze\b/gi, 'effortless')
-            .replace(/\bbreeze\b/gi, 'simple')
+            .replace(/\belevate(s|d|ing)?\b/gi, 'enhance')
             .replace(/\b(a )?(total )?game changer\b/gi, 'wonderful addition')
             // 7. De-duplicate accidental repeating regular price clauses (e.g. 'from 16 42, down from 16 42' -> 'down from 16 42')
             .replace(/\b(from|down from|previously|was)\s+(\d+\s+\d{2})\s*,\s*(down from|previously|was)\s+\2\b/gi, '$3 $2')
@@ -945,8 +945,8 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     if (str.includes('||')) {
                         postLines = str.split('||').map(s => s.trim());
                     } else {
-                        // Bulletproof fallback for missing delimiters (avoids lookbehind crashes)
-                        postLines = str.match(/[^.!?]+[.!?]+/g) || [str];
+                        // Bulletproof fallback: protects decimal prices (e.g. $23.39) from being sliced in half
+                        postLines = str.match(/(?:[^.!?]|\d\.\d)+[.!?]+(?!\d)/g) || [str];
                         postLines = postLines.map(s => s.trim());
                     }
                     postLines = postLines.filter(line => line.length > 0);
@@ -1064,7 +1064,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.15]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.16]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
