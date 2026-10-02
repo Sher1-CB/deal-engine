@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.28</title>
+    <title>The CB Command Center v10.2.29</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.28 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.29 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -634,8 +634,8 @@
             .replace(/\ba (total )?breeze\b/gi, 'effortless')
             .replace(/\belevate(s|d|ing)?\b/gi, 'enhance')
             .replace(/\b(a )?(total )?game changer\b/gi, 'wonderful addition')
-            // 7. De-duplicate repeating regular prices and collapse price ranges (e.g. '9 99 14 99' -> '14 99')
-            .replace(/\b(from|down from|previously|was|dropping from)\s+(\d+\s+\d{2})\s+(\d+\s+\d{2})\b/gi, '$1 $3')
+            // 7. Format regular price ranges with clean hyphens (e.g. '9 99 14 99' -> '9 99 - 14 99')
+            .replace(/\b(from|down from|previously|was|dropping from)\s+(\d+\s+\d{2})\s+(\d+\s+\d{2})\b/gi, '$1 $2 - $3')
             .replace(/\b(from|down from|previously|was)\s+(\d+\s+\d{2})\s*,\s*(down from|previously|was)\s+\2\b/gi, '$3 $2')
             // 7b. Purge hallucinated "NONE" regular prices
             .replace(/,\s*(down from|previously|was|dropping from)\s+NONE/gi, '')
@@ -843,7 +843,7 @@
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): You are STRICTLY FORBIDDEN from adding any notes, explanations, commentary, or asterisks (*) inside or outside the JSON. Return pure JSON only.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. RETAILER MISMATCH FIREWALL: If the raw text mentions 'Woot', the retailer MUST be Woot! Do not let Amazon bias override the true retailer!),
 "sale_price": (String. Extract the sale price. You MUST ensure a '$' sign is included at the front, then ADD the EXACT word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. NEVER change the fulfillment word (e.g., do NOT write 'Shipping inclusive'). NEVER drop the '$' sign. If none, write "???"),
-"reg_price": (String. Extract ONLY the numbers/digits of the regular price. PRICE RANGE RULE: If the raw text shows a price range (e.g., $29.99 - $43.99), you MUST extract ONLY the highest number! You MUST strip the $ sign, strip words like 'regular', 'was', or 'orig', and REPLACE the decimal with a space, e.g. "43 99". NEVER include the word 'regular' in this extracted string! If none, write "NONE"),
+"reg_price": (String. Extract ONLY the numbers/digits of the regular price. PRICE RANGE RULE: If the raw text shows a price range for the regular price (e.g., $23.99 - $26.99), you MUST preserve the full range! Strip the $ signs, replace decimals with spaces, and connect them with a hyphen, e.g. "23 99 - 26 99". Strip words like 'regular' or 'orig'. NEVER include the word 'regular' in this extracted string! If none, write "NONE"),
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line exactly as written. VERBATIM OVERRIDE (ABSOLUTE): If the title line starts with or contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Dove Body Wash'), you MUST keep those exact words in the title! You are STRICTLY FORBIDDEN from stripping them out to 'clean' the name.),
 "b2_verification": (JSON Object. Extract facts from the extra text. If none, write "NONE".
   "limit": (String. MUST contain 'Limit' or 'Max' plus a number. ACRONYM SCRUB: Strip 'QTY'.),
@@ -1069,9 +1069,13 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 if (activeCommentBlueprints[i].includes("Fluid Inline Paragraph")) {
                     // Formatted as a single fluid paragraph
                     let joined = emojifiedComment.join(' ');
+                    // QUESTION FLIP GUARD: Only flip if the question is at the start (NEVER flip a URL to the front!)
                     if (joined.includes('?') && !joined.trim().endsWith('?')) {
                         let parts = joined.split(/(?<=\?)\s+/);
-                        if (parts.length > 1) joined = parts.slice(1).join(' ') + ' ' + parts[0];
+                        // Shield: If the text after the question contains 'http', do NOT flip it to the front!
+                        if (parts.length > 1 && !parts.slice(1).join(' ').includes('http')) {
+                            joined = parts.slice(1).join(' ') + ' ' + parts[0];
+                        }
                     }
                     rawFinalComment = joined;
                 } else {
@@ -1115,7 +1119,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.28]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.29]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1340,7 +1344,7 @@ RULES:
 2. DATA INTEGRITY & FORMATTING:
    - You MUST include the exact sale price (ALWAYS with a '$' sign, e.g. '$14.99 Shipped' or '$3.99 Pickup').
    - PRICE PAIRING & DETERMINISTIC ROTATION LAW: You MUST weave the sale price and regular price side-by-side in the EXACT SAME SENTENCE. NEVER put them on separate lines! You MUST use this exact formatting: Var 1 MUST say 'on [Retailer] for [sale_price], down from [reg_price].' Var 2 MUST say 'on [Retailer] for [sale_price], previously [reg_price].' Var 3 MUST say 'on [Retailer] for [sale_price], was [reg_price].' Daily Thread MUST say 'on [Retailer] for [sale_price], dropping from [reg_price].' Make the price statement its own distinct sentence! Do NOT combine the opening scenario and the price into one giant run-on sentence using 'and' or 'when'! Sentence 1 MUST end with a period. Sentence 2 MUST start with the product title.
-   - REGULAR PRICE FORMAT: You MUST strip the $ sign and replace the decimal with a space (e.g., "29 99"). PRICE RANGE RULE: If the raw text shows a price range (e.g., $29.99 - $43.99), extract ONLY the highest number! Never output a dollar sign or decimal on regular prices! Never write 'marked down' or 'discount'. Never write 'regular' before the number!
+   - REGULAR PRICE FORMAT: Strip $ signs and replace decimals with spaces. PRICE RANGE RULE: If the raw text shows a price range for the regular price (e.g., $23.99 - $26.99), keep the full range connected with a hyphen (e.g., "23 99 - 26 99")! Never output dollar signs or decimals on regular prices! Never write 'regular' before the number!
    - Full product title verbatim (keep 'ADD 3 QTY' in the title line if present).
    - Retailer explicitly stated in EVERY post (e.g. 'on Amazon', 'at Walmart', 'at Walgreens', 'at Woot').
    - Capture all extra specs, sizes, limits, and store pickup thresholds. FACT DEDUPLICATION & FRAGMENT BAN: Do NOT list the same features twice! You MUST weave facts into full sentences. NEVER output fragmented bullet points! All facts MUST be placed AFTER the price sentence.
