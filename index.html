@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.33</title>
+    <title>The CB Command Center v10.2.34</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.33 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.34 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -601,7 +601,7 @@
         try {
             let urlObj = new URL(cleanURL);
             urlObj.searchParams.append(randomKey, randomHash);
-            if(Math.random() > 0.7) urlObj.hash = `sec${Math.floor(Math.random()*99)}`;
+            // Anchor hash removed to keep URLs clean and reserve '#' exclusively for #ad
             return urlObj.toString().replace(/\/\?/, '?');
         } catch (e) {
             const separator = cleanURL.includes('?') ? '&' : '?';
@@ -682,8 +682,8 @@
             .replace(/\bessential\b/gi, 'staple');
     }
 
-    // CRASH-PROOF EMOJI DENSITY ENGINE
-    function applyEmojiDensity(lines, min, max) {
+    // DYNAMIC CONTEXTUAL EMOJI ENGINE (Uses AI Product-Specific Emojis)
+    function applyEmojiDensity(lines, min, max, contextualEmojis = null) {
         if (!lines) return [];
         let arr = Array.isArray(lines) ? lines : typeof lines === 'object' ? Object.values(lines) : [String(lines)];
         arr = arr.map(s => String(s).trim()).filter(s => s.length > 0);
@@ -692,12 +692,15 @@
         let targetCount = Math.floor(Math.random() * (max - min + 1)) + min;
         if (targetCount === 0) return [...arr];
 
-        const emojis = ["✨","🔥","📦","👇","🌿","🧼","🧴","🛁","🌸","💧","🫧","🧺","☕","🧵","🧦"];
+        // Use AI product-specific emojis; fallback strictly to neutral universal emojis (no random bathtubs on food!)
+        const neutralFallbacks = ["✨", "🔥", "📦", "👇", "🌿", "☕"];
+        const pool = (contextualEmojis && contextualEmojis.length >= 3) ? contextualEmojis : neutralFallbacks;
+
         let result = [...arr];
         for (let e = 0; e < targetCount; e++) {
             let randIdx = Math.floor(Math.random() * result.length);
             if (result[randIdx].includes('http')) continue; // Shield URLs from emojis
-            let randEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            let randEmoji = pool[Math.floor(Math.random() * pool.length)];
             result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${randEmoji}` : `${randEmoji} ${result[randIdx]}`;
         }
         return result;
@@ -1012,7 +1015,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     postLines.splice(randIdx, 0, customText);
                 }
 
-                let emojifiedPost = applyEmojiDensity(postLines, 0, 4);
+                let emojifiedPost = applyEmojiDensity(postLines, 0, 4, finalEmojis);
                 let rawFinalPost = dealType === 'run' ? emojifiedPost.join(' ') : joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
                 // PASS THROUGH UNIVERSAL JAVASCRIPT FIREWALL
@@ -1072,7 +1075,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     commentLines[1] = temp;
                 }
 
-                let emojifiedComment = applyEmojiDensity(commentLines, 0, 2);
+                let emojifiedComment = applyEmojiDensity(commentLines, 0, 2, finalEmojis);
                 
                 // DYNAMIC CHAOS GEOMETRY ENFORCEMENT
                 let rawFinalComment = "";
@@ -1119,7 +1122,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 dtLines.splice(randIdxDt, 0, customTextDt);
             }
 
-            let emojifiedDt = applyEmojiDensity(dtLines, 0, 3);
+            let emojifiedDt = applyEmojiDensity(dtLines, 0, 3, finalEmojis);
             let rawFinalDt = joinWithSpaceChaos(emojifiedDt, 1, 2);
             
             // PASS THROUGH UNIVERSAL JAVASCRIPT FIREWALL
@@ -1129,7 +1132,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.33]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.34]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
