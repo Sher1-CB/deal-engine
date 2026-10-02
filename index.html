@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.32</title>
+    <title>The CB Command Center v10.2.33</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.32 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.33 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1033,8 +1033,8 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                 commentText = commentText.split(extractedURL).join('[TARGET_SLOT]');
                 commentText = commentText.replace(/\[URL\]/gi, '[TARGET_SLOT]');
                 
-                // Now safely replace all [TARGET_SLOT] placeholders with the cloaked URL exactly once
-                commentText = commentText.replace(/\[TARGET[^\]]*\]/gi, cloaked);
+                // Now safely replace all [TARGET_SLOT] placeholders with the cloaked URL and compliant #ad disclosure
+                commentText = commentText.replace(/\[TARGET[^\]]*\]/gi, cloaked + ' #ad');
                 
                 let commentLines = commentText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
 
@@ -1048,18 +1048,18 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
                     return true;
                 });
 
-                // FAIL-SAFE LINK INJECTION: If the AI omitted the link, inject it on Line 2!
+                // FAIL-SAFE LINK INJECTION: If the AI omitted the link, inject it on Line 2 with #ad disclosure!
                 if (!commentLines.some(l => l.includes(cloaked))) {
                     if (commentLines.length > 1) {
-                        commentLines.splice(1, 0, cloaked);
+                        commentLines.splice(1, 0, cloaked + ' #ad');
                     } else {
-                        commentLines.push(cloaked);
+                        commentLines.push(cloaked + ' #ad');
                     }
                 }
 
-                // LINE 1 SHIELD: If URL is the very first token in commentLines[0], move it behind the human text!
+                // LINE 1 SHIELD: If URL is the very first token in commentLines[0], move it and #ad behind the human text!
                 if (commentLines.length > 0 && /^https?:\/\//i.test(commentLines[0])) {
-                    let parts = commentLines[0].match(/^(https?:\/\/[^\s]+)\s+(.+)$/);
+                    let parts = commentLines[0].match(/^(https?:\/\/[^\s]+(?:\s+#ad)?)\s+(.+)$/);
                     if (parts) {
                         commentLines[0] = parts[2] + ' ' + parts[1];
                     }
@@ -1108,8 +1108,8 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             dtText = dtText.split(extractedURL).join('[TARGET_SLOT]');
             dtText = dtText.replace(/\[URL\]/gi, '[TARGET_SLOT]');
             
-            // Now safely replace all [TARGET_SLOT] placeholders with the cloaked URL exactly once
-            dtText = dtText.replace(/\[TARGET[^\]]*\]/gi, dtCloaked);
+            // Now safely replace all [TARGET_SLOT] placeholders with the cloaked URL and compliant #ad disclosure
+            dtText = dtText.replace(/\[TARGET[^\]]*\]/gi, dtCloaked + ' #ad');
 
             let dtLines = dtText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
             
@@ -1129,7 +1129,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.32]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.33]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
