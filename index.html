@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.31</title>
+    <title>The CB Command Center v10.2.32</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.31 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.32 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -649,8 +649,12 @@
             .replace(/\bpurchases?\b/gi, 'order')
             .replace(/\bpurchased\b/gi, 'ordered')
             .replace(/\bpurchasing\b/gi, 'ordering')
-            // Auto-capitalize the first letter of sentences if regex replacement made them lowercase
-            .replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase())
+            // Auto-capitalize the first letter of sentences while shielding URLs
+            .replace(/(^\s*|[.!?]\s+)(?!https?:\/\/)([a-z])/gi, (m, p1, p2) => p1 + p2.toUpperCase())
+            // Force all URLs to maintain lowercase https:// protocol
+            .replace(/\bHttps:\/\//g, 'https://')
+            // Purge hallucinated Amazon Prime shipping claims when not explicitly in raw text
+            .replace(/Delivery is complimentary for Prime members on Amazon\.?\s*/gi, '')
             // 10. Clean up double fulfillment tags
             .replace(/\bShipped\s+Total\b/gi, 'Total')
             .replace(/\bPickup\s+Total\b/gi, 'Total')
@@ -853,7 +857,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
   "size": (String. Extract exact sizes/dimensions, e.g., '44"L x 19"W', 'S-XXL'),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
-"b5_verification": (String. Extract specific shipping OR store pickup minimum thresholds and membership requirements ONLY (e.g., 'Walgreens $10 minimum pickup', 'Walmart+ or $35 order', 'Prime members for Woot'). If no special threshold or membership is needed, write "NONE"),
+"b5_verification": (String. Extract specific shipping OR store pickup minimum thresholds and membership requirements ONLY (e.g., 'Walgreens $10 minimum pickup', 'Walmart+ or $35 order', 'Prime members for Woot'). NON-WOOT LOCK: Never mention Prime membership on Amazon deals unless raw text explicitly says 'Prime only'! If no special threshold or membership is needed, write "NONE"),
 "b8_verification": (String. WEBSITE-SIDE CODE PROTOCOL: The website already displays the promo code box and coupon clipping button with a 1-click copy icon. Do NOT extract promo codes or clipping instructions for the post text. If the raw text mentions Subscribe & Save or S&S, write 'Routine Delivery Available'. Otherwise, write "NONE"),
 "features_catchall": (String. EXTRA LINE VACUUM: Look at EVERY line in the raw text. If a line is NOT the title, price, or URL, it is an extra fact! You MUST extract it here (e.g., 'several scents', 'washable', 'only on black', 'size 44x19', 'includes 2 batteries'). PROMO & CHECKOUT SCRUB (ABSOLUTE): You are STRICTLY FORBIDDEN from treating promotional phrases ('Point Drop', '90 Day Low', 'Top Score', 'Best Seller') or cart instructions ('Check total at checkout', 'Price drops in cart') as product features! Ignore those completely. NEVER output robotic phrases like 'verify the total' or 'inspect the final amount'. Extract ONLY physical product specs, materials, flavors, sizes, or limits. If none, write "NONE"),
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE PAIRING & DETERMINISTIC ROTATION LAW (ABSOLUTE): You MUST weave the sale_price and reg_price side-by-side in the EXACT SAME SENTENCE. You are STRICTLY FORBIDDEN from putting them on separate lines! CONDITIONAL 'NONE' RULE: If reg_price is "NONE", you MUST drop the comparative phrase entirely. DYNAMIC HUMAN PRICE FRAMING (ANTI-BOT CADENCE): You MUST rotate the sentence structure of the price across variations so they do not open identically:
@@ -1125,7 +1129,7 @@ GLOBAL SHIELD (ABSOLUTE SUPREME LAW): You are STRICTLY FORBIDDEN from using any 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.31]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.32]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
