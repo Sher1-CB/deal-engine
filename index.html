@@ -1392,7 +1392,7 @@ RULES:
    - Full product title verbatim (keep 'ADD 3 QTY' in the title line if present).
    - Retailer explicitly stated in EVERY post (e.g. 'on Amazon', 'at Walmart', 'at Walgreens', 'at Woot').
    - Capture all extra specs, sizes, limits, and store pickup thresholds. FACT DEDUPLICATION & FRAGMENT BAN: Do NOT list the same features twice! You MUST weave facts into full sentences. NEVER output fragmented bullet points! All facts MUST be placed AFTER the price sentence.
-   - PROMO & CHECKOUT SCRUB: Ignore promotional slogans ('Point Drop', '90 Day Low') and cart instructions ('Check total at checkout'). These are NOT product features! NEVER output robotic phrases like 'verify the total'.
+   - PROMO, CHECKOUT & RETAILER HEADER SCRUB: Ignore promotional slogans ('Point Drop', '90 Day Low', 'Top Score', 'Best Seller') and cart instructions. RETAILER HEADER BAN: Ignore any line announcing the deal on a retailer (e.g. 'RECORD LOW in Amazon', 'Good Pick on Amazon', 'Great Find on Amazon', 'Point Drop on Amazon')! Whatever phrase is placed before the retailer name is a DEAL HEADER, NOT a product feature! Extract ONLY physical product specs! NEVER output robotic phrases like 'verify the total' or 'RECORD LOW in Amazon'.
    - UNIVERSAL 'FREE' BAN: You are STRICTLY FORBIDDEN from writing 'free shipping', 'free pickup', or 'free store pickup'! Say 'delivery is included', 'complimentary delivery', or 'store pickup applies once your total hits 10'.
    - WEBSITE-SIDE CODE PROTOCOL: The website already displays the promo code box and coupon clipping button with a 1-click copy icon. Do NOT mention promo codes, coupon codes, clipping coupons, or specific codes in the post text!
 3. POST VARIATIONS (1, 2, 3) & SPACING: 
