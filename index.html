@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.65</title>
+    <title>The CB Command Center v10.2.66</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.65 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.66 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -880,9 +880,9 @@
             slangDirective = `MODE: PURE ORGANIC CONVERSATIONAL. Write in a warm, relaxed, completely natural human voice with ZERO forced slang tokens! Do NOT force words like 'lowkey', 'ngl', or 'clutch'. Write like a real person chatting casually with friends. (CRINGE BAN: Strictly forbidden from using Gen-Z teen slang like 'bussin', 'no cap', 'slay', 'fire', 'rizz', or 'drip'!).`;
         }
 
-        // POST DENSITY CHAOS SHUFFLER (Unpredictable 2-line, 3-line, and 4-line posts)
+        // POST DENSITY CHAOS SHUFFLER (Guarantees unpredictable line counts with strict product context)
         const densityArchetypes = [
-            "Snappy Quick-Hit (2 Lines Total): Line 1 Price and limits/specs || Line 2 Snappy personal reaction (e.g. 'Such a fun piece to style for weekend outings!' or 'Warm feet make cold mornings so much easier!'). Fast, punchy, zero fluff!",
+            "Snappy Quick-Hit (2 Lines Total): Line 1 Price and limits/specs || Line 2 Snappy personal human reaction 100% customized to this exact product (e.g., if it's furniture, talk about bedroom organization or clothes storage; if it's apparel, talk about wearing it). Fast, punchy, zero fluff!",
             "Full Rich Story (3 to 4 Lines): Line 1 Scenario Hook || Line 2 Price sentence || Line 3 Specs/limits || Line 4 Practical utility ending.",
             "Balanced Conversational Share (2 to 3 Lines): Line 1 Relatable daily thought || Line 2 Price and specs || Line 3 Practical closing thought."
         ];
@@ -931,7 +931,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "b5_verification": (String. Extract specific shipping OR store pickup minimum thresholds and membership requirements ONLY (e.g., 'Walgreens $10 minimum pickup', 'Walmart+ or $35 order', 'Prime members for Woot'). NON-WOOT LOCK: Never mention Prime membership on Amazon deals unless raw text explicitly says 'Prime only'! If no special threshold or membership is needed, write "NONE"),
 "b8_verification": (String. WEBSITE-SIDE CODE PROTOCOL: The website already displays the promo code box and coupon clipping button with a 1-click copy icon. Do NOT extract promo codes or clipping instructions for the post text. If the raw text mentions Subscribe & Save or S&S, write strictly 'YES'. Do NOT write a sentence here! Otherwise, write "NONE"),
 "features_catchall": (String. EXTRA LINE VACUUM: Extract raw comma-separated keywords/specs ONLY (e.g. '4 colors, sizes S-XL', 'washable, reusable', 'stainless steel'). You are STRICTLY FORBIDDEN from writing full sentences in this field! RETAILER HEADER BAN (ABSOLUTE): Ignore any line announcing the deal on a retailer (e.g. 'Point Drop on Amazon', 'Great Find on Amazon')! Extract ONLY raw physical specs, colors, sizes, or materials. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE PAIRING & DETERMINISTIC ROTATION LAW (ABSOLUTE): You MUST weave the sale_price and reg_price side-by-side in the EXACT SAME SENTENCE. You are STRICTLY FORBIDDEN from putting them on separate lines! CONDITIONAL 'NONE' RULE: If reg_price is "NONE", you MUST drop the comparative phrase entirely. POSITIVE HOUSEHOLD CONVENIENCE & BAN CORPORATE JARGON (ABSOLUTE): Every post MUST be 100% cheerful, positive, and deal-elevating! Focus strictly on enjoyable convenience, being stocked up for months, and practical daily wins! BAN CORPORATE JARGON: You are STRICTLY FORBIDDEN from using cold clinical terms like 'duplicate personal care items', 'reliable daily care', 'good prep work', or abstract phrases like 'brings total peace of mind'! Call items what they actually are in real life (e.g. 'deodorant', 'travel minis', 'socks', 'containers', 'snacks')! ZERO NEGATIVITY: Never use negative complaints ('frustrating', 'stressful', 'exhausting', 'the worst part'). Speak with upbeat warmth (e.g. 'Always love having extra deodorant tucked under the sink so you're set for months', 'Super handy to toss in gym bags and travel totes')! DYNAMIC HUMAN PRICE FRAMING (ANTI-BOT CADENCE): You MUST rotate the sentence structure of the price across variations so they do not open identically:
+"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE PAIRING & DETERMINISTIC ROTATION LAW (ABSOLUTE): You MUST weave the sale_price and reg_price side-by-side in the EXACT SAME SENTENCE. You are STRICTLY FORBIDDEN from putting them on separate lines! CONDITIONAL 'NONE' RULE: If reg_price is "NONE", you MUST drop the comparative phrase entirely. POSITIVE HOUSEHOLD CONVENIENCE & BAN CORPORATE JARGON (ABSOLUTE): Every post MUST be 100% cheerful, positive, and deal-elevating! Focus strictly on enjoyable convenience, being stocked up for months, and practical daily wins! BAN CORPORATE JARGON: You are STRICTLY FORBIDDEN from using cold clinical terms like 'duplicate personal care items', 'reliable daily care', 'good prep work', or abstract phrases like 'brings total peace of mind'! Call items what they actually are in real life (e.g. 'deodorant', 'travel minis', 'socks', 'containers', 'snacks')! ZERO NEGATIVITY: Never use negative complaints ('frustrating', 'stressful', 'exhausting', 'the worst part'). Speak with upbeat warmth (e.g. 'Always love having extra deodorant tucked under the sink so you're set for months', 'Super handy to toss in gym bags and travel totes')! PRODUCT-CONTEXTUAL REALITY (ABSOLUTE): Your sentences, reactions, and sign-offs MUST make logical, real-world sense for the ACTUAL product being sold! (e.g. If it is furniture, talk about organizing rooms, clothes, or closets—NEVER say a dresser is for 'weekend outings' or 'put it on a desk'! If it is clothing, talk about wearing it. If it is kitchenware, talk about cooking). You are STRICTLY FORBIDDEN from using generic template examples that mismatch the item! DYNAMIC HUMAN PRICE FRAMING (ANTI-BOT CADENCE): You MUST rotate the sentence structure of the price across variations so they do not open identically:
 • Variation 1: 'The [Title] on [Retailer] is [sale_price], down from [reg_price].'
 • Variation 2: '[Retailer] has the [Title] for [sale_price], previously [reg_price].'
 • Variation 3: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Sentence 1 of Variation 3 is a calm personal reflection—NEVER start Sentence 1 with 'Right now'!).
@@ -1255,7 +1255,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.65]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.66]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
