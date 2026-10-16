@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.72</title>
+    <title>The CB Command Center v10.2.75</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.72 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.75 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -507,18 +507,21 @@
                 select.appendChild(opt);
             });
             
-            // DYNAMIC KEY & MODEL MESH DISCOVERY (N-1 Models & Latest Models)
+            // DYNAMIC LITE-FIRST WATERFALL DISCOVERY
                 const stableLite = textModels.filter(m => m.name.includes("lite") && !m.name.includes("preview"));
-                const stableFlash = textModels.filter(m => m.name.includes("flash") && !m.name.includes("lite") && !m.name.includes("preview"));
+                const numberedFlash = textModels.filter(m => m.name.includes("flash") && !m.name.includes("lite") && !m.name.includes("latest") && !m.name.includes("preview"));
 
-                // Store N-1 (2nd latest) and Latest (1st latest) in memory
-                window.n1Lite = stableLite.length >= 2 ? stableLite[1].name.replace('models/', '') : (stableLite[0] ? stableLite[0].name.replace('models/', '') : 'gemini-3.5-flash-lite');
-                window.n1Flash = stableFlash.filter(m => !m.name.includes("latest")).length >= 2 ? stableFlash.filter(m => !m.name.includes("latest"))[1].name.replace('models/', '') : 'gemini-3.7-flash';
-                window.latestFlash = stableFlash.length > 0 ? stableFlash[0].name.replace('models/', '') : 'gemini-flash-latest';
+                // Dynamically store the 4 Waterfall models
+                const secondLite = (stableLite.length >= 2) ? stableLite[1].name.replace('models/', '') : 'gemini-3.5-flash-lite';
+                const thirdLite = (stableLite.length >= 3) ? stableLite[2].name.replace('models/', '') : (stableLite[0] ? stableLite[0].name.replace('models/', '') : 'gemini-3.1-flash-lite');
+                const latestLite = (stableLite.length > 0) ? stableLite[0].name.replace('models/', '') : 'gemini-flash-lite-latest';
+                const secondFlash = (numberedFlash.length >= 2) ? numberedFlash[1].name.replace('models/', '') : 'gemini-3.7-flash';
 
-                // Automatically default dropdown to N-1 Lite (2nd latest Lite)
-                if (select.querySelector(`option[value="${window.n1Lite}"]`)) {
-                    select.value = window.n1Lite;
+                window.modelWaterfall = [secondLite, thirdLite, latestLite, secondFlash];
+
+                // Automatically default dropdown to Step 1 (2nd Latest Lite)
+                if (select.querySelector(`option[value="${window.modelWaterfall[0]}"]`)) {
+                    select.value = window.modelWaterfall[0];
                 } else if (textModels.length > 0) {
                     select.value = textModels[0].name.replace('models/', '');
                 }
@@ -986,7 +989,8 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             ].filter(k => k !== "");
 
             // 100% RESPECT MANUAL SELECTION: If moderator manually picked a different model, use it!
-            const isManualChoice = selectedModel && (selectedModel !== window.n1Lite);
+            const defaultModel = (window.modelWaterfall && window.modelWaterfall[0]) ? window.modelWaterfall[0] : 'gemini-3.5-flash-lite';
+            const isManualChoice = selectedModel && (selectedModel !== defaultModel);
 
             while (attempts < maxAttempts) {
                 attempts++;
@@ -994,26 +998,30 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
                     let data = null;
                     
                     if (isManualChoice) {
-                        // Moderator manually chose a model: run across available keys
+                        // Manual Choice: User selected a specific model, run it directly!
                         btn.innerHTML = `⏳ Compiling on ${selectedModel}...`;
                         data = await fetchWithRetry(prompt, selectedModel);
                     } else {
-                        // DEFAULT MESH: Key 1 (2nd Lite -> 2nd Flash) -> Key 2 (Latest Flash) -> Key 3
+                        // LITE-FIRST WATERFALL: 2nd Lite (5s) -> 3rd Lite (5s) -> 1st Lite (5s) -> 2nd Flash (Finisher)
+                        const w = window.modelWaterfall || ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.7-flash'];
+                        
                         try {
-                            btn.innerHTML = `⏳ Key 1: Compiling on ${window.n1Lite}...`;
-                            data = await fetchWithRetry(prompt, window.n1Lite, 5000); // 5.0s lightning timeout
-                        } catch (k1Err) {
-                            console.log(`Key 1 on ${window.n1Lite} delayed. Trying Key 1 on ${window.n1Flash}...`);
+                            btn.innerHTML = `⏳ Step 1: ${w[0]} (5s)...`;
+                            data = await fetchWithRetry(prompt, w[0], 5000);
+                        } catch (step1Err) {
+                            console.log(`Step 1 (${w[0]}) timed out or busy. Trying Step 2: ${w[1]}...`);
                             try {
-                                btn.innerHTML = `⚡ Key 1: Switching to ${window.n1Flash}...`;
-                                data = await fetchWithRetry(prompt, window.n1Flash, 6000);
-                            } catch (k1FlashErr) {
-                                if (keys.length > 1) {
-                                    console.log(`Key 1 failed. Leaping to Key 2 on ${window.latestFlash}...`);
-                                    btn.innerHTML = `🔄 Key 1 busy ➔ Key 2 on ${window.latestFlash}...`;
-                                    data = await fetchWithRetry(prompt, window.latestFlash);
-                                } else {
-                                    throw k1FlashErr;
+                                btn.innerHTML = `⚡ Step 2: ${w[1]} (5s)...`;
+                                data = await fetchWithRetry(prompt, w[1], 5000);
+                            } catch (step2Err) {
+                                console.log(`Step 2 (${w[1]}) timed out or busy. Trying Step 3: ${w[2]}...`);
+                                try {
+                                    btn.innerHTML = `🔄 Step 3: ${w[2]} (5s)...`;
+                                    data = await fetchWithRetry(prompt, w[2], 5000);
+                                } catch (step3Err) {
+                                    console.log(`All 3 Lite models busy. Launching Step 4 Flash Finisher: ${w[3]}...`);
+                                    btn.innerHTML = `🚀 Step 4: Finishing on ${w[3]}...`;
+                                    data = await fetchWithRetry(prompt, w[3]);
                                 }
                             }
                         }
@@ -1255,7 +1263,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.72]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.75]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1334,19 +1342,26 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('duplicateWarning').style.display = 'none';
 
             localStorage.removeItem('cb_outage_start');
+            localStorage.removeItem('cb_fail_count');
             document.getElementById('emergencyFallbackBtn').style.display = 'none';
 
         } catch (error) {
             alert("Engine Error: " + error.message);
 
+            // INSTANT EMERGENCY TRIGGER: Shows button after 2 minutes OR consecutive errors
             const now = Date.now();
+            let failCount = parseInt(localStorage.getItem('cb_fail_count') || "0") + 1;
+            localStorage.setItem('cb_fail_count', failCount);
+
             let firstFailure = localStorage.getItem('cb_outage_start');
             if (!firstFailure) {
                 localStorage.setItem('cb_outage_start', now);
                 firstFailure = now;
             }
             const minutesElapsed = (now - parseInt(firstFailure)) / (1000 * 60);
-            if (minutesElapsed >= 15) {
+            
+            // Show emergency button if down for 2 minutes OR if it failed twice!
+            if (minutesElapsed >= 2 || failCount >= 2) {
                 document.getElementById('emergencyFallbackBtn').style.display = "flex";
             }
         } finally {
@@ -1589,7 +1604,16 @@ REQUIRED OUTPUT FORMAT (KEEP BLANK LINES BETWEEN THOUGHTS):
 [Concluding lifestyle thought]`;
 
         fallbackCopy(emergencyPrompt, () => {
-            alert("🚨 Emergency Fallback Prompt copied to clipboard! Paste this into ChatGPT.");
+            alert(
+                "🚨 EMERGENCY FALLBACK MODE ACTIVATED!\n\n" +
+                "📋 Prompt copied to your clipboard!\n" +
+                "🌐 Opening ChatGPT in a new tab now (just press Ctrl + V to paste).\n\n" +
+                "⚠️ OPERATIONAL DIRECTIVE:\n" +
+                "Use this emergency ChatGPT thread ONLY for the remainder of your shift today!\n\n" +
+                "The CB Command Center is continuously updated with live algorithm shields, tracking sharding, and #ad compliance that your static ChatGPT tab DOES NOT HAVE.\n\n" +
+                "You MUST return to the Command Center on your next shift!"
+            );
+            window.open("https://chatgpt.com", "_blank");
         });
     }
 </script>
