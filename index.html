@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.75</title>
+    <title>The CB Command Center v10.2.76</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.75 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.76 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -683,6 +683,8 @@
             .replace(/(^\s*|[.!?]\s+)(?!https?:\/\/)([a-z])/gi, (m, p1, p2) => p1 + p2.toUpperCase())
             // De-duplicate back-to-back "Right now" sentence starters
             .replace(/\b(Right now,[^.]*?\.\s*)Right now,\s+/gi, '$1')
+            // Purge accidental standalone count fragments (e.g. '120 Count ✨')
+            .replace(/(^\s*|\n+)\d+\s+(count|pack|pcs|pieces)\s*[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}]*(\n+|$)/giu, '$1')
             // Soften stiff robotic adverbs and scrub corporate zen clichés
             .replace(/\bremarkably\s+(cozy|peaceful|smooth|comforting|welcoming)\b/gi, 'so $1')
             .replace(/\bexceptionally\s+(cozy|peaceful|smooth|comforting|welcoming)\b/gi, 'really $1')
@@ -861,13 +863,13 @@
             ? `"custom_line_rephrases": (Array of 4 strings. The user provided a custom injection line: "${customLine}". TASK: Scrub banned words and rephrase this specific line 4 unique ways. Do NOT change the meaning.),` 
             : `"custom_line_rephrases": (Array of 4 strings. Write ["DEAD","DEAD","DEAD","DEAD"]),`;
 
-        // BULLETPROOF 5-OPTION CHAOS SHUFFLER (Guarantees specs/colors are ALWAYS included in every layout)
+        // BULLETPROOF 5-OPTION CHAOS SHUFFLER (Guarantees full sentence specs & zero standalone count fragments)
         const dtLayoutOptions = [
-            "Layout A: Line 1 Hook || Line 2 Price sentence || Line 3 Extracted specs, colors, or limits || Line 4 Link [TARGET_SLOT] || Line 5 Closing lifestyle thought.",
-            "Layout B (LINK AT END): Line 1 Price sentence || Line 2 Extracted specs, colors, or limits || Line 3 Conversational Hook || Line 4 Link [TARGET_SLOT] at the absolute very end (ABSOLUTE: The link MUST be the final line!).",
-            "Layout C: Line 1 Conversational Hook || Line 2 Link [TARGET_SLOT] in the middle || Line 3 Price sentence || Line 4 Extracted specs, colors, or limits at the very end.",
-            "Layout D: Line 1 Price sentence || Line 2 Extracted specs, colors, or limits || Line 3 Link [TARGET_SLOT] in the middle || Line 4 Closing lifestyle thought at the very end.",
-            "Layout E (LINK AT END): Line 1 Conversational Hook || Line 2 Price sentence || Line 3 Extracted specs, colors, or limits || Line 4 Closing lifestyle thought || Line 5 Link [TARGET_SLOT] at the absolute very end."
+            "Layout A: Line 1 Hook || Line 2 Price sentence || Line 3 Full sentence with specs, colors, or limits (NEVER a raw fragment like '120 Count') || Line 4 Link [TARGET_SLOT] || Line 5 Closing lifestyle thought.",
+            "Layout B (LINK AT END): Line 1 Price sentence || Line 2 Full sentence with specs, colors, or limits || Line 3 Conversational Hook || Line 4 Link [TARGET_SLOT] at the absolute very end (ABSOLUTE: The link MUST be the final line!).",
+            "Layout C: Line 1 Conversational Hook || Line 2 Link [TARGET_SLOT] in the middle || Line 3 Price sentence || Line 4 Full sentence with specs or limits at the very end.",
+            "Layout D: Line 1 Price sentence || Line 2 Full sentence with specs, colors, or limits || Line 3 Link [TARGET_SLOT] in the middle || Line 4 Closing lifestyle thought at the very end.",
+            "Layout E (LINK AT END): Line 1 Conversational Hook || Line 2 Price sentence || Line 3 Full sentence with specs, colors, or limits || Line 4 Closing lifestyle thought || Line 5 Link [TARGET_SLOT] at the absolute very end."
         ];
         const selectedDtLayout = dtLayoutOptions[Math.floor(Math.random() * dtLayoutOptions.length)];
 
@@ -922,7 +924,7 @@
 Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): Return pure JSON only with zero conversational filler.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. RETAILER MISMATCH FIREWALL: If the raw text mentions 'Woot', the retailer MUST be Woot! Do not let Amazon bias override the true retailer!),
-"sale_price": (String. Extract the sale price. You MUST ensure a '$' sign is included at the front, then ADD the EXACT word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'. NEVER change the fulfillment word (e.g., do NOT write 'Shipping inclusive'). NEVER drop the '$' sign. If none, write "???"),
+"sale_price": (String. Extract the sale price. PRICE RANGE MANDATE: If the raw text shows a price range for the sale price (e.g. '$15.99 - $17.99 Shipped'), you MUST extract the FULL range! NEVER collapse it to a single number even if text says 'cheapest'! You MUST ensure a '$' sign is included at the front, then ADD the EXACT word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}' or '$15.99 - $17.99 ${fulfillmentStatus}'. NEVER drop the '$' sign. If none, write "???"),
 "reg_price": (String. Extract ONLY the numbers/digits of the regular price. PRICE RANGE RULE: If the raw text shows a price range for the regular price (e.g., $23.99 - $26.99), you MUST preserve the full range! Strip the $ signs, replace decimals with spaces, and connect them with a hyphen, e.g. "23 99 - 26 99". Strip words like 'regular' or 'orig'. NEVER include the word 'regular' in this extracted string! If none, write "NONE"),
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line exactly as written. VERBATIM OVERRIDE (ABSOLUTE): If the title line starts with or contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Dove Body Wash'), you MUST keep those exact words in the title! You are STRICTLY FORBIDDEN from stripping them out to 'clean' the name.),
 "b2_verification": (JSON Object. Extract facts from the extra text. If none, write "NONE".
@@ -1263,7 +1265,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.75]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.76]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1517,7 +1519,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
 RULES:
 1. GLOBAL SHIELD, MANDATORY #ad DISCLOSURE & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Every single link you output in Comments and the Daily Thread MUST have ' #ad' appended directly to the end of the URL (e.g. 'https://... #ad'). Post variations must have ZERO links and ZERO hashtags! Before outputting, scan your text: replace 'purchase' with 'order', 'deal/offer' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. Everything MUST be positive and deal-elevating! You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Purchase, Shop, Checkout, Cart, Basket, Price, Cost, Budget, Spend, Payment, Fee, Charge, Sale, Deal, Deals, Save, Savings, Discount, Markdown, marked down, Clearance, Offer, Promo, %, Coupon, Voucher, Claim, Redeem, Code, Free, F.R.E.E, Hurry, Act fast, Today only, Ending soon, Limited time, Flash sale, Doors close, Last chance, Sold out, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Gone, While supplies last, Selling out, Going fast, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, promotion, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!
 2. DATA INTEGRITY & FORMATTING:
-   - You MUST include the exact sale price (ALWAYS with a '$' sign, e.g. '$14.99 Shipped' or '$3.99 Pickup').
+   - You MUST include the exact sale price. If raw text shows a price range for the sale price (e.g. '$15.99 - $17.99 Shipped'), you MUST keep the full range! NEVER collapse it to a single number! ALWAYS keep the '$' sign.
    - PRICE PAIRING & DYNAMIC HUMAN FRAMING: You MUST weave the sale price and regular price side-by-side in the EXACT SAME SENTENCE. Var 1 MUST use: 'The [Title] on [Retailer] is [sale_price], down from [reg_price].' Var 2 MUST use: '[Retailer] has the [Title] for [sale_price], previously [reg_price].' Var 3: Sentence 1 MUST be a calm personal reflection with ZERO slang! Sentence 2 MUST use: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' Daily Thread MUST use: 'The [Title] on [Retailer] is [sale_price], dropping from [reg_price].' (Keep price statements as distinct sentences ending with a period! Never combine with 'when' or 'and').
    - REGULAR PRICE FORMAT: Strip $ signs and replace decimals with spaces. PRICE RANGE RULE: If the raw text shows a price range for the regular price (e.g., $23.99 - $26.99), keep the full range connected with a hyphen (e.g., "23 99 - 26 99")! Never output dollar signs or decimals on regular prices! Never write 'regular' before the number!
    - Full product title verbatim (keep 'ADD 3 QTY' in the title line if present).
