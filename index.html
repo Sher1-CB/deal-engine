@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.86</title>
+    <title>The CB Command Center v10.2.87</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.86 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.87 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -677,6 +677,8 @@
             // Purge clinical catalog jargon -> replace with natural shopper terms
             .replace(/\bvessels\b/gi, 'travel mugs')
             .replace(/\bvessel\b/gi, 'travel mug')
+            // Contextual Semantic Shield: Prevent grocery idioms on skincare/beauty items
+            .replace(/\b(my skin|face|complexion)[^.\n]*?\b(set for months|stocked up for months)\b/gi, '$1 feels so radiant and refreshed')
             // Auto-capitalize the first letter of sentences while shielding URLs
             .replace(/(^\s*|[.!?]\s+)(?!https?:\/\/)([a-z])/gi, (m, p1, p2) => p1 + p2.toUpperCase())
             // De-duplicate back-to-back "Right now" sentence starters
@@ -869,8 +871,8 @@
         currentRawOutput = ""; 
 
         let pronounInstruction = pronounStyle === "subject" 
-            ? "Use warm, positive 1st-person sharing (I, My, We, Our) like a real person sharing a find with friends." 
-            : "Focus on the item and household convenience, but keep the tone 100% cheerful, natural, and positive.";
+            ? "PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, IMAGINING USE, and HOW HANDY IT WILL BE ONCE IT ARRIVES (e.g., 'This would be so nice for...', 'Such a fun find if you need...', 'Could definitely see this making mornings easier...', 'Imagine having a full set ready for...'). FALSE OWNERSHIP BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from pretending you already physically own, received, or tested the item! NEVER say 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'." 
+            : "Focus on the item and prospective household convenience, highlighting how practical it will be once delivered. Keep the tone 100% positive, natural, and anticipatory.";
 
         const customLine = document.getElementById('customLine').value.trim();
         let customLineInstruction = customLine 
@@ -918,8 +920,8 @@
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleB = [
-            "Role 2A (Preference Question Drop): Line 1 Positive observation about this specific item under 12 words || Line 2 Link [TARGET_SLOT] || Line 3 Open-ended question asking what favorite flavor, color, or daily routine they would pair with this item.",
-            "Role 2B (Everyday Habit Query): Line 1 Practical thought about having this item on hand under 12 words || Line 2 Link [TARGET_SLOT] || Line 3 Open-ended question asking how or where in their home they would use this item most."
+            "Role 2A (Preference Question Drop): Line 1 Prospective observation about how fun or handy this item would be under 12 words || Line 2 Link [TARGET_SLOT] || Line 3 Open-ended question asking what favorite flavor, color, or daily routine they would pair with this item.",
+            "Role 2B (Everyday Habit Query): Line 1 Practical thought about how helpful this would be to have on hand under 12 words || Line 2 Link [TARGET_SLOT] || Line 3 Open-ended question asking how or where in their home they would use this item most."
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleC = [
@@ -966,7 +968,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 • Variation 2 Style: ${densityVar2}
 • Variation 3 Style: ${densityVar3}
 ANTI-FORMULA & REAL HUMAN VOICE (ABSOLUTE): You are STRICTLY FORBIDDEN from relying on the robotic formula '[Gerund] makes [routine] feel [adverb] [adjective]'! NEVER use stiff advertising adverbs like 'remarkably' or 'exceptionally'. Speak from real, tangible, sensory daily life (e.g. 'chilly hardwood floors', 'messy pantry shelves', 'warm feet make cold mornings so much easier', 'this would look so cute on a desk').
-// Title placement follows dynamic price framing rules CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with an upbeat household convenience or joyful personal reaction (e.g. 'This would look so cute on my desk!', 'Set for months!'). Stop writing abstract corporate zen filler like 'brings deep peace of mind' or 'delightfully organized'! The limit or price can never be the final sentence! NEVER use call-to-action pointers (e.g. NEVER write 'Head over to Amazon'). State the deal info ONCE and end on cheerful, practical utility! PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (100% clean, peaceful, zero slang in ALL modes). ANTI-PARROT LOCK: Never repeat slang words across posts! Strictly ban teenage Gen-Z slang ('no cap', 'bussin', 'rizz', 'fire') and commercial slang ('steal', 'bargain', 'grab'). SLANG STACKING BAN (NUCLEAR): MAXIMUM OF ONE SLANG WORD PER VARIATION! SLANG INTEGRATION (ABSOLUTE): You are STRICTLY FORBIDDEN from putting a slang word on its own line! The slang word MUST be woven smoothly inside a complete sentence. SLANG PLACEMENT: In Variation 1, weave slang in Sentence 1. In Variation 2, weave slang in Sentence 2 (the scenario hook). NEVER attach slang to the price sentence! You are STRICTLY FORBIDDEN from attaching slang to the price sentence! TRANSACTIONAL NOUN BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using the word 'offer', 'deal', 'bargain', or 'promo' anywhere in the text! NUCLEAR BAN: 'game changer', 'grab', 'markdown', 'marked down', 'breeze', 'link', 'savings', 'saving', 'elevate', 'elevating'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, URL, Promotion, Markdown, Marked down, Link, Savings, Save. DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation.),
+// Title placement follows dynamic price framing rules CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use or display once delivered (e.g., 'This would look so cute on a vanity!', 'Such a fun find for weekend road trips!', 'Would make early morning routines feel so much cozier!'). FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already own it or claiming it changed your life yesterday! NEVER use generic catchphrases like 'set for months' on skincare, apparel, or tools! Stop writing abstract corporate zen filler like 'brings deep peace of mind' or 'delightfully organized'! The limit or price can never be the final sentence! NEVER use call-to-action pointers (e.g. NEVER write 'Head over to Amazon'). State the deal info ONCE and end on cheerful, practical utility! TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, or size (e.g. '7 Colors', '20oz', '12 Pack') in your feature sentence if it already appears in the product title! If the title says '7 Colors Facial Led Light Therapy', the feature line MUST ONLY mention the extra details ('can be used on the face, neck, hands and body'). NEVER write 'features 7 Colors'! PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (100% clean, peaceful, zero slang in ALL modes). ANTI-PARROT LOCK: Never repeat slang words across posts! Strictly ban teenage Gen-Z slang ('no cap', 'bussin', 'rizz', 'fire') and commercial slang ('steal', 'bargain', 'grab'). SLANG STACKING BAN (NUCLEAR): MAXIMUM OF ONE SLANG WORD PER VARIATION! SLANG INTEGRATION (ABSOLUTE): You are STRICTLY FORBIDDEN from putting a slang word on its own line! The slang word MUST be woven smoothly inside a complete sentence. SLANG PLACEMENT: In Variation 1, weave slang in Sentence 1. In Variation 2, weave slang in Sentence 2 (the scenario hook). NEVER attach slang to the price sentence! You are STRICTLY FORBIDDEN from attaching slang to the price sentence! TRANSACTIONAL NOUN BAN (NUCLEAR): You are STRICTLY FORBIDDEN from using the word 'offer', 'deal', 'bargain', or 'promo' anywhere in the text! NUCLEAR BAN: 'game changer', 'grab', 'markdown', 'marked down', 'breeze', 'link', 'savings', 'saving', 'elevate', 'elevating'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, URL, Promotion, Markdown, Marked down, Link, Savings, Save. DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation.),
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE, RETAILER & PRICE BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from using the product title or the retailer name in the comments! PLAIN ENGLISH PRODUCT NOUNS IN COMMENTS (BAN CORPORATE JARGON): You are strictly forbidden from copy-pasting the full 60-character title, retailer name, or dollar amounts in comments. BUT you MUST use simple, everyday product nouns like 'deodorant', 'ramen cups', 'socks', 'containers', or 'snacks'! You are STRICTLY FORBIDDEN from inventing cold, clinical terms like 'duplicate personal care items' or 'daily care routine'! Speak like a real human sharing a pantry find with friends. LINK POSITION LAW (ABSOLUTE): The link [TARGET_SLOT] MUST NEVER be at the very beginning of a comment and MUST NEVER be on Line 1! Line 1 MUST ALWAYS open with human words. ANTI-ECHO COMMENT MANDATE: Comments MUST NOT parrot or repeat the scenarios, routines, or words from the post variations! Do NOT summarize the deal again in the comments! Follow the assigned role for each comment:
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
@@ -1275,7 +1277,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.86]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.87]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
