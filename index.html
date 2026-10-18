@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.84</title>
+    <title>The CB Command Center v10.2.85</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.84 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.85 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -734,11 +734,18 @@
         const pool = (contextualEmojis && contextualEmojis.length >= 3) ? contextualEmojis : neutralFallbacks;
 
         let result = [...arr];
-        for (let e = 0; e < targetCount; e++) {
-            let randIdx = Math.floor(Math.random() * result.length);
-            if (result[randIdx].includes('http')) continue; // Shield URLs from emojis
+        // ANTI-CLUSTER EMOJI ENGINE: Distribute emojis across unique lines (max 1 emoji per line)
+        let eligibleIndices = [];
+        for (let idx = 0; idx < result.length; idx++) {
+            if (!result[idx].includes('http')) eligibleIndices.push(idx);
+        }
+        eligibleIndices.sort(() => 0.5 - Math.random());
+        
+        let actualCount = Math.min(targetCount, eligibleIndices.length);
+        for (let e = 0; e < actualCount; e++) {
+            let targetLineIdx = eligibleIndices[e];
             let randEmoji = pool[Math.floor(Math.random() * pool.length)];
-            result[randIdx] = Math.random() > 0.5 ? `${result[randIdx]} ${randEmoji}` : `${randEmoji} ${result[randIdx]}`;
+            result[targetLineIdx] = Math.random() > 0.5 ? `${result[targetLineIdx]} ${randEmoji}` : `${randEmoji} ${result[targetLineIdx]}`;
         }
         return result;
     }
@@ -759,8 +766,13 @@
         for(let i=0; i<numDoubleSpaces; i++) separators.push(Math.random() > 0.85 ? '\n\n\n' : '\n\n'); 
         for(let i=0; i<numSingleSpaces; i++) separators.push('\n');
         separators = separators.sort(() => 0.5 - Math.random());
+        
         let result = arr[0];
-        for(let i=0; i<numGaps; i++) result += separators[i] + arr[i+1];
+        for(let i=0; i<numGaps; i++) {
+            // URL BUFFER SHIELD: Guarantee double-newline spacing above and below any link
+            let sep = (arr[i].includes('http') || arr[i+1].includes('http')) ? '\n\n' : separators[i];
+            result += sep + arr[i+1];
+        }
         return result;
     }
 
@@ -929,15 +941,15 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "sale_price": (String. Extract the sale price. PRICE RANGE MANDATE: If the raw text shows a price range for the sale price (e.g. '$15.99 - $17.99 Shipped'), you MUST extract the FULL range! NEVER collapse it to a single number even if text says 'cheapest'! You MUST ensure a '$' sign is included at the front, then ADD the EXACT word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}' or '$15.99 - $17.99 ${fulfillmentStatus}'. NEVER drop the '$' sign. If none, write "???"),
 "reg_price": (String. Extract ONLY the numbers/digits of the regular price. PRICE RANGE RULE: If the raw text shows a price range for the regular price (e.g., $23.99 - $26.99), you MUST preserve the full range! Strip the $ signs, replace decimals with spaces, and connect them with a hyphen, e.g. "23 99 - 26 99". Strip words like 'regular' or 'orig'. NEVER include the word 'regular' in this extracted string! If none, write "NONE"),
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line exactly as written. VERBATIM OVERRIDE (ABSOLUTE): If the title line starts with or contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Dove Body Wash'), you MUST keep those exact words in the title! You are STRICTLY FORBIDDEN from stripping them out to 'clean' the name.),
-"b2_verification": (JSON Object. Extract facts from the extra text. If none, write "NONE".
+"b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. Extract ONLY the raw single digit/number, e.g. '5' or '3'. Do NOT write words, units, or sentences here! If none, write "NONE"),
-  "variant": (String. Extract specific colors, models, or 'works on' phrases. If text says 'only works on...', capture it here. Ignore S&S here.),
-  "size": (String. Extract exact sizes/dimensions, e.g., '44"L x 19"W', 'S-XXL'),
+  "variant": (String. Extract specific colors, models, or 'works on' phrases from extra text. If text says 'only works on...', capture it here. Ignore S&S here.),
+  "size": (String. TITLE-DEDUPLICATION MANDATE: If size or dimensions like '20oz' or 'Queen' are ALREADY in the title, write 'NONE'. Extract sizes only if missing from title!),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
 "b5_verification": (String. Extract specific shipping OR store pickup minimum thresholds and membership requirements ONLY (e.g., 'Walgreens $10 minimum pickup', 'Walmart+ or $35 order', 'Prime members for Woot'). NON-WOOT LOCK: Never mention Prime membership on Amazon deals unless raw text explicitly says 'Prime only'! If no special threshold or membership is needed, write "NONE"),
 "b8_verification": (String. WEBSITE-SIDE CODE PROTOCOL: The website already displays the promo code box and coupon clipping button with a 1-click copy icon. Do NOT extract promo codes or clipping instructions for the post text. If the raw text mentions Subscribe & Save or S&S, write strictly 'YES'. Do NOT write a sentence here! Otherwise, write "NONE"),
-"features_catchall": (String. EXTRA LINE VACUUM: Extract raw comma-separated keywords/specs ONLY (e.g. '4 colors, sizes S-XL', 'washable, reusable', 'stainless steel'). You are STRICTLY FORBIDDEN from writing full sentences in this field! RETAILER HEADER BAN (ABSOLUTE): Ignore any line announcing the deal on a retailer (e.g. 'Point Drop on Amazon', 'Great Find on Amazon')! Extract ONLY raw physical specs, colors, sizes, or materials. If none, write "NONE"),
+"features_catchall": (String. EXTRA LINE VACUUM: Extract raw comma-separated keywords/specs from extra lines ONLY. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): Do NOT extract pack counts, ounces, or specs that are ALREADY part of the product title! Extract ONLY genuinely new details like extra colors or materials. RETAILER HEADER BAN (ABSOLUTE): Ignore deal slogans like 'Point Drop on Amazon'. If no new specs exist, write "NONE"),
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE PAIRING & DETERMINISTIC ROTATION LAW (ABSOLUTE): You MUST weave the sale_price and reg_price side-by-side in the EXACT SAME SENTENCE. You are STRICTLY FORBIDDEN from putting them on separate lines! CONDITIONAL 'NONE' RULE: If reg_price is "NONE", you MUST drop the comparative phrase entirely. POSITIVE HOUSEHOLD CONVENIENCE & BAN CORPORATE JARGON (ABSOLUTE): Every post MUST be 100% cheerful, positive, and deal-elevating! Focus strictly on enjoyable convenience, being stocked up for months, and practical daily wins! BAN CORPORATE JARGON: You are STRICTLY FORBIDDEN from using cold clinical terms like 'duplicate personal care items', 'reliable daily care', 'good prep work', 'vessel', 'vessels', or abstract phrases like 'brings total peace of mind'! Call items what they actually are in real life (e.g. 'deodorant', 'travel minis', 'mugs', 'cups', 'socks', 'containers', 'snacks')! ZERO NEGATIVITY: Never use negative complaints ('frustrating', 'stressful', 'exhausting', 'the worst part'). Speak with upbeat warmth (e.g. 'Always love having extra deodorant tucked under the sink so you're set for months', 'Super handy to toss in gym bags and travel totes')! PRODUCT-CONTEXTUAL REALITY & SANITY LOCK (ABSOLUTE): Your sentences, reactions, and sign-offs MUST make logical, real-world sense for the ACTUAL product being sold!  • If it is CLOTHING / APPAREL (dresses, sweaters, socks): Talk about wearing it, styling it with boots/denim, or staying warm. NEVER say clothing looks cute 'on a desk' or is for 'weekend outings' if it's indoor loungewear! • If it is FURNITURE: Talk about organizing rooms, closets, or floors. • If it is KITCHENWARE: Talk about cooking or pantry storage. You are STRICTLY FORBIDDEN from mixing up product categories! DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): You MUST express the price, retailer, and title in a completely distinct, unpredictable conversational sentence structure across variations to prevent automated pattern matching:
 • Variation 1: Open with the product title or retailer, pairing the price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].' or '[Retailer] marked down [Title] to [sale_price] from [reg_price].' - do NOT use the word marked down!).
 • Variation 2: Open with retailer context or a situational routine (e.g., '[Retailer] has [Title] sitting at [sale_price], previously [reg_price].' or 'Spotted on [Retailer]: [Title] for [sale_price], down from [reg_price].').
@@ -1256,7 +1268,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.84]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.85]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
