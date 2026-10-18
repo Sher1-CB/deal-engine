@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.87</title>
+    <title>The CB Command Center v10.2.88</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.87 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.88 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -707,7 +707,12 @@
             .replace(/\[(Price\/Title|Lifestyle hook|TARGET_SLOT)\]/gi, '')
             .replace(/\bupgrade(s|d|ing)?\b/gi, 'refreshing')
             .replace(/\b(find\s+it\s+)?right\s+here\b/gi, 'available')
-            .replace(/\b(find\s+it\s+via|check\s+it\s+out\s+via)\s+/gi, '')
+            .replace(/\b(you\s+can\s+)?(locate|find|check|grab|see|access)\s+(it\s+)?via\s*/gi, '')
+            .replace(/\bavailable\s+via\s*/gi, '')
+            // Orphaned Punctuation Scrubber: Clean up periods detached by URL line breaks
+            .replace(/(https?:\/\/[^\s]+)\s*\n+\s*\.\s*/gi, '$1\n\n')
+            .replace(/\n+\s*\.\s*(?=[A-Z])/g, '\n\n')
+            .replace(/\n+\s*\.\s*$/g, '')
             .replace(/\s+\.\s+#ad/gi, ' #ad')
             .replace(/\btransforms\b/gi, 'refreshes')
             .replace(/\btransforming\b/gi, 'refreshing')
@@ -973,7 +978,7 @@ ANTI-FORMULA & REAL HUMAN VOICE (ABSOLUTE): You are STRICTLY FORBIDDEN from rely
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
 • Comment 3 Role: ${activeCommentBlueprints[2]}
-(ABSOLUTE LINE 1 PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! Never use CTA pointers like 'Check out' or 'Find it here'! Keep human statements lean and under 15 words!).
+(ABSOLUTE LINE 1 PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! ZERO POINTER PHRASES (ABSOLUTE): You are strictly forbidden from writing pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', or 'Check it out via')! The link [TARGET_SLOT] MUST stand completely alone on its own line without any introductory words or leading prepositions! NEVER put a period after [TARGET_SLOT]! Keep human statements lean and under 15 words!).
 (COMMENT ANTI-PARROT LAW: Each comment MUST contain unique thoughts! BAN CLINICAL JARGON: NEVER use robotic phrases like 'duplicate personal care items' or 'daily care routine'! Speak in normal everyday English like 'extra deodorant', 'pantry snacks', or 'travel sizes'!) (ABSOLUTE BAN: The human statement in Comments 2 and 3 MUST be a complete, grammatically correct sentence with a subject and a verb, ending with a hard period! You MUST start the sentence with a pronoun (I, We, It, This) or a noun. NEVER start these statements with an '-ing' word (e.g., 'Heading out...', 'Getting the...') because that creates a fragment!) POSITIVE 5-WORD QUESTIONS (ANTI-NEGATIVITY & ANTI-THERAPY MANDATE): All statements and questions MUST be 100% positive, cheerful, and deal-elevating! Questions MUST focus strictly on favorites, enjoyable routines, delicious recipes, and creative styling (e.g. 'What is your favorite sweet treat to bake...', 'Where in your home do you love placing...'). You are STRICTLY FORBIDDEN from asking about annoyances, complaints, messes, chores, or product flaws! NEVER ask deep psychological 'therapy talk' questions. Keep everything lighthearted, joyful, and easy to answer in 5+ words! STRICTLY BAN Yes/No or single-word choice questions! ENGAGEMENT BAIT BAN: Never use 'let me know', 'tell me below', 'thoughts?', or 'comment below'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, Share, Promotion, Markdown, Marked down, Restock, Steal, Bargain, Blowout, Doorbuster. QUESTION FIREWALL (NUCLEAR): If the raw deal only works on ONE color (e.g., 'only works on pink') or one size, you are STRICTLY FORBIDDEN from using the words 'color', 'shade', 'pattern', or 'size' in ANY question! Ask strictly about room decor, lifestyle routines, or product usage instead!),
 "daily_thread": (String. DAILY THREAD ORDER LOCK: For this specific generation, you MUST use this exact sentence order: ${selectedDtLayout} (ABSOLUTE: The link [TARGET_SLOT] MUST ALWAYS sit on its own completely separate line! NEVER weave the link inside a sentence in the Daily Thread!). PRICE PAIRING & MANDATORY TITLE LOCK: The price sentence MUST start with the product title and retailer and END cleanly with a period: 'The [Title] on [Retailer] is [sale_price], dropping from [reg_price].' (ABSOLUTE BAN: Do NOT tack on redundant clauses like 'featuring a king size design' at the end of the price sentence!). (EMOJI & HOOK ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from using the same opening emoji or verb that was used in Variation 1, 2, or 3!) CONDITIONAL 'NONE' RULE: If reg_price is "NONE", drop the comparative phrase and just say '[sale_price]'. STRUCTURAL EXECUTION: You MUST weave the price, title, retailer, extracted facts, hook, and [TARGET_SLOT] into the EXACT line order commanded by the DAILY THREAD ORDER LOCK above! Do NOT rearrange the lines or invent a different structure! RESTRICTION LOCK (ABSOLUTE): You MUST explicitly state any color/size restrictions or purchase limits in the Daily Thread! PRONOUN OPENING BAN: You are STRICTLY FORBIDDEN from starting the Daily Thread with 'I [verb]' or 'We [verb]' (e.g., NEVER start with 'I spotted', 'I found', 'I noticed'). Open with a natural conversational thought or a gerund! (ABSOLUTE ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from using the same opening verb, action, or sentence structure that was used to open ANY of the variations! If Var 3 opened with 'Sprucing up...', the Daily Thread CANNOT open with 'Sprucing up...')! DAILY THREAD ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from copying OR PARAPHRASING the opening or closing sentences from Variation 1, 2, or 3! Changing a few words (e.g., changing 'calming' to 'refreshing', or 'outside' to 'out the door') is a PARROT VIOLATION! The Daily Thread MUST be 100% unique and share ZERO identical phrases or structural similarities with the variations! (CRITICAL CHECK: Did you accidentally paraphrase Variation 2 or 3? You MUST write a completely new thought!) CLOSING THOUGHT: If your layout includes a closing thought, it MUST be a 100% brand new sentence! (ABSOLUTE ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from borrowing the structure or phrasing from the final sentence of Variation 1, 2, or 3! The Daily Thread MUST have a 100% unique closing thought that shares zero words with the other variations! CRITICAL: If Variation 3 ended with 'prepared for the week', the Daily Thread is FORBIDDEN from using those words!)! CTA BAN: You are STRICTLY FORBIDDEN from using Call-To-Action pointers before the link (e.g., NEVER say 'Find it here:', 'Check it out at'). Never use 'marked down' and never write 'regular' before the number! QUANTITY RULE: ONLY if raw text explicitly requires a cart quantity (e.g. 'ADD 3'), say 'add [X] to your order'. If no quantity requirement exists in the raw text, do NOT say 'add 1 to your order'! SHIPPING & PRIME FIREWALL (ABSOLUTE): If b5_verification is 'NONE', you are STRICTLY FORBIDDEN from adding ANY sentence about shipping, delivery, or Prime in the Daily Thread! NEVER invent 'Delivery is complimentary for Prime members' unless b5 explicitly specifies it in raw text! (Fulfillment is already stated in the price!). NEVER write 'free shipping', 'free pickup', or 'free store pickup'! ANTI-STUTTER: State price and title only ONCE. BUNDLE FIREWALL: Never say add multiple items if it is just a '2 Pack'. NUCLEAR BAN: 'share', 'grab', 'markdown', 'marked down'. BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, Share, Promotion, Markdown, Marked down. DELIMITER LOCK (ABSOLUTE): You MUST end every single sentence with a period! You MUST separate sentences with ' || '. NEVER use raw newlines!),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
@@ -1277,7 +1282,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.87]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.88]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
