@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.83</title>
+    <title>The CB Command Center v10.2.84</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.83 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.84 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -667,6 +667,9 @@
             .replace(/\bpurchases?\b/gi, 'get')
             .replace(/\bpurchased\b/gi, 'got')
             .replace(/\bpurchasing\b/gi, 'getting')
+            // Purge clinical catalog jargon -> replace with natural shopper terms
+            .replace(/\bvessels\b/gi, 'travel mugs')
+            .replace(/\bvessel\b/gi, 'travel mug')
             // Auto-capitalize the first letter of sentences while shielding URLs
             .replace(/(^\s*|[.!?]\s+)(?!https?:\/\/)([a-z])/gi, (m, p1, p2) => p1 + p2.toUpperCase())
             // De-duplicate back-to-back "Right now" sentence starters
@@ -901,7 +904,7 @@
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleC = [
-            "Role 3A (Fluid Inline Paragraph): Concise single-paragraph thought weaving [TARGET_SLOT] in the middle, ending with an open-ended lifestyle question directly related to this specific item.",
+            "Role 3A (Conversational Lifestyle Drop): Line 1 Short lifestyle thought under 12 words || Line 2 Link [TARGET_SLOT] ON ITS OWN LINE || Line 3 Open-ended question asking a fun preference or routine question.",
             "Role 3B (Dialogue Drop): Line 1 Short personal reaction under 10 words || Line 2 Open-ended question asking how often they restock or use this item || Line 3 Link [TARGET_SLOT] at the absolute end."
         ].sort(() => 0.5 - Math.random())[0];
 
@@ -935,7 +938,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "b5_verification": (String. Extract specific shipping OR store pickup minimum thresholds and membership requirements ONLY (e.g., 'Walgreens $10 minimum pickup', 'Walmart+ or $35 order', 'Prime members for Woot'). NON-WOOT LOCK: Never mention Prime membership on Amazon deals unless raw text explicitly says 'Prime only'! If no special threshold or membership is needed, write "NONE"),
 "b8_verification": (String. WEBSITE-SIDE CODE PROTOCOL: The website already displays the promo code box and coupon clipping button with a 1-click copy icon. Do NOT extract promo codes or clipping instructions for the post text. If the raw text mentions Subscribe & Save or S&S, write strictly 'YES'. Do NOT write a sentence here! Otherwise, write "NONE"),
 "features_catchall": (String. EXTRA LINE VACUUM: Extract raw comma-separated keywords/specs ONLY (e.g. '4 colors, sizes S-XL', 'washable, reusable', 'stainless steel'). You are STRICTLY FORBIDDEN from writing full sentences in this field! RETAILER HEADER BAN (ABSOLUTE): Ignore any line announcing the deal on a retailer (e.g. 'Point Drop on Amazon', 'Great Find on Amazon')! Extract ONLY raw physical specs, colors, sizes, or materials. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE PAIRING & DETERMINISTIC ROTATION LAW (ABSOLUTE): You MUST weave the sale_price and reg_price side-by-side in the EXACT SAME SENTENCE. You are STRICTLY FORBIDDEN from putting them on separate lines! CONDITIONAL 'NONE' RULE: If reg_price is "NONE", you MUST drop the comparative phrase entirely. POSITIVE HOUSEHOLD CONVENIENCE & BAN CORPORATE JARGON (ABSOLUTE): Every post MUST be 100% cheerful, positive, and deal-elevating! Focus strictly on enjoyable convenience, being stocked up for months, and practical daily wins! BAN CORPORATE JARGON: You are STRICTLY FORBIDDEN from using cold clinical terms like 'duplicate personal care items', 'reliable daily care', 'good prep work', or abstract phrases like 'brings total peace of mind'! Call items what they actually are in real life (e.g. 'deodorant', 'travel minis', 'socks', 'containers', 'snacks')! ZERO NEGATIVITY: Never use negative complaints ('frustrating', 'stressful', 'exhausting', 'the worst part'). Speak with upbeat warmth (e.g. 'Always love having extra deodorant tucked under the sink so you're set for months', 'Super handy to toss in gym bags and travel totes')! PRODUCT-CONTEXTUAL REALITY & SANITY LOCK (ABSOLUTE): Your sentences, reactions, and sign-offs MUST make logical, real-world sense for the ACTUAL product being sold!  • If it is CLOTHING / APPAREL (dresses, sweaters, socks): Talk about wearing it, styling it with boots/denim, or staying warm. NEVER say clothing looks cute 'on a desk' or is for 'weekend outings' if it's indoor loungewear! • If it is FURNITURE: Talk about organizing rooms, closets, or floors. • If it is KITCHENWARE: Talk about cooking or pantry storage. You are STRICTLY FORBIDDEN from mixing up product categories! DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): You MUST express the price, retailer, and title in a completely distinct, unpredictable conversational sentence structure across variations to prevent automated pattern matching:
+"post_variations": (Array of 3 strings. You are a polymorphic text engine. PRICE PAIRING & DETERMINISTIC ROTATION LAW (ABSOLUTE): You MUST weave the sale_price and reg_price side-by-side in the EXACT SAME SENTENCE. You are STRICTLY FORBIDDEN from putting them on separate lines! CONDITIONAL 'NONE' RULE: If reg_price is "NONE", you MUST drop the comparative phrase entirely. POSITIVE HOUSEHOLD CONVENIENCE & BAN CORPORATE JARGON (ABSOLUTE): Every post MUST be 100% cheerful, positive, and deal-elevating! Focus strictly on enjoyable convenience, being stocked up for months, and practical daily wins! BAN CORPORATE JARGON: You are STRICTLY FORBIDDEN from using cold clinical terms like 'duplicate personal care items', 'reliable daily care', 'good prep work', 'vessel', 'vessels', or abstract phrases like 'brings total peace of mind'! Call items what they actually are in real life (e.g. 'deodorant', 'travel minis', 'mugs', 'cups', 'socks', 'containers', 'snacks')! ZERO NEGATIVITY: Never use negative complaints ('frustrating', 'stressful', 'exhausting', 'the worst part'). Speak with upbeat warmth (e.g. 'Always love having extra deodorant tucked under the sink so you're set for months', 'Super handy to toss in gym bags and travel totes')! PRODUCT-CONTEXTUAL REALITY & SANITY LOCK (ABSOLUTE): Your sentences, reactions, and sign-offs MUST make logical, real-world sense for the ACTUAL product being sold!  • If it is CLOTHING / APPAREL (dresses, sweaters, socks): Talk about wearing it, styling it with boots/denim, or staying warm. NEVER say clothing looks cute 'on a desk' or is for 'weekend outings' if it's indoor loungewear! • If it is FURNITURE: Talk about organizing rooms, closets, or floors. • If it is KITCHENWARE: Talk about cooking or pantry storage. You are STRICTLY FORBIDDEN from mixing up product categories! DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): You MUST express the price, retailer, and title in a completely distinct, unpredictable conversational sentence structure across variations to prevent automated pattern matching:
 • Variation 1: Open with the product title or retailer, pairing the price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].' or '[Retailer] marked down [Title] to [sale_price] from [reg_price].' - do NOT use the word marked down!).
 • Variation 2: Open with retailer context or a situational routine (e.g., '[Retailer] has [Title] sitting at [sale_price], previously [reg_price].' or 'Spotted on [Retailer]: [Title] for [sale_price], down from [reg_price].').
 • Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces the item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
@@ -1204,24 +1207,8 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
                 let emojifiedComment = applyEmojiDensity(commentLines, 0, 2, finalEmojis);
                 
                 // DYNAMIC CHAOS GEOMETRY ENFORCEMENT
-                let rawFinalComment = "";
-                if (activeCommentBlueprints[i].includes("Fluid Inline Paragraph")) {
-                    // Formatted as a single fluid paragraph
-                    let joined = emojifiedComment.join(' ');
-                    // QUESTION FLIP GUARD: Only flip if the question is at the start (NEVER flip a URL to the front!)
-                    if (joined.includes('?') && !joined.trim().endsWith('?')) {
-                        let parts = joined.split(/(?<=\?)\s+/);
-                        // Shield: If the text after the question contains 'http', do NOT flip it to the front!
-                        if (parts.length > 1 && !parts.slice(1).join(' ').includes('http')) {
-                            joined = parts.slice(1).join(' ') + ' ' + parts[0];
-                        }
-                    }
-                    rawFinalComment = joined;
-                } else {
-                    // Formatted as multi-line airy spaced drop
-                    rawFinalComment = joinWithSpaceChaos(emojifiedComment, 1, 2);
-                }
-                
+                // Guarantees all comment styles maintain clean line separation so links never run into text
+                let rawFinalComment = joinWithSpaceChaos(emojifiedComment, 1, 2);
                 let finalComment = sanitizeDealCopy(rawFinalComment);
 
                 document.getElementById(`out-com${i+1}`).innerText = finalComment;
@@ -1269,7 +1256,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.83]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.84]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
