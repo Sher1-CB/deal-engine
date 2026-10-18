@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.85</title>
+    <title>The CB Command Center v10.2.86</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.85 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.86 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -632,9 +632,16 @@
             // 4. Purge standalone 'free' attached to shipping/pickup
             .replace(/\bfree\s+(shipping|delivery)\b/gi, 'complimentary delivery')
             .replace(/\bfree\s+(store\s+)?pickup\b/gi, 'pickup is included')
-            // 5. Purge transactional nouns & secondary retail triggers ('steal', 'bargain', 'doorbuster', 'blowout' -> 'find')
-            .replace(/\b(this|the|an|great|special|massive)\s+(offer|discount|markdown|promotion|promo|reduction|deal|steal|bargain|doorbuster|blowout)\b/gi, '$1 find')
-            .replace(/\b(offer|discount|markdown|promotion|promo|reduction|deal|steal|bargain|doorbuster|blowout)s?\b/gi, 'find')
+            // 5. Purge transactional nouns & verbs accurately without grammatical mutilations
+            .replace(/\b(it|this\s+\w+|device|tool|unit|set)\s+offers\b/gi, '$1 features')
+            .replace(/\boffers\b/gi, 'features')
+            .replace(/\boffering\b/gi, 'providing')
+            .replace(/\boffered\b/gi, 'featured')
+            .replace(/\b(this|the|an|great|special|massive|good|nice|solid)\s+(offer|discount|markdown|promotion|promo|reduction|deal|steal|bargain|doorbuster|blowout)\b/gi, '$1 find')
+            .replace(/\b(discounts?|markdowns?|promotions?|promos?|reductions?|steals?|bargains?|doorbusters?|blowouts?)\b/gi, 'find')
+            .replace(/\bthe\s+offer\b/gi, 'this find')
+            .replace(/\ban\s+offer\b/gi, 'a find')
+            .replace(/\bthis\s+offer\b/gi, 'this find')
             // 6. Purge marketing clichés ('breeze' -> 'effortless', 'game changer' -> 'wonderful addition')
             .replace(/\bfeels like an absolute breeze\b/gi, 'feels completely effortless')
             .replace(/\bfeels like a (total )?breeze\b/gi, 'feels completely effortless')
@@ -943,7 +950,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line exactly as written. VERBATIM OVERRIDE (ABSOLUTE): If the title line starts with or contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Dove Body Wash'), you MUST keep those exact words in the title! You are STRICTLY FORBIDDEN from stripping them out to 'clean' the name.),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. Extract ONLY the raw single digit/number, e.g. '5' or '3'. Do NOT write words, units, or sentences here! If none, write "NONE"),
-  "variant": (String. Extract specific colors, models, or 'works on' phrases from extra text. If text says 'only works on...', capture it here. Ignore S&S here.),
+  "variant": (String. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): If the color count, shade, or model (e.g. '7 Colors') is ALREADY in the cleaned_title, write 'NONE'! Extract specific colors or models from additional text lines ONLY if missing from the title. Ignore S&S here.),
   "size": (String. TITLE-DEDUPLICATION MANDATE: If size or dimensions like '20oz' or 'Queen' are ALREADY in the title, write 'NONE'. Extract sizes only if missing from title!),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
@@ -1268,7 +1275,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.85]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.86]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
