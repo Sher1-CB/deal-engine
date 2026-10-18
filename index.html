@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.88</title>
+    <title>The CB Command Center v10.2.89</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.88 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.89 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -662,8 +662,9 @@
             .replace(/\boasis\b/gi, 'retreat')
             .replace(/\b(so\s+|lowkey\s+)?exhausting\b/gi, 'tiring')
             .replace(/\b(from|down from|previously|was)\s+(\d+\s+\d{2})\s*,\s*(down from|previously|was)\s+\2\b/gi, '$3 $2')
-            // 7b. Purge hallucinated "NONE" regular prices
+            // 7b. Purge hallucinated "NONE" regular prices and clean up dangling comparisons
             .replace(/,\s*(down from|previously|was|dropping from)\s+NONE/gi, '')
+            .replace(/,\s*(down from|previously|was|dropping from)\s*\./gi, '.')
             // 8. Purge scarcity buzzwords ('restock' -> 'refresh')
             .replace(/\brestock(ed|ing|s)?\b/gi, 'refresh')
             /// 9. Purge banned verbs 'grab' and 'purchase' -> replace strictly with safe 'get'
@@ -953,7 +954,7 @@ Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): Return pure JSON only with zero conversational filler.
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. RETAILER MISMATCH FIREWALL: If the raw text mentions 'Woot', the retailer MUST be Woot! Do not let Amazon bias override the true retailer!),
 "sale_price": (String. Extract the sale price. PRICE RANGE MANDATE: If the raw text shows a price range for the sale price (e.g. '$15.99 - $17.99 Shipped'), you MUST extract the FULL range! NEVER collapse it to a single number even if text says 'cheapest'! You MUST ensure a '$' sign is included at the front, then ADD the EXACT word '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}' or '$15.99 - $17.99 ${fulfillmentStatus}'. NEVER drop the '$' sign. If none, write "???"),
-"reg_price": (String. Extract ONLY the numbers/digits of the regular price. PRICE RANGE RULE: If the raw text shows a price range for the regular price (e.g., $23.99 - $26.99), you MUST preserve the full range! Strip the $ signs, replace decimals with spaces, and connect them with a hyphen, e.g. "23 99 - 26 99". Strip words like 'regular' or 'orig'. NEVER include the word 'regular' in this extracted string! If none, write "NONE"),
+"reg_price": (String. Extract ONLY the numbers/digits of the regular price. ZERO-GUESS MANDATE (ABSOLUTE): If the raw text does NOT explicitly state an original, was, or regular price (e.g. 'Regular $79.99' or 'was $18.99'), you MUST write 'NONE'! You are STRICTLY FORBIDDEN from guessing, estimating, or inventing a regular price! PRICE RANGE RULE: If a range is stated, strip $ signs, replace decimals with spaces, and connect with a hyphen, e.g. '23 99 - 26 99'. NEVER include the word 'regular'. If missing from raw text, write 'NONE'),
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line exactly as written. VERBATIM OVERRIDE (ABSOLUTE): If the title line starts with or contains 'ADD', 'BUY', or 'QTY' (e.g., 'ADD 3 QTY Dove Body Wash'), you MUST keep those exact words in the title! You are STRICTLY FORBIDDEN from stripping them out to 'clean' the name.),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. Extract ONLY the raw single digit/number, e.g. '5' or '3'. Do NOT write words, units, or sentences here! If none, write "NONE"),
@@ -1104,6 +1105,14 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
 
             if (aiData.sale_price && aiData.sale_price !== "???" && !aiData.sale_price.startsWith('$')) {
                 aiData.sale_price = '$' + aiData.sale_price.trim();
+            }
+
+            // DETERMINISTIC REGULAR PRICE FIREWALL:
+            // If raw text has no regular price keywords and only 1 dollar amount, force reg_price = "NONE"
+            const hasRegKeyword = /\b(regular|was|orig|original|list|originally|down from|dropping from)\b/i.test(rawText);
+            const rawDollarCount = (rawText.match(/\$\d+(\.\d{2})?/g) || []).length;
+            if (!hasRegKeyword && rawDollarCount <= 1) {
+                aiData.reg_price = "NONE";
             }
 
             let cleanTitle = (aiData.cleaned_title || aiData.title || aiData.product_name || aiData.product_title || "").trim();
@@ -1282,7 +1291,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.88]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.89]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
