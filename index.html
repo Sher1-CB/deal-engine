@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.94</title>
+    <title>The CB Command Center v10.2.95</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.94 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.95 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -712,6 +712,7 @@
             // Safe Badge Eraser: Wipes out exact promotional badges without erasing human sentences
             .replace(/\b(record\s+low|all[\s-]time\s+low|historic(al)?\s+low|point\s+drop|price\s+drop|top\s+score|best\s+seller|good\s+pick|solid\s+find|great\s+find)\s+(on|in|at)\s+(Amazon|Walmart|Woot|Walgreens|Target)\.?\s*/gi, '')
             .replace(/\[(Price\/Title|Lifestyle hook|TARGET_SLOT)\]/gi, '')
+            .replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '')
             // Grammatical Upgrade Handler: Noun -> addition, Verb -> refreshing
             .replace(/\b(a|an|the|this)\s+upgrade\b/gi, '$1 addition')
             .replace(/\bupgrades\b/gi, 'additions')
@@ -1222,9 +1223,8 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
                 let rawComment = commentsList[i] || "";
                 let commentText = typeof rawComment === 'object' ? Object.values(rawComment).join(' ') : String(rawComment);
                 
-                // Strip commercial #ad tags from group comments to clear Meta's Content Credibility filter
-                // Enforce clear boundary spacing around the URL to prevent word-gluing collisions
-                commentText = commentText.replace(/\[TARGET[^\]]*\]/gi, '\n\n' + cloaked + '\n\n');
+                // Universal Placeholder Matcher: Catches [TARGET_SLOT], target_slot, Target_slot., and [URL]
+                commentText = commentText.replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '\n\n' + cloaked + '\n\n');
                 
                 let commentLines = commentText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
 
@@ -1279,10 +1279,15 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
             let rawDt = aiData.daily_thread ? aiData.daily_thread : "";
             let dtText = typeof rawDt === 'object' ? Object.values(rawDt).join(' ') : String(rawDt);
             
-            // Replace [TARGET_SLOT] with clean canonical link on its own line (no commercial #ad token)
-            dtText = dtText.replace(/\[TARGET[^\]]*\]/gi, '\n\n' + dtCloaked + '\n\n');
+            // Universal Daily Thread Placeholder Matcher: Catches [TARGET_SLOT], target_slot, Target_slot., and [URL]
+            dtText = dtText.replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '\n\n' + dtCloaked + '\n\n');
 
             let dtLines = dtText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
+
+            // FAIL-SAFE DAILY THREAD LINK INJECTION: Guarantee link is always present even if AI forgot placeholder
+            if (!dtLines.some(l => l.includes(dtCloaked))) {
+                dtLines.push(dtCloaked);
+            }
 
             // AUTOMATED PUNCTUATION ENFORCER FOR DAILY THREAD:
             dtLines = dtLines.map(line => {
