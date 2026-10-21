@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.00</title>
+    <title>The CB Command Center v10.3.01</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.00 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.01 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -716,6 +716,11 @@
             .replace(/\|\|/g, '')
             .replace(/\bLayout\s+[A-E]:?\s*/gi, '')
             .replace(/\b(record\s+low|all[\s-]time\s+low|historic(al)?\s+low|point\s+drop|price\s+drop|top\s+score|best\s+seller|good\s+pick|solid\s+find|great\s+find|solid\s+catch|solid\s+dip)\s+(on|in|at)\s+(Amazon|Walmart|Woot|Walgreens|Target)\.?\s*/gi, '')
+            // Standalone Header Slogan Scrubber: Purge leaked slogans like "TOP SCORE."
+            .replace(/\b(top\s+score|record\s+low|best\s+seller|good\s+drop|solid\s+catch|solid\s+dip)\b\.?\s*/gi, '')
+            // Headline Colon Scrubber: Convert "Spotted on Amazon: The" -> "Amazon has the" or remove colon
+            .replace(/\b(spotted|found|seen)\s+on\s+(Amazon|Walmart|Woot|Walgreens|Target):\s*/gi, '$2 has the ')
+            .replace(/:\s*([A-Z0-9])/g, ', $1')
             .replace(/\[(Price\/Title|Lifestyle hook|TARGET_SLOT)\]/gi, '')
             .replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '')
             // Grammatical Upgrade Handler: Noun -> addition, Verb -> refreshing
@@ -981,7 +986,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "post_variations": (Array of 3 strings. You are a polymorphic text engine.
 DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
-• Variation 2: Open with retailer context or a situational routine (e.g. 'Spotted on [Retailer]: [Title] for [sale_price], previously [reg_price].').
+• Variation 2: Open with retailer context or a situational routine in a flowing conversational sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].' or 'Just spotted the [Title] on [Retailer] down to [sale_price], previously [reg_price].'). ZERO HEADLINE COLONS: You are strictly forbidden from using headline colons like 'Spotted on Amazon:'! Write flowing sentences without colons!
 • Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
@@ -1322,7 +1327,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.00]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.01]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1581,7 +1586,7 @@ RULES:
    - PRICE PAIRING: When a regular price is present, you MUST weave the sale price and regular price side-by-side in the EXACT SAME SENTENCE. Keep the price statement as its own distinct sentence ending with a period. Do NOT glue the opening hook and price together using 'with' or 'and'.
    - DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): Rotate the sentence structure of the price across variations so they do not open identically:
      • Variation 1: Open with the product title or retailer, pairing the price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].' or '[Retailer] has the [Title] for [sale_price], down from [reg_price].').
-     • Variation 2: Open with retailer context or a situational routine (e.g., 'Spotted on [Retailer]: [Title] for [sale_price], previously [reg_price].' or '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].').
+     • Variation 2: Open with retailer context or a situational routine in a flowing conversational sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].' or 'Just spotted the [Title] on [Retailer] for [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
      • Variation 3: Sentence 1 MUST be a calm personal reflection with ZERO pricing and ZERO slang. Sentence 2 introduces the item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
    - Full product title verbatim (keep 'ADD 3 QTY' or pack counts in the title line if present).
