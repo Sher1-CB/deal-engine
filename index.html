@@ -1179,17 +1179,18 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, you M
                         postLines = postLines.map(s => s.trim());
                     }
                     postLines = postLines.filter(line => line.length > 0);
-                }
+                    }
 
-                // AUTOMATED PUNCTUATION ENFORCER: Ensure every post line ends with proper punctuation (. ! ?)
-                postLines = postLines.map(line => {
-                    let trimmed = line.trim();
-                    if (!trimmed || trimmed.includes('http')) return trimmed;
-                    if (!/[.!?]$/.test(trimmed)) return trimmed + '.';
-                    return trimmed;
-                });
-                
-                let customText = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD") ? aiData.custom_line_rephrases[i] : "";
+                    // AUTOMATED PUNCTUATION ENFORCER: Ensure every post line ends with proper punctuation (. ! ?)
+                    postLines = postLines.map(line => {
+                        let trimmed = line.trim();
+                        if (!trimmed || trimmed.includes('http')) return trimmed;
+                        if (!/[.!?]$/.test(trimmed)) return trimmed + '.';
+                        return trimmed;
+                    });
+                    
+                    let customText = (aiData.custom_line_rephrases && aiData.custom_line_rephrases[i] !== "DEAD") ? aiData.custom_line_rephrases[i] : "";
+
                     const randIdx = Math.floor(Math.random() * (postLines.length + 1));
                     postLines.splice(randIdx, 0, customText);
                 }
