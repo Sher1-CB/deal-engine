@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.2.98</title>
+    <title>The CB Command Center v10.2.99</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.98 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.2.99 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -646,6 +646,10 @@
             .replace(/\b(to\s+your\s+|per\s+|each\s+)orders?\b/gi, '$1delivery')
             .replace(/\byou\s+can\s+order\b/gi, 'you can get')
             .replace(/\borders\s+are\s+restricted\b/gi, 'strictly limited')
+            // Purge corporate "rate applies" jargon and awkward variant combinations
+            .replace(/\bthis\s+rate\s+applies\b/gi, 'this applies')
+            .replace(/\bcolor\s+size\s+choice\b/gi, 'option')
+            .replace(/\bcolor\s+size\s+option\b/gi, 'option')
             // 6. Purge marketing clichés ('breeze' -> 'effortless', 'game changer' -> 'wonderful addition')
             .replace(/\bfeels like an absolute breeze\b/gi, 'feels completely effortless')
             .replace(/\bfeels like a (total )?breeze\b/gi, 'feels completely effortless')
@@ -894,11 +898,11 @@
             : `"custom_line_rephrases": (Array of 4 strings. Write ["DEAD","DEAD","DEAD","DEAD"]),`;
 
         const dtLayoutOptions = [
-            "Layout A: Line 1 Hook || Line 2 Price sentence || Line 3 Full sentence with specs or limits (ONLY if extra specs exist in raw text! If none, omit this line!) || Line 4 Link [TARGET_SLOT] ON ITS OWN SEPARATE LINE || Line 5 Closing lifestyle thought.",
-            "Layout B (LINK AT END): Line 1 Price sentence || Line 2 Full sentence with specs or limits (ONLY if extra specs exist! If none, omit!) || Line 3 Conversational Hook || Line 4 Link [TARGET_SLOT] ON ITS OWN SEPARATE LINE at the absolute very end.",
-            "Layout C: Line 1 Conversational Hook || Line 2 Link [TARGET_SLOT] ON ITS OWN SEPARATE LINE || Line 3 Price sentence || Line 4 Full sentence with specs or limits at the very end (ONLY if extra specs exist! If none, omit!).",
-            "Layout D: Line 1 Price sentence || Line 2 Full sentence with specs or limits (ONLY if extra specs exist! If none, omit!) || Line 3 Link [TARGET_SLOT] ON ITS OWN SEPARATE LINE || Line 4 Closing lifestyle thought at the very end.",
-            "Layout E (LINK AT END): Line 1 Conversational Hook || Line 2 Price sentence || Line 3 Full sentence with specs or limits (ONLY if extra specs exist! If none, omit!) || Line 4 Closing lifestyle thought || Line 5 Link [TARGET_SLOT] ON ITS OWN SEPARATE LINE at the absolute very end."
+            "Layout A: Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE || Line 5 Closing prospective thought.",
+            "Layout B (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Closing prospective thought || Line 5 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute very end.",
+            "Layout C: Line 1 Conversational Lifestyle Hook || Line 2 Link [TARGET_SLOT] ON ITS OWN LINE || Line 3 Price sentence || Line 4 Stated specs or limits at the very end (if present).",
+            "Layout D: Line 1 Conversational Lifestyle Hook || Line 2 Stated specs or limits (if present) || Line 3 Price sentence || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute end.",
+            "Layout E (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Closing prospective thought || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute very end."
         ];
         const selectedDtLayout = dtLayoutOptions[Math.floor(Math.random() * dtLayoutOptions.length)];
 
@@ -977,7 +981,7 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
-VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a variant restriction, RESTRICTION SENTENCE ENTROPY: Rotate between 'This rate applies specifically to the [variant] option.', 'The drop is featured on the [variant] model.', and 'Applies strictly to the [variant] size choice.'. Never dump raw bullet fragments like 'Works on medium.'!
+VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a variant restriction, RESTRICTION SENTENCE ENTROPY: Never use corporate jargon like 'this rate applies'! Rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', 'Works strictly on the [variant] selection.', or 'Applies exclusively to the [variant] version.'. Never dump raw bullet fragments like 'Works on medium.'!
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy using varied safe phrasing ('drops even lower with auto-delivery', 'rates adjust lower when setting up routine deliveries', etc.). ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
@@ -1314,7 +1318,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.98]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.2.99]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1593,7 +1597,7 @@ RULES:
      • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
      • HOME & HARDWARE: Talk about meal prep, kitchen counters, or clean organization.
    - ROUTINE DELIVERY (S&S) MANDATE (CONDITIONAL ONLY): If and ONLY IF the raw text explicitly mentions Subscribe & Save or S&S, you MUST highlight recurring savings naturally! Rotate safe phrasing: 'drops even lower with auto-delivery', 'rates adjust lower when setting up routine deliveries', 'extra savings apply when scheduled for routine shipments', or 'even less when choosing recurring deliveries'. NEVER use the trademarked words 'Subscribe & Save' or 'S&S'! ABSOLUTE NEGATIVE PROHIBITION: If the raw text does NOT explicitly mention Subscribe & Save or S&S, you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings! Never guess or assume an item has auto-delivery!
-   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a restriction (e.g. 'Works on medium', 'only works on pink'), you are strictly forbidden from dumping raw fragments like 'Works on medium.'! Weave it into complete, rotating sentences: 'This rate applies specifically to the [variant] option.', 'The drop is featured on the [variant] model.', or 'Applies strictly to the [variant] size choice.'.
+   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a restriction (e.g. 'Works on medium', 'only works on pink'), you are strictly forbidden from dumping raw fragments like 'Works on medium.' and NEVER write 'this rate applies'! Weave it into complete, natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Applies strictly to the [variant] version.'.
    - LEAN DEAL BREVITY (ABSOLUTE): Never write long essays or stories! Every variation MUST be short, punchy, and direct (2 to 4 lines max). Structure: Quick practical context ➔ Price and Title sentence ➔ Essential specs (if present) ➔ Fast 1-line prospective sign-off. Zero fluff!
    - ANTI-ZEN & REAL UTILITY: Do NOT use abstract corporate yoga phrases like 'brings a quiet sense of peace/calm/satisfaction'! Speak about real, tangible daily wins.
    - ZERO LINKS: You are STRICTLY FORBIDDEN from putting any link or website name in post variations!
@@ -1616,6 +1620,7 @@ RULES:
      • Comment 3: Short lifestyle reaction under 12 words || Open-ended habit question || Buffered Link at the absolute end.
 
 5. DAILY THREAD COMMENT:
+   - DAILY THREAD HOOK LAW (ABSOLUTE): Line 1 MUST ALWAYS be a warm, engaging conversational lifestyle observation or gerund! NEVER open the Daily Thread with a cold price or title sentence!
    - DAILY THREAD ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copying OR PARAPHRASING the opening or closing sentences from Variation 1, 2, or 3! The Daily Thread MUST be 100% unique and open with a completely brand new thought or gerund!
    - PRONOUN OPENING BAN: NEVER start the thread with 'I [verb]' or 'We [verb]'. Open with a natural conversational observation.
    - Weave the sale price (with '$' and fulfillment), regular price (no '$' or decimal, if present), full title, retailer, and verified specs.
