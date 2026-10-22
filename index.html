@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.02</title>
+    <title>The CB Command Center v10.3.04</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.02 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.04 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -646,6 +646,8 @@
             .replace(/\b(to\s+your\s+|per\s+|each\s+)orders?\b/gi, '$1delivery')
             .replace(/\byou\s+can\s+order\b/gi, 'you can get')
             .replace(/\borders\s+are\s+restricted\b/gi, 'strictly limited')
+            // Detach slang from price sentences (e.g. 'is fr $23' -> 'is $23')
+            .replace(/\b(is|for)\s+(fr|ngl|tbf|tbh|imo|lowkey|legit)\s+\$/gi, '$1 $')
             // Purge corporate "rate applies" jargon and awkward variant combinations
             .replace(/\bthis\s+rate\s+applies\b/gi, 'this applies')
             .replace(/\brates?\s+adjust\s+lower\b/gi, 'drops even lower')
@@ -752,7 +754,9 @@
             .replace(/\bessentials\b/gi, 'supplies')
             .replace(/\bessential\b/gi, 'a staple')
             // Strip any accidental #ad hashtags from copy
-            .replace(/\s*#ad\b/gi, '');
+            .replace(/\s*#ad\b/gi, '')
+            // Final Auto-Capitalizer: Ensure sentence starters and post openers are always capitalized
+            .replace(/(^\s*|[.!?]\s+)(?!https?:\/\/)([a-z])/gi, (m, p1, p2) => p1 + p2.toUpperCase());
     }
 
     // DYNAMIC CONTEXTUAL EMOJI ENGINE (Anti-Clustering & Single-Emoji-Per-Line Distribution)
@@ -912,7 +916,7 @@
             "Layout A: Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE || Line 5 Closing prospective thought.",
             "Layout B (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Closing prospective thought || Line 5 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute very end.",
             "Layout C: Line 1 Conversational Lifestyle Hook || Line 2 Link [TARGET_SLOT] ON ITS OWN LINE || Line 3 Price sentence || Line 4 Stated specs or limits at the very end (if present).",
-            "Layout D: Line 1 Conversational Lifestyle Hook || Line 2 Stated specs or limits (if present) || Line 3 Price sentence || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute end.",
+            "Layout D: Line 1 Conversational Lifestyle Hook || Line 2 Stated specs or limits (ONLY if extra specs exist! If none, omit this line!) || Line 3 Price sentence || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute end.",
             "Layout E (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Closing prospective thought || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute very end."
         ];
         const selectedDtLayout = dtLayoutOptions[Math.floor(Math.random() * dtLayoutOptions.length)];
@@ -1173,11 +1177,13 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     postLines = Object.values(rawPost).map(s => String(s).trim()).filter(s => s.length > 0);
                 } else {
                     let str = String(rawPost);
+                    // Universal Sentence Boundary Splitter: Handles ||, newlines, and period boundaries cleanly
                     if (str.includes('||')) {
-                        postLines = str.split('||').map(s => s.trim());
+                        postLines = str.split(/\s*\|\|\s*/).map(s => s.trim());
+                    } else if (str.includes('\n')) {
+                        postLines = str.split(/\n+/).map(s => s.trim());
                     } else {
-                        postLines = str.match(/(?:[^.!?]|\d\.\d)+[.!?]+(?!\d)/g) || [str];
-                        postLines = postLines.map(s => s.trim());
+                        postLines = str.split(/(?<=[.!?])\s{1,3}(?=[A-Z0-9\u{1F300}-\u{1F9FF}])/gu).map(s => s.trim());
                     }
                     postLines = postLines.filter(line => line.length > 0);
                 }
@@ -1289,6 +1295,13 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 dtLines.push(dtCloaked);
             }
 
+            // DAILY THREAD NAKED TITLE PURGE: If a line is just the naked product title by itself, drop it!
+            dtLines = dtLines.filter(line => {
+                let cleanLine = line.replace(/[.!?]/g, '').trim().toLowerCase();
+                let cleanT = cleanTitle.toLowerCase().trim();
+                return cleanLine !== cleanT;
+            });
+
             // AUTOMATED PUNCTUATION ENFORCER FOR DAILY THREAD:
             dtLines = dtLines.map(line => {
                 let trimmed = line.trim();
@@ -1329,7 +1342,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.02]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.04]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
