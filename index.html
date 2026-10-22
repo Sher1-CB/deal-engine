@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.04</title>
+    <title>The CB Command Center v10.3.06</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.04 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.06 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -640,14 +640,16 @@
             .replace(/\bthis\s+offer\b/gi, 'this find')
             // Scrutinize financial & particulate commercial tokens
             .replace(/\b(shopping|purchasing|ordering)\b/gi, 'getting')
-            .replace(/\b(prices?|pricing|costs?|costing|spending|payments?|fees?|charges?)\b/gi, 'rates')
+            .replace(/\b(prices?|pricing|costs?|costing|spending|payments?|fees?|charges?)\b/gi, 'drops')
             .replace(/\b(usd|cents)\b/gi, '')
+            // Purge "at this rate" from limits
+            .replace(/\bat\s+this\s+rate\b/gi, 'per customer')
             // Purge commercial order tokens while preserving 'in order to'
             .replace(/\b(to\s+your\s+|per\s+|each\s+)orders?\b/gi, '$1delivery')
             .replace(/\byou\s+can\s+order\b/gi, 'you can get')
             .replace(/\borders\s+are\s+restricted\b/gi, 'strictly limited')
             // Detach slang from price sentences (e.g. 'is fr $23' -> 'is $23')
-            .replace(/\b(is|for)\s+(fr|ngl|tbf|tbh|imo|lowkey|legit)\s+\$/gi, '$1 $')
+            .replace(/\b(is|for)\s+(fr|ngl|tbf|tbh|imo|lowkey|legit|probs|kinda|super)\s+\$/gi, '$1 $')
             // Purge corporate "rate applies" jargon and awkward variant combinations
             .replace(/\bthis\s+rate\s+applies\b/gi, 'this applies')
             .replace(/\brates?\s+adjust\s+lower\b/gi, 'drops even lower')
@@ -997,6 +999,7 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a variant restriction, RESTRICTION SENTENCE ENTROPY: Never use corporate jargon like 'this rate applies'! Rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', 'Works strictly on the [variant] selection.', or 'Applies exclusively to the [variant] version.'. Never dump raw bullet fragments like 'Works on medium.'!
+MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel', 'dishwasher safe'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean, distinct sentence stating these features into EVERY variation (with varied phrasing)! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
@@ -1004,7 +1007,7 @@ CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective exciteme
 • APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling.
 • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
 • HOME & HARDWARE: Talk about meal prep, kitchen counters, or clean organization.
-FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility! PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household', 'There is a 1-unit limit allowed', 'You can get 1 at this rate', 'Restricted to 1 per customer'. Never use the word 'order' in limits! BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, URL, Promotion, Markdown, Marked down, Link, Savings, Save. DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
+FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility! PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! BANNED WORDS: Sale, Discount, Price, Cost, Checkout, Buy, Grab, URL, Promotion, Markdown, Marked down, Link, Savings, Save. DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE, RETAILER & PRICE BAN: You are STRICTLY FORBIDDEN from using full product title, retailer name, or dollar amounts in comments! Use simple everyday product nouns like 'deodorant', 'soup', 'tumblers', or 'tools'. ZERO POINTER PHRASES (ABSOLUTE): Never write pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', or 'Check it out via')! The link [TARGET_SLOT] MUST stand completely alone on its own line without any leading prepositions! NEVER put a period after [TARGET_SLOT]! LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! Keep human statements lean and under 15 words. Follow assigned roles:
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
@@ -1342,7 +1345,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.04]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.06]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1614,6 +1617,7 @@ RULES:
    - PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, PROSPECTIVE UTILITY, and IMAGINING USE (e.g., 'This would be so nice for...', 'Such a fun find for...', 'Imagine having a warm bowl ready...', 'Could definitely see this making mornings easier...').
    - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', 'My pantry feels so tidy with these', or 'I always keep a backup pack in my cabinet'.
    - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title! If the title already says 'Moisture Hydrating Shampoo 28 oz 3 Count', the feature line must NOT repeat '28 oz' or '3 Count'! Extract only genuinely new specs from the bullet points.
+   - MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence describing these features into EVERY single post variation with varied phrasing!
    - REAL-WORLD CATEGORY COMMON SENSE:
      • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
      • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
@@ -1626,7 +1630,7 @@ RULES:
    - ANTI-ZEN & REAL UTILITY: Do NOT use abstract corporate yoga phrases like 'brings a quiet sense of peace/calm/satisfaction'! Speak about real, tangible daily wins.
    - ZERO LINKS: You are STRICTLY FORBIDDEN from putting any link or website name in post variations!
    - BUNDLE/PIECE COUNT FIREWALL: Do NOT confuse a multi-pack, set, or piece count in the title (e.g., '16 Pcs', '2 Pack', '12 Pack') with a cart quantity! A '12 Pack' is ONE single box. Never tell the user to 'add 12 to your delivery'.
-   - QUANTITY RULE: ONLY if a specific cart quantity is explicitly required in raw text (e.g. 'ADD 3'), say 'add [X] to your delivery'. LIMIT CONFUSION FIREWALL: A purchase limit (e.g., 'Limit 5') is a RESTRICTION, not a cart requirement! Rephrase limits naturally: 'Capped at 5 per household', 'There is a 5-unit limit allowed', 'You can get 5 at this rate', 'Restricted to 5 per customer'. NEVER make the limit the final sentence!
+   - QUANTITY RULE: ONLY if a specific cart quantity is explicitly required in raw text (e.g. 'ADD 3'), say 'add [X] to your delivery'. LIMIT CONFUSION FIREWALL: A purchase limit (e.g., 'Limit 5') is a RESTRICTION, not a cart requirement! Rephrase limits naturally: 'Capped at 5 per household.', 'There is a 5-unit limit allowed.', 'You can get up to 5 per customer.', or 'Restricted to 5 per customer.'. NEVER use the word 'rate' and NEVER make the limit the final sentence!
    - SLANG DIVERSITY MATRIX: Use strictly ONE casual slang token per variation in Variations 1 and 2 from this approved list ONLY: ['ngl', 'tbf', 'imo', 'fr', 'no lie', 'hands down', 'so clutch', '10/10', 'legit', 'unreal', 'living for this', 'lowkey', 'highkey', 'super', 'insanely', 'kinda', 'rn', 'probs']. SLANG STACKING BAN: NEVER pair your slang word with filler adverbs (do NOT write 'tbh totally' or 'seriously super'). ONE WORD TOTAL. Weave slang smoothly inside Sentence 1. NEVER attach slang to the price sentence! Variation 3 MUST be 100% clean with ZERO slang (The Breather).
    - EMOJI DENSITY: Include 1 to 3 contextual emojis per post. Distribute them across separate lines (maximum 1 emoji per line). NEVER stack emojis into clusters like '🌈 🔥 ❄'!
 
