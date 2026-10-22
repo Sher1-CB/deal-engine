@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.01</title>
+    <title>The CB Command Center v10.3.02</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.01 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.02 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -648,6 +648,8 @@
             .replace(/\borders\s+are\s+restricted\b/gi, 'strictly limited')
             // Purge corporate "rate applies" jargon and awkward variant combinations
             .replace(/\bthis\s+rate\s+applies\b/gi, 'this applies')
+            .replace(/\brates?\s+adjust\s+lower\b/gi, 'drops even lower')
+            .replace(/\brates?\s+shift\s+quickly\b/gi, 'listings shift quickly')
             .replace(/\bcolor\s+size\s+choice\b/gi, 'option')
             .replace(/\bcolor\s+size\s+option\b/gi, 'option')
             // Restriction Stutter Shield: De-duplicate 'works on the works on' collisions
@@ -991,7 +993,7 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a variant restriction, RESTRICTION SENTENCE ENTROPY: Never use corporate jargon like 'this rate applies'! Rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', 'Works strictly on the [variant] selection.', or 'Applies exclusively to the [variant] version.'. Never dump raw bullet fragments like 'Works on medium.'!
-ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy using varied safe phrasing ('drops even lower with auto-delivery', 'rates adjust lower when setting up routine deliveries', etc.). ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
+ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
 • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
@@ -1327,7 +1329,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.01]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.02]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1605,7 +1607,7 @@ RULES:
      • APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling. NEVER say clothes look cute on a desk or vanity!
      • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
      • HOME & HARDWARE: Talk about meal prep, kitchen counters, or clean organization.
-   - ROUTINE DELIVERY (S&S) MANDATE (CONDITIONAL ONLY): If and ONLY IF the raw text explicitly mentions Subscribe & Save or S&S, you MUST highlight recurring savings naturally! Rotate safe phrasing: 'drops even lower with auto-delivery', 'rates adjust lower when setting up routine deliveries', 'extra savings apply when scheduled for routine shipments', or 'even less when choosing recurring deliveries'. NEVER use the trademarked words 'Subscribe & Save' or 'S&S'! ABSOLUTE NEGATIVE PROHIBITION: If the raw text does NOT explicitly mention Subscribe & Save or S&S, you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings! Never guess or assume an item has auto-delivery!
+   - ROUTINE DELIVERY (S&S) MANDATE (CONDITIONAL ONLY): If and ONLY IF the raw text explicitly mentions Subscribe & Save or S&S, highlight recurring savings naturally. AUTO-DELIVERY PHRASING ENTROPY: NEVER use the word 'rates' and NEVER repeat the same auto-delivery sentence across variations! Rotate naturally: 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', or 'Adjusts down even further with recurring shipments.'. NEVER use 'Subscribe & Save' or 'S&S'! ABSOLUTE NEGATIVE PROHIBITION: If raw text does not mention S&S, you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, or recurring shipments!
    - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a restriction (e.g. 'Works on medium', 'only works on pink', 'works on both pictured option'), strip out the words 'works on' so the variant is clean (e.g. 'both pictured options', 'medium', 'pink')! NEVER write 'this rate applies' and NEVER stutter ('works on the works on')! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Applies strictly to the [variant] version.'.
    - LEAN DEAL BREVITY (ABSOLUTE): Never write long essays or stories! Every variation MUST be short, punchy, and direct (2 to 4 lines max). Structure: Quick practical context ➔ Price and Title sentence ➔ Essential specs (if present) ➔ Fast 1-line prospective sign-off. Zero fluff!
    - ANTI-ZEN & REAL UTILITY: Do NOT use abstract corporate yoga phrases like 'brings a quiet sense of peace/calm/satisfaction'! Speak about real, tangible daily wins.
