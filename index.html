@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.08</title>
+    <title>The CB Command Center v10.3.10</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.08 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.10 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -303,16 +303,13 @@
             </div>
 
             <div class="output-col">
-                <!-- Elapsed Human Pacing Clock: Bypasses <60s link trap with zero robotic periodicity -->
-                <div id="linkBufferPill" style="display:none; padding:8px 12px; border-radius:6px; font-size:12px; font-weight:700; align-items:center; justify-content:space-between; margin-bottom:5px; transition: 0.3s;">
-                    <span id="bufferTimerStatus">⏳ Link Shield: <span id="bufferTimerCount">00:00</span></span>
-                    <span id="bufferTimerAdvice" style="font-size:11px; font-weight:600; opacity:0.85;">(Cooldown active...)</span>
-                </div>
-
                 <div class="output-box">
                     <div class="box-header">
                         <h4>💬 COMMENT 1</h4>
-                        <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy</button>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="timer-pill-1" style="display:none; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; transition:0.3s;"></span>
+                            <button class="copy-btn" onclick="copyToClipboard('out-com1', this)">📄 Copy</button>
+                        </div>
                     </div>
                     <div id="out-com1" class="output-content"></div>
                 </div>
@@ -320,7 +317,10 @@
                 <div class="output-box">
                     <div class="box-header">
                         <h4>💬 COMMENT 2</h4>
-                        <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy</button>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="timer-pill-2" style="display:none; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; transition:0.3s;"></span>
+                            <button class="copy-btn" onclick="copyToClipboard('out-com2', this)">📄 Copy</button>
+                        </div>
                     </div>
                     <div id="out-com2" class="output-content"></div>
                 </div>
@@ -328,7 +328,10 @@
                 <div class="output-box">
                     <div class="box-header">
                         <h4>💬 COMMENT 3</h4>
-                        <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy</button>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="timer-pill-3" style="display:none; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; transition:0.3s;"></span>
+                            <button class="copy-btn" onclick="copyToClipboard('out-com3', this)">📄 Copy</button>
+                        </div>
                     </div>
                     <div id="out-com3" class="output-content"></div>
                 </div>
@@ -581,10 +584,8 @@
         document.getElementById('priceWarning').style.display = 'none';
         document.getElementById('outputSection').style.display = 'none';
         document.getElementById('emergencyFallbackBtn').style.display = 'none';
-        // Reset and hide link pacing timer for the next deal
-        clearInterval(bufferTimerInterval);
-        const pill = document.getElementById('linkBufferPill');
-        if (pill) pill.style.display = 'none';
+        // Reset and hide all 3 per-comment timers for the next deal
+        resetAllCommentTimers();
         fetchCloudHistory(); 
         checkServerForUpdates(); 
     }
@@ -678,8 +679,9 @@
             .replace(/\bpurchases?\b/gi, 'get')
             .replace(/\bpurchased\b/gi, 'got')
             .replace(/\bpurchasing\b/gi, 'getting')
-            // 12. De-duplicate back-to-back "Right now" sentence starters
+            // 12. De-duplicate back-to-back "Right now" sentence starters & double price sentences
             .replace(/\b(Right now,[^.]*?\.\s*)Right now,\s+/gi, '$1')
+            .replace(/\b(Amazon has the [^.]*?\.\s*)(Just spotted the [^.]*?\.\s*)/gi, '$1')
             // Purge accidental standalone count fragments (e.g. '120 Count ✨')
             .replace(/(^\s*|\n+)\d+\s+(count|pack|pcs|pieces)\s*[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}]*(\n+|$)/giu, '$1')
             // Soften stiff robotic adverbs
@@ -890,10 +892,8 @@
         btn.disabled = true;
         document.getElementById('priceWarning').style.display = 'none';
         currentRawOutput = ""; 
-        // Reset pacing timer so the new deal starts fresh
-        clearInterval(bufferTimerInterval);
-        const pill = document.getElementById('linkBufferPill');
-        if (pill) pill.style.display = 'none';
+        // Reset all 3 per-comment timers so the new deal starts fresh
+        resetAllCommentTimers();
 
         let pronounInstruction = pronounStyle === "subject" 
             ? "PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, IMAGINING USE, and HOW HANDY IT WILL BE ONCE IT ARRIVES (e.g., 'This would be so nice for...', 'Such a fun find if you need...', 'Could definitely see this making mornings easier...', 'Imagine having a full set ready for...'). FALSE OWNERSHIP BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from pretending you already physically own, received, or tested the item! NEVER say 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'." 
@@ -974,7 +974,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "post_variations": (Array of 3 strings. You are a polymorphic text engine.
 DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
-• Variation 2: Open with retailer context or a situational routine in a flowing conversational sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].' or 'Just spotted the [Title] on [Retailer] down to [sale_price], previously [reg_price].'). ZERO HEADLINE COLONS: You are strictly forbidden from using headline colons like 'Spotted on Amazon:'! Write flowing sentences without colons!
+• Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
 • Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
@@ -1333,7 +1333,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.08]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.10]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1489,44 +1489,60 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         document.body.removeChild(textArea);
     }
 
-    let bufferTimerInterval = null;
-    function startLinkBufferTimer() {
-        const pill = document.getElementById('linkBufferPill');
-        const countSpan = document.getElementById('bufferTimerCount');
-        const statusSpan = document.getElementById('bufferTimerStatus');
-        const adviceSpan = document.getElementById('bufferTimerAdvice');
-        if (!pill || !countSpan) return;
+    // INDEPENDENT PER-COMMENT TIMER ENGINE
+    const commentTimers = { 1: null, 2: null, 3: null };
 
-        clearInterval(bufferTimerInterval);
-        pill.style.display = 'flex';
+    function resetAllCommentTimers() {
+        for (let i = 1; i <= 3; i++) {
+            if (commentTimers[i]) clearInterval(commentTimers[i]);
+            commentTimers[i] = null;
+            const pill = document.getElementById(`timer-pill-${i}`);
+            if (pill) {
+                pill.style.display = 'none';
+                pill.innerText = '';
+            }
+        }
+    }
+
+    function startCommentTimer(commentNum) {
+        const pill = document.getElementById(`timer-pill-${commentNum}`);
+        if (!pill) return;
+
+        if (commentTimers[commentNum]) clearInterval(commentTimers[commentNum]);
+
+        // DYNAMIC STOCHASTIC ENTROPY: Randomize safe threshold between 90 and 130 seconds per timer
+        const safeThreshold = Math.floor(Math.random() * (130 - 90 + 1)) + 90;
+
+        pill.style.display = 'inline-block';
         pill.style.background = '#fce8e6';
         pill.style.border = '1px solid #ea4335';
         pill.style.color = '#c5221f';
 
         let elapsed = 0;
-        const updateDisplay = () => {
+        const updatePill = () => {
             let m = Math.floor(elapsed / 60);
             let s = elapsed % 60;
-            countSpan.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            let timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
-            // Under 75 seconds: Red zone (Bypasses Meta's fatal <60s instant-link filter)
-            if (elapsed < 75) {
-                statusSpan.innerHTML = `🔴 Post Cooldown: <span id="bufferTimerCount">${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}</span>`;
-                adviceSpan.innerText = `(Wait ~90s to avoid <60s link penalty)`;
+            // Stays RED until this specific random threshold (90-130s) is passed!
+            if (elapsed < safeThreshold) {
+                pill.style.background = '#fce8e6';
+                pill.style.border = '1px solid #ea4335';
+                pill.style.color = '#c5221f';
+                pill.innerText = `🔴 ${timeStr} (Cooldown)`;
             } else {
-                // 75+ seconds: Green zone (Natural human window - drop anytime!)
+                // Unlocks GREEN at a completely unpredictable time for total algorithm defense!
                 pill.style.background = '#e6f4ea';
                 pill.style.border = '1px solid #00a400';
                 pill.style.color = '#007a00';
-                statusSpan.innerHTML = `🟢 Natural Human Window: <span id="bufferTimerCount">${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}</span>`;
-                adviceSpan.innerText = `(Safe to drop link at your own natural pace!)`;
+                pill.innerText = `🟢 ${timeStr} (Safe to drop!)`;
             }
         };
-        updateDisplay();
+        updatePill();
 
-        bufferTimerInterval = setInterval(() => {
+        commentTimers[commentNum] = setInterval(() => {
             elapsed++;
-            updateDisplay();
+            updatePill();
         }, 1000);
     }
 
@@ -1535,10 +1551,13 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         const textToCopy = el.getAttribute('data-raw') || el.innerText;
         if (!textToCopy) { alert("Nothing to copy yet!"); return; }
 
-        // Start Elapsed Pacing Clock when copying any Post Variation!
-        if (elementId.startsWith('out-post')) {
-            startLinkBufferTimer();
-        }
+        // Start specific timer matching the copied post:
+        // Copy Post 1 -> Starts Timer on Comment 1!
+        // Copy Post 2 -> Starts Timer on Comment 2!
+        // Copy Post 3 -> Starts Timer on Comment 3!
+        if (elementId === 'out-post1') startCommentTimer(1);
+        if (elementId === 'out-post2') startCommentTimer(2);
+        if (elementId === 'out-post3') startCommentTimer(3);
 
         const handleSuccess = () => {
             const originalText = btnElement.innerText;
