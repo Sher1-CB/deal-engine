@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.10</title>
+    <title>The CB Command Center v10.3.11</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.10 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.11 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1333,7 +1333,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.10]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.11]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1510,38 +1510,37 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
 
         if (commentTimers[commentNum]) clearInterval(commentTimers[commentNum]);
 
-        // DYNAMIC STOCHASTIC ENTROPY: Randomize safe threshold between 90 and 130 seconds per timer
-        const safeThreshold = Math.floor(Math.random() * (130 - 90 + 1)) + 90;
+        // DYNAMIC STOCHASTIC COUNTDOWN: Roll a unique random duration between 90 and 130 seconds!
+        let remaining = Math.floor(Math.random() * (130 - 90 + 1)) + 90;
 
         pill.style.display = 'inline-block';
         pill.style.background = '#fce8e6';
         pill.style.border = '1px solid #ea4335';
         pill.style.color = '#c5221f';
 
-        let elapsed = 0;
         const updatePill = () => {
-            let m = Math.floor(elapsed / 60);
-            let s = elapsed % 60;
+            let m = Math.floor(remaining / 60);
+            let s = remaining % 60;
             let timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
-            // Stays RED until this specific random threshold (90-130s) is passed!
-            if (elapsed < safeThreshold) {
+            if (remaining > 0) {
                 pill.style.background = '#fce8e6';
                 pill.style.border = '1px solid #ea4335';
                 pill.style.color = '#c5221f';
-                pill.innerText = `🔴 ${timeStr} (Cooldown)`;
+                pill.innerText = `🔴 ${timeStr} left`;
             } else {
-                // Unlocks GREEN at a completely unpredictable time for total algorithm defense!
+                // Countdown hits 00:00 -> Turns green!
+                clearInterval(commentTimers[commentNum]);
                 pill.style.background = '#e6f4ea';
                 pill.style.border = '1px solid #00a400';
                 pill.style.color = '#007a00';
-                pill.innerText = `🟢 ${timeStr} (Safe to drop!)`;
+                pill.innerText = `🟢 Safe to drop!`;
             }
         };
         updatePill();
 
         commentTimers[commentNum] = setInterval(() => {
-            elapsed++;
+            remaining--;
             updatePill();
         }, 1000);
     }
