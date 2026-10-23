@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.07</title>
+    <title>The CB Command Center v10.3.08</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.07 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.08 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -303,6 +303,12 @@
             </div>
 
             <div class="output-col">
+                <!-- Elapsed Human Pacing Clock: Bypasses <60s link trap with zero robotic periodicity -->
+                <div id="linkBufferPill" style="display:none; padding:8px 12px; border-radius:6px; font-size:12px; font-weight:700; align-items:center; justify-content:space-between; margin-bottom:5px; transition: 0.3s;">
+                    <span id="bufferTimerStatus">⏳ Link Shield: <span id="bufferTimerCount">00:00</span></span>
+                    <span id="bufferTimerAdvice" style="font-size:11px; font-weight:600; opacity:0.85;">(Cooldown active...)</span>
+                </div>
+
                 <div class="output-box">
                     <div class="box-header">
                         <h4>💬 COMMENT 1</h4>
@@ -575,6 +581,10 @@
         document.getElementById('priceWarning').style.display = 'none';
         document.getElementById('outputSection').style.display = 'none';
         document.getElementById('emergencyFallbackBtn').style.display = 'none';
+        // Reset and hide link pacing timer for the next deal
+        clearInterval(bufferTimerInterval);
+        const pill = document.getElementById('linkBufferPill');
+        if (pill) pill.style.display = 'none';
         fetchCloudHistory(); 
         checkServerForUpdates(); 
     }
@@ -631,8 +641,10 @@
             .replace(/\boffers\b/gi, 'features')
             .replace(/\boffering\b/gi, 'providing')
             .replace(/\boffered\b/gi, 'featured')
-            .replace(/\b(this|the|an|great|special|massive|good|nice|solid)\s+(offer|discount|markdown|promotion|promo|reduction|deal|steal|bargain|doorbuster|blowout|voucher|coupon)s?\b/gi, '$1 find')
-            .replace(/\b(discounts?|markdowns?|promotions?|promos?|reductions?|steals?|bargains?|doorbusters?|blowouts?|vouchers?|coupons?)\b/gi, 'find')
+            .replace(/\b(this|the|an|great|special|massive|good|nice|solid)\s+(offer|discount|markdown|promotion|promo|reduction|deal|steal|bargain|doorbuster|blowout|voucher|coupon|closeout)s?\b/gi, '$1 find')
+            .replace(/\b(discounts?|markdowns?|promotions?|promos?|reductions?|steals?|bargains?|doorbusters?|blowouts?|vouchers?|coupons?|closeouts?)\b/gi, 'find')
+            .replace(/\b(unbeatable|cheapest|fraction\s+of\s+the\s+cost|pennies\s+on\s+the\s+dollar)\b/gi, 'wonderful value')
+            .replace(/\b(drop\s+(your\s+)?(thoughts|comments?)|share\s+your\s+thoughts|tell\s+us\s+below|who\s+else\s+needs\s+this|anyone\s+need\s+this)\b/gi, '')
             // 6. Scrutinize financial & particulate commercial tokens
             .replace(/\b(shopping|purchasing|ordering)\b/gi, 'getting')
             .replace(/\b(prices?|pricing|costs?|costing|spending|payments?|fees?|charges?)\b/gi, 'drops')
@@ -878,6 +890,10 @@
         btn.disabled = true;
         document.getElementById('priceWarning').style.display = 'none';
         currentRawOutput = ""; 
+        // Reset pacing timer so the new deal starts fresh
+        clearInterval(bufferTimerInterval);
+        const pill = document.getElementById('linkBufferPill');
+        if (pill) pill.style.display = 'none';
 
         let pronounInstruction = pronounStyle === "subject" 
             ? "PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, IMAGINING USE, and HOW HANDY IT WILL BE ONCE IT ARRIVES (e.g., 'This would be so nice for...', 'Such a fun find if you need...', 'Could definitely see this making mornings easier...', 'Imagine having a full set ready for...'). FALSE OWNERSHIP BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from pretending you already physically own, received, or tested the item! NEVER say 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'." 
@@ -980,7 +996,7 @@ MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each contain a distinc
 "daily_thread": (String. DAILY THREAD ORDER LOCK: Use this exact sentence order: ${selectedDtLayout} (ABSOLUTE: The link [TARGET_SLOT] MUST ALWAYS sit on its own completely separate line!). PRICE PAIRING: 'The [Title] on [Retailer] is [sale_price], dropping from [reg_price].' (If reg_price is 'NONE', just say '[sale_price]'). DAILY THREAD ANTI-PARROT LAW: You are STRICTLY FORBIDDEN from copying or paraphrasing opening or closing sentences from Variations 1, 2, or 3! Open with a natural conversational observation or gerund. NEVER start with 'I [verb]' or 'We [verb]'. RESTRICTION LOCK: State any variant restrictions or limits conversationally. ZERO POINTER PHRASES: Never use pointers before the link! DELIMITER LOCK: End every sentence with a period and separate with ' || '.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
-GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
+GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Drop your thoughts, Share your thoughts, Drop a comment, Tell us below, Who else needs this, Anyone need this, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
         } else {
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): Return pure JSON only.
@@ -995,7 +1011,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "daily_thread": (String. Weave sale_price, reg_price, cleaned_title, retailer_name, features_catchall, and '[TARGET_SLOT]' into single natural message. QUANTITY RULE: Say 'add [X] to your delivery'. DELIMITER LOCK: Separate sentences with ' || ' and end with a period.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
-GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
+GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Drop your thoughts, Share your thoughts, Drop a comment, Tell us below, Who else needs this, Anyone need this, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
         }
 
         try {
@@ -1317,7 +1333,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.07]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.08]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1473,10 +1489,56 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         document.body.removeChild(textArea);
     }
 
+    let bufferTimerInterval = null;
+    function startLinkBufferTimer() {
+        const pill = document.getElementById('linkBufferPill');
+        const countSpan = document.getElementById('bufferTimerCount');
+        const statusSpan = document.getElementById('bufferTimerStatus');
+        const adviceSpan = document.getElementById('bufferTimerAdvice');
+        if (!pill || !countSpan) return;
+
+        clearInterval(bufferTimerInterval);
+        pill.style.display = 'flex';
+        pill.style.background = '#fce8e6';
+        pill.style.border = '1px solid #ea4335';
+        pill.style.color = '#c5221f';
+
+        let elapsed = 0;
+        const updateDisplay = () => {
+            let m = Math.floor(elapsed / 60);
+            let s = elapsed % 60;
+            countSpan.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+            // Under 75 seconds: Red zone (Bypasses Meta's fatal <60s instant-link filter)
+            if (elapsed < 75) {
+                statusSpan.innerHTML = `🔴 Post Cooldown: <span id="bufferTimerCount">${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}</span>`;
+                adviceSpan.innerText = `(Wait ~90s to avoid <60s link penalty)`;
+            } else {
+                // 75+ seconds: Green zone (Natural human window - drop anytime!)
+                pill.style.background = '#e6f4ea';
+                pill.style.border = '1px solid #00a400';
+                pill.style.color = '#007a00';
+                statusSpan.innerHTML = `🟢 Natural Human Window: <span id="bufferTimerCount">${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}</span>`;
+                adviceSpan.innerText = `(Safe to drop link at your own natural pace!)`;
+            }
+        };
+        updateDisplay();
+
+        bufferTimerInterval = setInterval(() => {
+            elapsed++;
+            updateDisplay();
+        }, 1000);
+    }
+
     function copyToClipboard(elementId, btnElement) {
         const el = document.getElementById(elementId);
         const textToCopy = el.getAttribute('data-raw') || el.innerText;
         if (!textToCopy) { alert("Nothing to copy yet!"); return; }
+
+        // Start Elapsed Pacing Clock when copying any Post Variation!
+        if (elementId.startsWith('out-post')) {
+            startLinkBufferTimer();
+        }
 
         const handleSuccess = () => {
             const originalText = btnElement.innerText;
@@ -1566,7 +1628,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         const emergencyPrompt = `SYSTEM ROLE: You are an advanced polymorphic deal-formatting engine for The Coupon Boutique®. You will receive raw deal text containing a product, pricing, retailer, specifications, and a link. You will output EXACTLY 3 Post Variations, 3 Comments, and 1 Daily Thread Comment. Do NOT output any conversational filler, introductory remarks, or concluding notes. Output pure deal text only following the exact required format.
 
 RULES:
-1. GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Group comments and the Daily Thread must output clean, plain canonical URLs without any '#ad' or commercial hashtags to clear Meta's Content Credibility filters. Post variations must have ZERO links and ZERO hashtags! Before outputting, scan every single word you wrote: replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' or 'offer' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. Everything MUST be positive, cheerful, and deal-elevating! You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!
+1. GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Group comments and the Daily Thread must output clean, plain canonical URLs without any '#ad' or commercial hashtags to clear Meta's Content Credibility filters. Post variations must have ZERO links and ZERO hashtags! Before outputting, scan every single word you wrote: replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' or 'offer' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. Everything MUST be positive, cheerful, and deal-elevating! You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Drop your thoughts, Share your thoughts, Drop a comment, Tell us below, Who else needs this, Anyone need this, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!
 
 2. DATA INTEGRITY & ZERO-GUESS PRICING:
    - SALE PRICE: You MUST include the exact sale price with a '$' sign and fulfillment status (e.g., '$12.00 Shipped' or '$7.57 Total'). If raw text shows a price range for the sale price (e.g. '$45.59 - $47.99 Shipped'), you MUST keep the full range! NEVER collapse it to a single number! ALWAYS keep the '$' sign on the sale price.
