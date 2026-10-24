@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.15</title>
+    <title>The CB Command Center v10.3.16</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.15 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.16 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -921,8 +921,8 @@
         if (stopBtn) stopBtn.style.display = 'inline-flex';
         // Reset all 3 per-comment timers so the new deal starts fresh
         resetAllCommentTimers();
-        // Roll brand-new Base Cooldown Anchor (90-115s) for this specific deal generation!
-        currentDealBaseCooldown = Math.floor(Math.random() * (115 - 90 + 1)) + 90;
+        // Roll brand-new Base Cooldown Anchor (125-165s) for this specific deal generation!
+        currentDealBaseCooldown = Math.floor(Math.random() * (165 - 125 + 1)) + 125;
 
         let pronounInstruction = pronounStyle === "subject" 
             ? "PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, IMAGINING USE, and HOW HANDY IT WILL BE ONCE IT ARRIVES (e.g., 'This would be so nice for...', 'Such a fun find if you need...', 'Could definitely see this making mornings easier...', 'Imagine having a full set ready for...'). FALSE OWNERSHIP BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from pretending you already physically own, received, or tested the item! NEVER say 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'." 
@@ -1363,7 +1363,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.15]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.16]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1530,7 +1530,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
 
     // INDEPENDENT PER-COMMENT CASCADING TIMER ENGINE
     const commentTimers = { 1: null, 2: null, 3: null };
-    let currentDealBaseCooldown = 95; // Anchored base per generation
+    let currentDealBaseCooldown = 135; // Anchored base per generation (125-180s window)
 
     function resetAllCommentTimers() {
         for (let i = 1; i <= 3; i++) {
