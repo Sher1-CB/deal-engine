@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.13</title>
+    <title>The CB Command Center v10.3.14</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.13 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.14 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -743,6 +743,9 @@
             .replace(/\b(applies|works|featured|valid)\s+(specifically\s+|strictly\s+|exclusively\s+)?(to|on)\s+the\s+works\s+on\s+/gi, '$1 $2$3 ')
             .replace(/\bworks\s+on\s+the\s+works\s+on\s+/gi, 'works on ')
             .replace(/\bthe\s+works\s+on\s+/gi, '')
+            // Multi-Color Syntax Cleaner: Fixes "Featured on the Several colors choice" -> "Available in several colors"
+            .replace(/\b(featured on|applies exclusively to|works strictly on|applies specifically to)\s+the\s+several\s+colors?\s+(choice|version|selection|option)\b/gi, 'available in several colors')
+            .replace(/\bthe\s+several\s+colors?\s+(choice|version|selection|option)\b/gi, 'several colors')
             // Headline Colon Scrubber: Convert "Spotted on Amazon: The" -> "Amazon has the "
             .replace(/\b(spotted|found|seen)\s+on\s+(Amazon|Walmart|Woot|Walgreens|Target):\s*/gi, '$2 has the ')
             .replace(/:\s*([A-Z0-9])/g, ', $1')
@@ -1003,7 +1006,7 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
-VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a variant restriction, RESTRICTION SENTENCE ENTROPY: Never use corporate jargon like 'this rate applies'! Rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', 'Works strictly on the [variant] selection.', or 'Applies exclusively to the [variant] version.'. Never dump raw bullet fragments like 'Works on medium.'!
+VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a single color or size restriction (e.g. 'Pink', 'Large', 'medium'), rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'. MULTI-COLOR AVAILABILITY RULE: If raw text states multiple colors are available (e.g. 'Several colors', 'multiple options'), you are STRICTLY FORBIDDEN from treating it as a single restricted color name! NEVER write 'Featured on the Several colors choice' or 'Applies exclusively to the Several colors version'! State it naturally: 'Available in several colors.', 'Multiple color choices are available.', or 'You can pick from several colors.'.
 MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel', 'dishwasher safe'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean, distinct sentence stating these features into EVERY variation (with varied phrasing)! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
@@ -1358,7 +1361,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.13]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.14]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1712,7 +1715,7 @@ RULES:
    - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', 'My pantry feels so tidy with these', or 'I always keep a backup pack in my cabinet'.
    - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title! If the title already says 'Moisture Hydrating Shampoo 28 oz 3 Count', the feature line must NOT repeat '28 oz' or '3 Count'! Extract only genuinely new specs from the bullet points.
    - MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence describing these features into EVERY single post variation with varied phrasing!
-   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a restriction (e.g. 'Works on medium', 'only works on pink', 'works on both pictured option'), strip out the words 'works on' so the variant is clean (e.g. 'both pictured options', 'medium', 'pink')! NEVER write 'this rate applies' and NEVER stutter ('works on the works on')! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Applies strictly to the [variant] version.'.
+   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a single variant restriction (e.g. 'Works on medium', 'only works on pink'), weave it into natural sentences: 'This applies specifically to the [variant] option.', or 'Featured on the [variant] choice.'. MULTI-COLOR AVAILABILITY: If text says 'Several colors', NEVER write 'Applies to the Several colors version'! State it naturally: 'Available in several colors.' or 'Multiple colors are available.'.
    - REAL-WORLD CATEGORY COMMON SENSE:
      • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
      • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
