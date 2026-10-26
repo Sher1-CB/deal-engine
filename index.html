@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.16</title>
+    <title>The CB Command Center v10.3.18</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.16 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.18 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -768,8 +768,8 @@
             .replace(/\bessential\b/gi, 'a staple')
             // Strip any accidental #ad hashtags from copy
             .replace(/\s*#ad\b/gi, '')
-            // 15. Final Auto-Capitalizer: Ensure sentence starters and post openers are always capitalized
-            .replace(/(^\s*|[.!?]\s+)(?!https?:\/\/)([a-z])/gi, (m, p1, p2) => p1 + p2.toUpperCase());
+            // 15. Final Emoji-Aware Auto-Capitalizer: Capitalize sentence starters even when preceded by emojis
+            .replace(/(^\s*[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]*\s*|[.!?]\s+[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]*\s*)(?!https?:\/\/)([a-z])/giu, (m, p1, p2) => p1 + p2.toUpperCase());
     }
 
     // DYNAMIC CONTEXTUAL EMOJI ENGINE (Anti-Clustering & Single-Emoji-Per-Line Distribution)
@@ -990,7 +990,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. If mentions 'Woot', must be Woot!),
 "sale_price": (String. Extract the sale price. PRICE RANGE MANDATE: If raw text shows a range (e.g. '$15.99 - $17.99 Shipped'), preserve the FULL range! Ensure '$' sign is included, then ADD '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'),
 "reg_price": (String. Extract ONLY numbers/digits of regular price. ZERO-GUESS MANDATE (ABSOLUTE): If raw text does NOT explicitly state an original, was, or regular price, you MUST write 'NONE'! Guessing is strictly forbidden! Strip $ signs, replace decimals with spaces, connect ranges with hyphen, e.g. "23 99 - 26 99". NEVER include the word 'regular'!),
-"cleaned_title": (String. MANDATORY TITLE LOCK: Copy product name verbatim. Keep 'ADD 3 QTY' if present.),
+"cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the title line!),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. ZERO-GUESS MANDATE: If raw text does NOT explicitly state a limit (e.g. 'Limit of 5' or 'max 3'), write strictly 'NONE'! You are STRICTLY FORBIDDEN from assuming or guessing a limit! Extract ONLY the raw digit if explicitly written.),
   "variant": (String. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): If color count, shade, or model (e.g. '7 Colors') is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract ONLY the clean attribute or option itself (e.g. 'both pictured options', 'Pink', 'Large')! You are STRICTLY FORBIDDEN from including introductory words like 'works on', 'only works on', 'valid on', or 'applies to' inside this extracted string! Extract from additional lines only.),
@@ -1008,7 +1008,7 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a single color or size restriction (e.g. 'Pink', 'Large', 'medium'), rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'. MULTI-COLOR AVAILABILITY RULE: If raw text states multiple colors are available (e.g. 'Several colors', 'multiple options'), you are STRICTLY FORBIDDEN from treating it as a single restricted color name! NEVER write 'Featured on the Several colors choice' or 'Applies exclusively to the Several colors version'! State it naturally: 'Available in several colors.', 'Multiple color choices are available.', or 'You can pick from several colors.'.
-MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel', 'dishwasher safe'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean, distinct sentence stating these features into EVERY variation (with varied phrasing)! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
+MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you MUST weave a clean sentence stating these features into EVERY variation (with varied phrasing)! ZERO EXTRA BULLET CONDITIONAL: If features_catchall is 'NONE' (meaning no extra bullet points exist in the raw text), you are STRICTLY FORBIDDEN from chopping up the product title to create a redundant spec sentence! In that case, do NOT repeat the title specs—simply transition directly from the price sentence to the prospective lifestyle thought! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
@@ -1032,7 +1032,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "retailer_name": (String. Extract FULL retailer name. If mentions 'Woot', must be Woot!),
 "sale_price": (String. Extract sale price numbers and $, then ADD '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'),
 "reg_price": (String. Extract regular price. If none, write "NONE". Strip $ and replace decimal with space, e.g. "34 99"),
-"cleaned_title": (String. Copy product name verbatim.),
+"cleaned_title": (String. Copy product name line verbatim. Do NOT append 'ADD 3 QTY'!),
 "scrubbed_keyword": (String. Extract generic noun for the product. Max 2 words.),
 "features_catchall": (String. Extract remaining specs. If none, write "NONE"),
 "post_variations": (Array of 3 strings. PRICE BAN: You are STRICTLY FORBIDDEN from putting price in this string. Write short, urgent 2-sentence Run Deal post. Sentence 1: Curiosity hook. Sentence 2: Start with 'Snag', 'Pick up', 'Score', or 'Secure'. QUANTITY RULE: Say 'add [X] to your delivery'. CHARACTER LIMIT: Under 120 characters. DELIMITER LOCK: Separate sentences with ' || ' and use proper punctuation ending every sentence with a period.),
@@ -1163,6 +1163,14 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             if (!cleanTitle || cleanTitle.toLowerCase() === "featured deal") {
                 cleanTitle = extractTitleFromRawText(rawText);
             } 
+
+            // TITLE PURITY SHIELD: If raw text does NOT contain 'ADD [X]', scrub hallucinated 'ADD [X] QTY' from title
+            if (!/\bADD\s+\d+/i.test(rawText)) {
+                cleanTitle = cleanTitle.replace(/\s*ADD\s+\d+(\s+QTY)?\b/gi, '').trim();
+                if (aiData.cleaned_title) {
+                    aiData.cleaned_title = aiData.cleaned_title.replace(/\s*ADD\s+\d+(\s+QTY)?\b/gi, '').trim();
+                }
+            }
 
             const cleanAiPrice = aiData.sale_price ? aiData.sale_price.replace('$', '').replace(fulfillmentStatus, '').trim() : "???";
             if (cleanAiPrice !== "???") {
@@ -1363,7 +1371,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.16]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.18]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1706,7 +1714,7 @@ RULES:
      • Variation 2: Open with retailer context or a situational routine in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].' or 'Just spotted the [Title] on [Retailer] for [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
      • Variation 3: Sentence 1 MUST be a calm personal reflection with ZERO pricing and ZERO slang. Sentence 2 introduces the item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
-   - Full product title verbatim (keep 'ADD 3 QTY' or pack counts in the title line if present).
+   - Full product title verbatim. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!
    - Retailer explicitly stated in EVERY post (e.g. 'on Amazon', 'at Walmart', 'at Walgreens', 'at Woot').
    - PROMO, CHECKOUT & RETAILER HEADER SCRUB: Ignore promotional slogans ('Point Drop', 'Solid Dip', 'Solid Catch', 'Good Find', 'Top Score', 'Best Seller') and cart instructions. Whatever phrase is placed before the retailer name is a DEAL HEADER, NOT a product feature! Extract ONLY physical product specs! NEVER output robotic phrases like 'verify the total' or 'Point Drop on Amazon'.
    - UNIVERSAL 'FREE' BAN: You are STRICTLY FORBIDDEN from writing 'free shipping', 'free pickup', or 'free store pickup'! Say 'delivery is included', 'complimentary delivery', or 'store pickup applies once your total hits 10'.
