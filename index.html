@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.21</title>
+    <title>The CB Command Center v10.3.23</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.21 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.23 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -846,7 +846,10 @@
 
         const payload = {
             contents: [{ parts: [{ text: promptText }] }],
-            generationConfig: { temperature: 0.65 },
+            generationConfig: { 
+                temperature: 0.65,
+                response_mime_type: "application/json"
+            },
             safetySettings: [
                 { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
                 { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
@@ -1055,40 +1058,23 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             let attempts = 0;
             const maxAttempts = 3;
 
-            const defaultModel = (window.modelWaterfall && window.modelWaterfall[0]) ? window.modelWaterfall[0] : 'gemini-2.0-flash-lite';
-            const isManualChoice = selectedModel && (selectedModel !== defaultModel);
-
+            // 100% RESPECT SELECTION & DYNAMIC WATERFALL (NO PREMATURE ABORTS)
             while (attempts < maxAttempts) {
                 attempts++;
                 try {
                     let data = null;
+                    btn.innerHTML = `⏳ Compiling on ${selectedModel}...`;
                     
-                    if (isManualChoice) {
-                        btn.innerHTML = `⏳ Compiling on ${selectedModel}...`;
-                        data = await fetchWithRetry(prompt, selectedModel);
-                    } else {
-                        const w = window.modelWaterfall || ['gemini-2.0-flash-lite', 'gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-                        
-                        try {
-                            btn.innerHTML = `⏳ Step 1: ${w[0]}...`;
-                            data = await fetchWithRetry(prompt, w[0], 8500);
-                        } catch (step1Err) {
-                            console.log(`Step 1 (${w[0]}) timed out or busy. Trying Step 2: ${w[1]}...`);
-                            try {
-                                btn.innerHTML = `⚡ Step 2: ${w[1]}...`;
-                                data = await fetchWithRetry(prompt, w[1], 8500);
-                            } catch (step2Err) {
-                                console.log(`Step 2 (${w[1]}) timed out or busy. Trying Step 3: ${w[2]}...`);
-                                try {
-                                    btn.innerHTML = `🔄 Step 3: ${w[2]}...`;
-                                    data = await fetchWithRetry(prompt, w[2], 8500);
-                                } catch (step3Err) {
-                                    console.log(`All 3 Lite models busy. Launching Step 4 Flash Finisher: ${w[3]}...`);
-                                    btn.innerHTML = `🚀 Step 4: Finishing on ${w[3]}...`;
-                                    data = await fetchWithRetry(prompt, w[3]);
-                                }
-                            }
-                        }
+                    try {
+                        // Give the selected model a full 15s runway so it finishes cleanly on the 1st try!
+                        data = await fetchWithRetry(prompt, selectedModel, 15000);
+                    } catch (primaryErr) {
+                        // If selected model is busy/rate-limited, seamlessly fall back to dynamic waterfall models
+                        const w = window.modelWaterfall || [];
+                        const fallbackModel = w.find(m => m !== selectedModel) || selectedModel;
+                        console.log(`Primary model busy (${primaryErr.message}). Failing over to: ${fallbackModel}...`);
+                        btn.innerHTML = `⚡ Failing over to ${fallbackModel}...`;
+                        data = await fetchWithRetry(prompt, fallbackModel);
                     }
 
                     let aiText = data.candidates[0].content.parts[0].text;
@@ -1373,7 +1359,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.21]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.23]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
