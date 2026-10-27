@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.18</title>
+    <title>The CB Command Center v10.3.19</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.18 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.19 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -720,7 +720,12 @@
             .replace(/\|\|/g, '')
             .replace(/\bLayout\s+[A-E]:?\s*/gi, '')
             .replace(/\b(record\s+low|all[\s-]time\s+low|historic(al)?\s+low|point\s+drop|price\s+drop|top\s+score|best\s+seller|good\s+pick|solid\s+find|great\s+find|solid\s+catch|solid\s+dip)\s+(on|in|at)\s+(Amazon|Walmart|Woot|Walgreens|Target)\.?\s*/gi, '')
+            // Standalone Header Slogan Scrubber: Purge leaked slogans like "TOP SCORE."
             .replace(/\b(top\s+score|record\s+low|best\s+seller|good\s+drop|solid\s+catch|solid\s+dip)\b\.?\s*/gi, '')
+            // Meta-Instruction Scrubber: Erase leaked prompt directives like "ON ITS OWN LINE"
+            .replace(/\bON\s+ITS\s+OWN\s+LINE\b\.?\s*/gi, '')
+            // Variant Range Cleaner: Remove awkward trailing "choice/selection" on complex size ranges
+            .replace(/(Large Plus up to [\dX]+-Large Plus)\s+(choice|selection|version)\b/gi, '$1')
             .replace(/\[(Price\/Title|Lifestyle hook|TARGET_SLOT)\]/gi, '')
             .replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '')
             // Grammatical Upgrade Handler: Noun -> addition, Verb -> refreshing
@@ -934,11 +939,11 @@
             : `"custom_line_rephrases": (Array of 4 strings. Write ["DEAD","DEAD","DEAD","DEAD"]),`;
 
         const dtLayoutOptions = [
-            "Layout A: Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE || Line 5 Closing prospective thought.",
-            "Layout B (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Closing prospective thought || Line 5 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute very end.",
-            "Layout C: Line 1 Conversational Lifestyle Hook || Line 2 Link [TARGET_SLOT] ON ITS OWN LINE || Line 3 Price sentence || Line 4 Stated specs or limits at the very end (if present).",
-            "Layout D: Line 1 Conversational Lifestyle Hook || Line 2 Stated specs or limits (ONLY if extra specs exist! If none, omit this line!) || Line 3 Price sentence || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute end.",
-            "Layout E (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Closing prospective thought || Line 4 Link [TARGET_SLOT] ON ITS OWN LINE at the absolute very end."
+            "Layout A: Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 [TARGET_SLOT] || Line 5 Closing prospective thought.",
+            "Layout B (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Stated specs or limits (if present) || Line 4 Closing prospective thought || Line 5 [TARGET_SLOT].",
+            "Layout C: Line 1 Conversational Lifestyle Hook || Line 2 [TARGET_SLOT] || Line 3 Price sentence || Line 4 Stated specs or limits at the very end (if present).",
+            "Layout D: Line 1 Conversational Lifestyle Hook || Line 2 Stated specs or limits (ONLY if extra specs exist! If none, omit this line!) || Line 3 Price sentence || Line 4 [TARGET_SLOT].",
+            "Layout E (LINK AT END): Line 1 Conversational Lifestyle Hook || Line 2 Price sentence || Line 3 Closing prospective thought || Line 4 [TARGET_SLOT]."
         ];
         const selectedDtLayout = dtLayoutOptions[Math.floor(Math.random() * dtLayoutOptions.length)];
 
@@ -966,8 +971,8 @@
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleC = [
-            "Role 3A (Conversational Lifestyle Drop): Line 1 Short lifestyle thought under 12 words || Line 2 Link [TARGET_SLOT] ON ITS OWN LINE || Line 3 Open-ended question asking a fun preference or routine question.",
-            "Role 3B (Dialogue Drop): Line 1 Short personal reaction under 10 words || Line 2 Open-ended question asking how often they use this item || Line 3 Link [TARGET_SLOT] at the absolute end."
+            "Role 3A (Conversational Lifestyle Drop): Line 1 Short lifestyle thought under 12 words || Line 2 [TARGET_SLOT] || Line 3 Open-ended question asking a fun preference or routine question.",
+            "Role 3B (Dialogue Drop): Line 1 Short personal reaction under 10 words || Line 2 Open-ended question asking how often they use this item || Line 3 [TARGET_SLOT]."
         ].sort(() => 0.5 - Math.random())[0];
 
         const activeCommentBlueprints = [commentRoleA, commentRoleB, commentRoleC];
@@ -1371,7 +1376,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.18]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.19]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1743,7 +1748,7 @@ RULES:
 
 4. COMMENTS (1, 2, 3) & ACTIVE SIGNALS ARCHITECTURE:
    - ZERO POINTER PHRASES (ABSOLUTE): You are strictly forbidden from writing pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', 'Check it out via', 'Grab it via', or 'Access it via')!
-   - LINK ISOLATION & DOUBLE-NEWLINE BUFFER (ABSOLUTE): Every link MUST stand completely alone on its own line with blank lines above and below. NEVER put a period after the URL!
+   - LINK ISOLATION & DOUBLE-NEWLINE BUFFER (ABSOLUTE): Every link MUST stand completely alone on its own line with blank lines above and below. NEVER put a period after the URL and NEVER write the words 'ON ITS OWN LINE'!
    - LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human copy under 15 words. NEVER put a URL on Line 1!
    - PLAIN ENGLISH PRODUCT NOUNS: Do NOT copy-paste the full 60-character title or retailer name in comments. Use simple, natural everyday nouns like 'shampoo', 'soup', 'tumblers', or 'tools'! NEVER invent clinical robot jargon like 'duplicate personal care items' or 'vessels'!
    - MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each include an open-ended, positive question directly related to using the item in daily life to elicit 5+ word responses from group members. Never ask Yes/No questions!
