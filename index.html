@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.20</title>
+    <title>The CB Command Center v10.3.21</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.20 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.21 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -682,7 +682,7 @@
             .replace(/\b(a\s+)?(total\s+)?game changer\b/gi, 'a wonderful addition')
             // 9. Format regular price ranges, scrub redundant title appendages, and purge dangling comparative words
             .replace(/\b(from|down from|previously|was|dropping from)\s+(\d+\s+\d{2})\s+(\d+\s+\d{2})\b/gi, '$1 $2 - $3')
-            .replace(/\b(from|down from|previously|was|dropping from)\s+(\d+)\.(\d{2})\b/gi, '$1 $2 $3')
+            .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)\.(\d{2})\b/gi, '$1 $2 $3')
             .replace(/,\s*(previously|was|down from|dropping from)\s*\./gi, '.')
             .replace(/,\s*featuring\s+[^\n.]*\./gi, '.')
             .replace(/\boasis\b/gi, 'retreat')
@@ -738,7 +738,11 @@
             .replace(/\b(you\s+can\s+)?(locate|find|check|grab|see|access)\s+(it\s+)?via\s*/gi, '')
             .replace(/\bavailable\s+via\s*/gi, '')
             // Detach slang from price sentences (e.g. 'is probs $23' -> 'is $23')
-            .replace(/\b(is|for)\s+(fr|ngl|tbf|tbh|imo|lowkey|legit|probs|kinda|super)\s+\$/gi, '$1 $')
+            .replace(/\b(is|for)\s+(fr|ngl|tbf|tbh|imo|lowkey|legit|probs|kinda|super|highkey)\s+\$/gi, '$1 $')
+            // Scrub awkward slang wedged between retailer and verbs (e.g. "Amazon highkey is" -> "Amazon is")
+            .replace(/\b(Amazon|Walmart|Woot|Target)\s+(highkey|lowkey|fr|ngl|tbf|tbh|imo|legit|probs|kinda)\s+(is|has)\b/gi, '$1 $3')
+            // Scrub awkward slang tacked onto factual specs (e.g. "sizes S to XXL, imo." -> "sizes S to XXL.")
+            .replace(/,\s*(imo|tbf|tbh|fr|ngl|lowkey|highkey)\s*([.!?])/gi, '$2')
             // Purge corporate "rate applies" jargon and awkward variant combinations
             .replace(/\bthis\s+rate\s+applies\b/gi, 'this applies')
             .replace(/\brates?\s+adjust\s+lower\b/gi, 'drops even lower')
@@ -947,16 +951,9 @@
         ];
         const selectedDtLayout = dtLayoutOptions[Math.floor(Math.random() * dtLayoutOptions.length)];
 
-        const isSlangMode = Math.random() > 0.5;
-        let slangDirective = "";
-
-        if (isSlangMode) {
-            const approvedSlangList = ['ngl', 'tbf', 'imo', 'fr', 'no lie', 'hands down', 'so clutch', '10/10', 'legit', 'unreal', 'living for this', 'lowkey', 'highkey', 'super', 'insanely', 'kinda', 'majorly', 'rn', 'probs', 'obv'];
-            const shuffledSlang = [...approvedSlangList].sort(() => 0.5 - Math.random());
-            slangDirective = `MODE: SLANG ROTATION ACTIVE. You MUST weave exactly one casual token into Sentence 1 of Variation 1 ('${shuffledSlang[0]}'), and exactly one casual token into Sentence 2 of Variation 2 ('${shuffledSlang[1]}'). (Max 1 token per post! Never stack with adverbs).`;
-        } else {
-            slangDirective = `MODE: PURE ORGANIC CONVERSATIONAL. Write in a warm, relaxed, completely natural human voice with ZERO forced slang tokens! Do NOT force words like 'lowkey', 'ngl', or 'clutch'. Write like a real person chatting casually with friends. (CRINGE BAN: Strictly forbidden from using Gen-Z teen slang like 'bussin', 'no cap', 'slay', 'fire', 'rizz', or 'drip'!).`;
-        }
+        // 100% UNFORCED ORGANIC CONVERSATIONAL ENGINE
+        // Slang is strictly optional seasoning — NEVER forced by quota!
+        const slangDirective = `TONE: RELAXED, ORGANIC & UNFORCED CONVERSATIONAL. Write like a real person casually chatting with friends about a great find. ZERO FORCED SLANG (ABSOLUTE): You are strictly forbidden from forcing slang words to meet a quota! If a post sounds warm, natural, and friendly without slang, KEEP IT CLEAN! You may occasionally use a mild conversational word (like 'honestly', 'hands down', 'super', or 'ngl') ONLY in a personal lifestyle reaction if it flows 100% effortlessly. SLANG PLACEMENT FIREWALL: Never wedge slang into price statements (NEVER write 'Amazon highkey is available' or 'is fr $7.49') and NEVER attach slang to factual specs (NEVER write 'sizes S to XXL, imo')! Keep Variation 3 100% clean (The Breather).`;
 
         // STRUCTURED ACTIVE-SIGNALS COMMENT MATRIX
         const commentRoleA = [
@@ -1376,7 +1373,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.20]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.21]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1743,7 +1740,7 @@ RULES:
    - ZERO LINKS: You are STRICTLY FORBIDDEN from putting any link or website name in post variations!
    - BUNDLE/PIECE COUNT FIREWALL: Do NOT confuse a multi-pack, set, or piece count in the title (e.g., '16 Pcs', '2 Pack', '12 Pack') with a cart quantity! A '12 Pack' is ONE single box. Never tell the user to 'add 12 to your delivery'.
    - QUANTITY RULE: ONLY if a specific cart quantity is explicitly required in raw text (e.g. 'ADD 3'), say 'add [X] to your delivery'. LIMIT CONFUSION FIREWALL: A purchase limit (e.g., 'Limit 5') is a RESTRICTION, not a cart requirement! Rephrase limits naturally: 'Capped at 5 per household.', 'There is a 5-unit limit allowed.', 'You can get up to 5 per customer.', or 'Restricted to 5 per customer.'. NEVER use the word 'rate' and NEVER make the limit the final sentence!
-   - SLANG DIVERSITY MATRIX: Use strictly ONE casual slang token per variation in Variations 1 and 2 from this approved list ONLY: ['ngl', 'tbf', 'imo', 'fr', 'no lie', 'hands down', 'so clutch', '10/10', 'legit', 'unreal', 'living for this', 'lowkey', 'highkey', 'super', 'insanely', 'kinda', 'rn', 'probs']. SLANG STACKING BAN: NEVER pair your slang word with filler adverbs. ONE WORD TOTAL. Weave slang smoothly inside Sentence 1. NEVER attach slang to the price sentence! Variation 3 MUST be 100% clean with ZERO slang (The Breather).
+   - NATURAL CONVERSATIONAL TONE (ZERO FORCED SLANG): Write in a warm, relaxed, friendly human voice. ZERO SLANG QUOTAS: You are strictly forbidden from forcing slang words into sentences! If a post reads naturally without slang, KEEP IT CLEAN! You may occasionally use a mild conversational word (like 'honestly', 'hands down', 'super', or 'ngl') in a lifestyle thought ONLY if it flows 100% effortlessly. NEVER put slang into price statements (NEVER write 'Amazon highkey is available') and NEVER attach slang to factual specs (NEVER write 'sizes S to XXL, imo')! Variation 3 MUST be 100% clean with ZERO slang (The Breather).
    - EMOJI DENSITY: Include 1 to 3 contextual emojis per post. Distribute them across separate lines (maximum 1 emoji per line). NEVER stack emojis into clusters like '🌈 🔥 ❄'!
 
 4. COMMENTS (1, 2, 3) & ACTIVE SIGNALS ARCHITECTURE:
