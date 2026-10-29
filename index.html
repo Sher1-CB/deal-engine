@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.25</title>
+    <title>The CB Command Center v10.3.26</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.25 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.26 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1017,7 +1017,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the title line!),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. ZERO-GUESS MANDATE: If raw text does NOT explicitly state a limit (e.g. 'Limit of 5' or 'max 3'), write strictly 'NONE'! You are STRICTLY FORBIDDEN from assuming or guessing a limit! Extract ONLY the raw digit if explicitly written.),
-  "variant": (String. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): If color count, shade, or model (e.g. '7 Colors') is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract ONLY the clean attribute itself (e.g. 'all colors', 'all sizes', 'Pink', 'Large')! Strip introductory words like 'works on', 'only works on', or 'applies to'. NEVER invent 'both pictured options' unless physically written in raw text! Extract from additional lines only.),
+  "variant": (String. TITLE-DEDUPLICATION MANDATE: If attribute is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract the clean attribute, model, style, theme, color, or size itself (e.g. 'White - Art Book Store', 'all colors', 'Pink', 'Large')! Strip introductory words like 'works on' or 'only works on'. NEVER drop kit themes or style models! Extract from additional lines only.),
   "size": (String. TITLE-DEDUPLICATION MANDATE: If size or dimensions like '20oz' are ALREADY in title, write 'NONE'.),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
@@ -1033,7 +1033,7 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 ${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & RESTRICTION MANDATE:
-• SINGLE RESTRICTION: If raw text restricts to a single color or size (e.g. 'Pink', 'Large', 'medium'), rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'.
+• SINGLE RESTRICTION / THEME / MODEL: If raw text restricts to a specific color, size, model, style, or theme (e.g. 'White - Art Book Store', 'Pink', 'Large'), you are STRICTLY FORBIDDEN from omitting it! Rotate naturally: 'This applies specifically to the [variant] design.', 'Featured on the [variant] option.', or 'Works strictly on the [variant] style.'.
 • MULTI-COLOR / SIZES: If raw text states multiple colors are available (e.g. 'Several colors'), state naturally: 'Available in several colors.' or 'Multiple color choices are available.'.
 • UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', you are STRICTLY FORBIDDEN from phrasing it as an exclusive restriction (NEVER write 'Applies specifically to the all colors option')! State it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
 APPAREL SIZING & COLOR PAIRING MANDATE (ABSOLUTE): If raw text contains BOTH colors and size ranges (e.g. 'several colors, S - 3XL' or 'multiple shades, sizes S to XXL'), you are STRICTLY FORBIDDEN from dropping the sizes! You MUST state both the colors AND the size range together in your spec sentence across variations (e.g. 'Available in several colors spanning sizes S through 3XL.', 'Multiple color choices are available across sizes S to 3XL.', or 'Sizing runs from S up to 3XL with several colors to choose from.').
@@ -1383,7 +1383,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.25]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.26]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1737,7 +1737,7 @@ RULES:
    - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', 'My pantry feels so tidy with these', or 'I always keep a backup pack in my cabinet'.
    - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title! If the title already says 'Moisture Hydrating Shampoo 28 oz 3 Count', the feature line must NOT repeat '28 oz' or '3 Count'! Extract only genuinely new specs from the bullet points.
    - MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence describing these features into EVERY single post variation with varied phrasing!
-   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a single variant restriction (e.g. 'Works on medium', 'only works on pink'), weave it into natural sentences: 'This applies specifically to the [variant] option.', or 'Featured on the [variant] choice.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes, state both together ('Available in several colors spanning sizes S through 3XL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
+   - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'Works on White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes, state both together ('Available in several colors spanning sizes S through 3XL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
    - REAL-WORLD CATEGORY COMMON SENSE:
      • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
      • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
