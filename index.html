@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.23</title>
+    <title>The CB Command Center v10.3.25</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.23 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.25 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -707,6 +707,7 @@
             .replace(/\bexceptionally\s+(cozy|peaceful|smooth|comforting|welcoming)\b/gi, 'really $1')
             .replace(/\bbrings a (quiet|peaceful) sense of (peace|calm|order|satisfaction)\b/gi, 'makes things so much easier')
             // Purge clinical catalog jargon -> replace with natural shopper terms
+            .replace(/\bwater\s+vessels?\b/gi, 'glass bowls')
             .replace(/\bvessels\b/gi, 'travel mugs')
             .replace(/\bvessel\b/gi, 'travel mug')
             // Contextual Semantic Shield: Prevent grocery idioms on skincare/beauty items
@@ -756,6 +757,10 @@
             // Multi-Color Syntax Cleaner: Fixes "Featured on the Several colors choice" -> "Available in several colors"
             .replace(/\b(featured on|applies exclusively to|works strictly on|applies specifically to)\s+the\s+several\s+colors?\s+(choice|version|selection|option)\b/gi, 'available in several colors')
             .replace(/\bthe\s+several\s+colors?\s+(choice|version|selection|option)\b/gi, 'several colors')
+            // Universal Variant Cleaner: Fixes "applies specifically to all colors" -> "works across all colors"
+            .replace(/\b(applies specifically to|featured on|works strictly on|applies exclusively to)\s+the\s+all\s+(colors?|sizes?|options?|choices?)\s*(option|choice|version|selection)?\b/gi, 'works across all $2')
+            .replace(/\b(applies specifically to|featured on|works strictly on)\s+the\s+both\s+pictured\s+options?\s*(choice|selection|version|option)?\b/gi, 'works on both pictured options')
+            .replace(/\bthe\s+both\s+pictured\s+options?\s*(choice|selection|version|option)?\b/gi, 'both pictured options')
             // Headline Colon Scrubber: Convert "Spotted on Amazon: The" -> "Amazon has the "
             .replace(/\b(spotted|found|seen)\s+on\s+(Amazon|Walmart|Woot|Walgreens|Target):\s*/gi, '$2 has the ')
             .replace(/:\s*([A-Z0-9])/g, ', $1')
@@ -986,6 +991,20 @@
         }
         let fulfillmentStatus = activeStyle === 'pickup' ? "Pickup" : activeStyle === 'conditional' ? "Total" : "Shipped";
 
+        // 1-IN-4 STOCHASTIC VARIETY ENGINE (25% Probability Gate)
+        const isVarietyDeal = (dealType === 'regular') && (Math.random() < 0.25);
+        let varietyInstruction = "";
+        let varietyAuditTag = "STYLE: Classic";
+
+        if (isVarietyDeal) {
+            // Roll intensity: 1 in 3 (60% chance), 2 in 3 (30% chance), all 3 (10% jackpot)
+            const roll = Math.random();
+            const punchyCount = roll < 0.60 ? 1 : (roll < 0.90 ? 2 : 3);
+            const pickedVars = [1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, punchyCount);
+            varietyAuditTag = `STYLE: ⚡ Punchy Quick-Hit on Var ${pickedVars.join(', ')}`;
+            varietyInstruction = `PUNCHY VARIETY INJECTION: For Variation ${pickedVars.join(' and ')}, format as an ultra-lean, punchy 2-liner! Line 1: Short practical context under 8 words paired with the price and title sentence. Line 2: Fast prospective sign-off under 12 words. Keep it super short, energetic, and clean (2 lines only!). The other variations remain full and classic.`;
+        }
+
         let prompt = "";
 
         if (dealType === 'regular') {
@@ -998,7 +1017,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the title line!),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. ZERO-GUESS MANDATE: If raw text does NOT explicitly state a limit (e.g. 'Limit of 5' or 'max 3'), write strictly 'NONE'! You are STRICTLY FORBIDDEN from assuming or guessing a limit! Extract ONLY the raw digit if explicitly written.),
-  "variant": (String. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): If color count, shade, or model (e.g. '7 Colors') is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract ONLY the clean attribute or option itself (e.g. 'both pictured options', 'Pink', 'Large')! You are STRICTLY FORBIDDEN from including introductory words like 'works on', 'only works on', 'valid on', or 'applies to' inside this extracted string! Extract from additional lines only.),
+  "variant": (String. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): If color count, shade, or model (e.g. '7 Colors') is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract ONLY the clean attribute itself (e.g. 'all colors', 'all sizes', 'Pink', 'Large')! Strip introductory words like 'works on', 'only works on', or 'applies to'. NEVER invent 'both pictured options' unless physically written in raw text! Extract from additional lines only.),
   "size": (String. TITLE-DEDUPLICATION MANDATE: If size or dimensions like '20oz' are ALREADY in title, write 'NONE'.),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
@@ -1011,8 +1030,13 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
 • Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
+${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
-VARIANT & COLOR RESTRICTION MANDATE (ABSOLUTE): If raw text specifies a single color or size restriction (e.g. 'Pink', 'Large', 'medium'), rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'. MULTI-COLOR AVAILABILITY RULE: If raw text states multiple colors are available (e.g. 'Several colors', 'multiple options'), state it naturally: 'Available in several colors.', 'Multiple color choices are available.', or 'You can pick from several colors.'. APPAREL SIZING & COLOR PAIRING MANDATE (ABSOLUTE): If raw text contains BOTH colors and size ranges (e.g. 'several colors, S - 3XL' or 'multiple shades, sizes S to XXL'), you are STRICTLY FORBIDDEN from dropping the sizes! You MUST state both the colors AND the size range together in your spec sentence across variations (e.g. 'Available in several colors spanning sizes S through 3XL.', 'Multiple color choices are available across sizes S to 3XL.', or 'Sizing runs from S up to 3XL with several colors to choose from.').
+VARIANT & RESTRICTION MANDATE:
+• SINGLE RESTRICTION: If raw text restricts to a single color or size (e.g. 'Pink', 'Large', 'medium'), rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'.
+• MULTI-COLOR / SIZES: If raw text states multiple colors are available (e.g. 'Several colors'), state naturally: 'Available in several colors.' or 'Multiple color choices are available.'.
+• UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', you are STRICTLY FORBIDDEN from phrasing it as an exclusive restriction (NEVER write 'Applies specifically to the all colors option')! State it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
+APPAREL SIZING & COLOR PAIRING MANDATE (ABSOLUTE): If raw text contains BOTH colors and size ranges (e.g. 'several colors, S - 3XL' or 'multiple shades, sizes S to XXL'), you are STRICTLY FORBIDDEN from dropping the sizes! You MUST state both the colors AND the size range together in your spec sentence across variations (e.g. 'Available in several colors spanning sizes S through 3XL.', 'Multiple color choices are available across sizes S to 3XL.', or 'Sizing runs from S up to 3XL with several colors to choose from.').
 MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you MUST weave a clean sentence stating these features into EVERY variation (with varied phrasing)! ZERO EXTRA BULLET CONDITIONAL: If features_catchall is 'NONE' (meaning no extra bullet points exist in the raw text), you are STRICTLY FORBIDDEN from chopping up the product title to create a redundant spec sentence! In that case, do NOT repeat the title specs—simply transition directly from the price sentence to the prospective lifestyle thought! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
@@ -1359,7 +1383,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.23]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.25]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1713,7 +1737,7 @@ RULES:
    - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', 'My pantry feels so tidy with these', or 'I always keep a backup pack in my cabinet'.
    - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title! If the title already says 'Moisture Hydrating Shampoo 28 oz 3 Count', the feature line must NOT repeat '28 oz' or '3 Count'! Extract only genuinely new specs from the bullet points.
    - MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence describing these features into EVERY single post variation with varied phrasing!
-   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a single variant restriction (e.g. 'Works on medium', 'only works on pink'), weave it into natural sentences: 'This applies specifically to the [variant] option.', or 'Featured on the [variant] choice.'. MULTI-COLOR AVAILABILITY & SIZING: If text says 'Several colors', state it naturally: 'Available in several colors.' or 'Multiple colors are available.'. If raw text contains BOTH colors and size ranges (e.g. 'several colors, S - 3XL'), you are STRICTLY FORBIDDEN from dropping the sizes! State both together: 'Available in several colors spanning sizes S through 3XL.' or 'Multiple color options are available across sizes S to 3XL.'.
+   - VARIANT & RESTRICTION SENTENCE ENTROPY: If raw text states a single variant restriction (e.g. 'Works on medium', 'only works on pink'), weave it into natural sentences: 'This applies specifically to the [variant] option.', or 'Featured on the [variant] choice.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes, state both together ('Available in several colors spanning sizes S through 3XL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
    - REAL-WORLD CATEGORY COMMON SENSE:
      • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
      • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
