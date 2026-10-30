@@ -1680,28 +1680,29 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             sentences.splice(targetPos, 0, priceSentence);
         }
 
-        // 4. RANDOMIZE MACRO GEOMETRY (2-Line Punchy vs 3-Line vs 4-Line Airy)
-        let geometryRoll = Math.floor(Math.random() * 3);
-        let paragraphs = [];
+        // 4. RANDOMIZE MACRO GEOMETRY (Single Paragraph vs 2-Line Punchy vs 3-Line vs 4-Line Airy)
+        let geometryRoll = Math.floor(Math.random() * 4); // 0, 1, 2, or 3
+        let newText = "";
 
-        if (geometryRoll === 0 && sentences.length >= 3) {
-            // MODE A: CONDENSED 2-BLOCK (2 lines total)
-            paragraphs.push(sentences.slice(0, 2).join(' '));
-            paragraphs.push(sentences.slice(2).join(' '));
+        if (geometryRoll === 0) {
+            // MODE 1: THE SINGLE FLUID PARAGRAPH (Zero Line Breaks / Flowing Block)
+            newText = sentences.join(' ');
         } else if (geometryRoll === 1 && sentences.length >= 3) {
-            // MODE B: 3-LINE DYNAMIC (1 solo sentence, 2 paired sentences)
-            paragraphs.push(sentences[0]);
-            paragraphs.push(sentences.slice(1, sentences.length - 1).join(' '));
-            paragraphs.push(sentences[sentences.length - 1]);
+            // MODE 2: THE ULTRA-PUNCHY 2-LINER (2 tight lines)
+            let p1 = sentences.slice(0, 2).join(' ');
+            let p2 = sentences.slice(2).join(' ');
+            newText = p1 + '\n\n' + p2;
+        } else if (geometryRoll === 2 && sentences.length >= 3) {
+            // MODE 3: THE BALANCED 3-LINER
+            let p1 = sentences[0];
+            let p2 = sentences.slice(1, sentences.length - 1).join(' ');
+            let p3 = sentences[sentences.length - 1];
+            newText = p1 + '\n\n' + p2 + '\n\n' + p3;
         } else {
-            // MODE C: FULL AIRY 4-LINE (Every sentence gets its own isolated line)
-            paragraphs = [...sentences];
+            // MODE 4: FULL AIRY 4-LINER (Every sentence on its own separate line, splitting specs!)
+            newText = joinWithSpaceChaos(sentences, 1, 2);
         }
 
-        paragraphs = paragraphs.filter(p => p.trim().length > 0);
-
-        // 5. REJOIN WITH ORGANIC SPACING & UPDATE RENDER
-        let newText = joinWithSpaceChaos(paragraphs, 1, 2);
         newText = sanitizeDealCopy(newText);
 
         el.innerText = newText;
