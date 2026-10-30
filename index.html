@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.27</title>
+    <title>The CB Command Center v10.3.29</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.27 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.29 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1392,7 +1392,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.27]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.29]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1622,27 +1622,88 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         }, 1000);
     }
 
-    // CLIENT-SIDE INSTANT POST SHUFFLE ENGINE (0 API CALLS / ZERO TOKENS)
+    // TOTAL STRUCTURAL CHAOS SHUFFLE ENGINE (0 API CALLS / ZERO TOKENS)
+    // Mutates post geometry: splits combined specs, merges separate lines, flips line counts (2, 3, or 4 lines), and randomizes price position!
     function shufflePostLines(varNum) {
         const el = document.getElementById(`out-post${varNum}`);
         if (!el) return;
         let currentText = el.getAttribute('data-raw') || el.innerText;
         if (!currentText || !currentText.trim()) return;
 
-        // Split into paragraphs / lines
-        let lines = currentText.split(/\n+/).map(s => s.trim()).filter(s => s.length > 0);
-        if (lines.length <= 1) {
-            lines = currentText.split(/(?<=[.!?])\s+(?=[A-Z0-9\u{1F300}-\u{1F9FF}])/gu).map(s => s.trim()).filter(s => s.length > 0);
+        // 1. EXTRACT ALL ATOMIC SENTENCES & INTELLIGENTLY SPLIT COMBINED SPECS
+        let rawParagraphs = currentText.split(/\n+/).map(s => s.trim()).filter(s => s.length > 0);
+        let sentences = [];
+
+        for (let para of rawParagraphs) {
+            // DETECT COMBINED COLOR + SIZE: If a sentence combines colors and sizes, split it into 2 separate sentences!
+            let combinedMatch = para.match(/^(.*?available|.*?choices?|.*?colors?|.*?options?)\s+(?:spanning|across|in sizes?|from)\s+(US\s+shoe\s+size|sizes?\s+.*|[0-9A-Za-z\-\s]+)$/i);
+            if (combinedMatch && combinedMatch[1] && combinedMatch[2]) {
+                let partColor = combinedMatch[1].trim();
+                if (!/[.!?]$/.test(partColor)) partColor += '.';
+                let partSize = 'Sizing spans ' + combinedMatch[2].trim();
+                if (!/[.!?]$/.test(partSize)) partSize += '.';
+                sentences.push(partColor);
+                sentences.push(partSize);
+            } else {
+                // Split multi-sentence paragraphs cleanly
+                let sArr = para.split(/(?<=[.!?])\s+(?=[A-Z0-9\u{1F300}-\u{1F9FF}])/gu).map(s => s.trim()).filter(s => s.length > 0);
+                sentences.push(...sArr);
+            }
         }
-        if (lines.length <= 1) return;
 
-        // Cycle sentence order: first line moves to bottom, rotating structure cleanly
-        let rotated = [...lines];
-        let first = rotated.shift();
-        rotated.push(first);
+        if (sentences.length <= 1) return;
 
-        // Rejoin with organic spacing
-        let newText = joinWithSpaceChaos(rotated, 1, 2);
+        // 2. 50% CHANCE TO MERGE SEPARATE SPECS (Combine what was separated!)
+        let colorIdx = sentences.findIndex(s => /\b(colors?|shades?)\b/i.test(s) && !/\b(sizes?|shoe)\b/i.test(s));
+        let sizeIdx = sentences.findIndex(s => /\b(sizes?|shoe|XS|XXL|XL|3XL|S -)\b/i.test(s) && !/\b(colors?)\b/i.test(s));
+
+        if (colorIdx !== -1 && sizeIdx !== -1 && Math.random() > 0.5) {
+            let cleanColor = sentences[colorIdx].replace(/[.!?]/g, '').trim();
+            let cleanSize = sentences[sizeIdx].replace(/^(sizing\s+(spans|runs|fits)|sizes?\s+(span|run|fit))\s+/i, '').replace(/[.!?]/g, '').trim();
+            let merged = `${cleanColor} spanning ${cleanSize}.`;
+            let highIdx = Math.max(colorIdx, sizeIdx);
+            let lowIdx = Math.min(colorIdx, sizeIdx);
+            sentences.splice(highIdx, 1);
+            sentences.splice(lowIdx, 1, merged);
+        }
+
+        // 3. ISOLATE PRICE SENTENCE & RANDOMIZE ITS POSITION
+        let priceIdx = sentences.findIndex(s => /\$\d+(\.\d{2})?\s+(Shipped|Total|Pickup)/i.test(s));
+        let priceSentence = priceIdx !== -1 ? sentences.splice(priceIdx, 1)[0] : null;
+
+        // Shuffle all non-price thoughts
+        sentences.sort(() => 0.5 - Math.random());
+
+        // Re-inject price sentence at random: 0 (Line 1 Price-First), 1 (Line 2 Classic), or end!
+        if (priceSentence) {
+            let targetPos = Math.floor(Math.random() * (sentences.length + 1));
+            sentences.splice(targetPos, 0, priceSentence);
+        }
+
+        // 4. RANDOMIZE MACRO GEOMETRY (2-Line Punchy vs 3-Line vs 4-Line Airy)
+        let geometryRoll = Math.floor(Math.random() * 3);
+        let paragraphs = [];
+
+        if (geometryRoll === 0 && sentences.length >= 3) {
+            // MODE A: CONDENSED 2-BLOCK (2 lines total)
+            paragraphs.push(sentences.slice(0, 2).join(' '));
+            paragraphs.push(sentences.slice(2).join(' '));
+        } else if (geometryRoll === 1 && sentences.length >= 3) {
+            // MODE B: 3-LINE DYNAMIC (1 solo sentence, 2 paired sentences)
+            paragraphs.push(sentences[0]);
+            paragraphs.push(sentences.slice(1, sentences.length - 1).join(' '));
+            paragraphs.push(sentences[sentences.length - 1]);
+        } else {
+            // MODE C: FULL AIRY 4-LINE (Every sentence gets its own isolated line)
+            paragraphs = [...sentences];
+        }
+
+        paragraphs = paragraphs.filter(p => p.trim().length > 0);
+
+        // 5. REJOIN WITH ORGANIC SPACING & UPDATE RENDER
+        let newText = joinWithSpaceChaos(paragraphs, 1, 2);
+        newText = sanitizeDealCopy(newText);
+
         el.innerText = newText;
         el.setAttribute('data-raw', newText);
     }
