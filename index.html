@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.26</title>
+    <title>The CB Command Center v10.3.27</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.26 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.27 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -281,7 +281,10 @@
                 <div class="output-box">
                     <div class="box-header">
                         <h4>📝 POST VARIATION 1</h4>
-                        <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
+                        <div style="display:flex; gap:6px;">
+                            <button class="copy-btn" onclick="shufflePostLines(1)">🔀 Shuffle</button>
+                            <button class="copy-btn" onclick="copyToClipboard('out-post1', this)">📄 Copy</button>
+                        </div>
                     </div>
                     <div id="out-post1" class="output-content"></div>
                 </div>
@@ -289,7 +292,10 @@
                 <div class="output-box">
                     <div class="box-header">
                         <h4>📝 POST VARIATION 2</h4>
-                        <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
+                        <div style="display:flex; gap:6px;">
+                            <button class="copy-btn" onclick="shufflePostLines(2)">🔀 Shuffle</button>
+                            <button class="copy-btn" onclick="copyToClipboard('out-post2', this)">📄 Copy</button>
+                        </div>
                     </div>
                     <div id="out-post2" class="output-content"></div>
                 </div>
@@ -297,7 +303,10 @@
                 <div class="output-box">
                     <div class="box-header">
                         <h4>📝 POST VARIATION 3</h4>
-                        <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
+                        <div style="display:flex; gap:6px;">
+                            <button class="copy-btn" onclick="shufflePostLines(3)">🔀 Shuffle</button>
+                            <button class="copy-btn" onclick="copyToClipboard('out-post3', this)">📄 Copy</button>
+                        </div>
                     </div>
                     <div id="out-post3" class="output-content"></div>
                 </div>
@@ -1034,7 +1043,7 @@ ${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & RESTRICTION MANDATE:
 • SINGLE RESTRICTION / THEME / MODEL: If raw text restricts to a specific color, size, model, style, or theme (e.g. 'White - Art Book Store', 'Pink', 'Large'), you are STRICTLY FORBIDDEN from omitting it! Rotate naturally: 'This applies specifically to the [variant] design.', 'Featured on the [variant] option.', or 'Works strictly on the [variant] style.'.
-• MULTI-COLOR / SIZES: If raw text states multiple colors are available (e.g. 'Several colors'), state naturally: 'Available in several colors.' or 'Multiple color choices are available.'.
+• MULTI-COLOR, SIZING & ENTROPY: If raw text states multiple colors are available (e.g. 'Several colors'), state naturally: 'Available in several colors.' or 'Multiple color choices are available.'. If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both, but you can freely choose whether to combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.'). Rotate between combined and separate phrasing across variations!
 • UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', you are STRICTLY FORBIDDEN from phrasing it as an exclusive restriction (NEVER write 'Applies specifically to the all colors option')! State it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
 APPAREL SIZING & COLOR PAIRING MANDATE (ABSOLUTE): If raw text contains BOTH colors and size ranges (e.g. 'several colors, S - 3XL' or 'multiple shades, sizes S to XXL'), you are STRICTLY FORBIDDEN from dropping the sizes! You MUST state both the colors AND the size range together in your spec sentence across variations (e.g. 'Available in several colors spanning sizes S through 3XL.', 'Multiple color choices are available across sizes S to 3XL.', or 'Sizing runs from S up to 3XL with several colors to choose from.').
 MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you MUST weave a clean sentence stating these features into EVERY variation (with varied phrasing)! ZERO EXTRA BULLET CONDITIONAL: If features_catchall is 'NONE' (meaning no extra bullet points exist in the raw text), you are STRICTLY FORBIDDEN from chopping up the product title to create a redundant spec sentence! In that case, do NOT repeat the title specs—simply transition directly from the price sentence to the prospective lifestyle thought! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
@@ -1383,7 +1392,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.26]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.27]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1613,6 +1622,31 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         }, 1000);
     }
 
+    // CLIENT-SIDE INSTANT POST SHUFFLE ENGINE (0 API CALLS / ZERO TOKENS)
+    function shufflePostLines(varNum) {
+        const el = document.getElementById(`out-post${varNum}`);
+        if (!el) return;
+        let currentText = el.getAttribute('data-raw') || el.innerText;
+        if (!currentText || !currentText.trim()) return;
+
+        // Split into paragraphs / lines
+        let lines = currentText.split(/\n+/).map(s => s.trim()).filter(s => s.length > 0);
+        if (lines.length <= 1) {
+            lines = currentText.split(/(?<=[.!?])\s+(?=[A-Z0-9\u{1F300}-\u{1F9FF}])/gu).map(s => s.trim()).filter(s => s.length > 0);
+        }
+        if (lines.length <= 1) return;
+
+        // Cycle sentence order: first line moves to bottom, rotating structure cleanly
+        let rotated = [...lines];
+        let first = rotated.shift();
+        rotated.push(first);
+
+        // Rejoin with organic spacing
+        let newText = joinWithSpaceChaos(rotated, 1, 2);
+        el.innerText = newText;
+        el.setAttribute('data-raw', newText);
+    }
+
     function copyToClipboard(elementId, btnElement) {
         const el = document.getElementById(elementId);
         const textToCopy = el.getAttribute('data-raw') || el.innerText;
@@ -1737,7 +1771,7 @@ RULES:
    - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', 'My pantry feels so tidy with these', or 'I always keep a backup pack in my cabinet'.
    - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title! If the title already says 'Moisture Hydrating Shampoo 28 oz 3 Count', the feature line must NOT repeat '28 oz' or '3 Count'! Extract only genuinely new specs from the bullet points.
    - MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence describing these features into EVERY single post variation with varied phrasing!
-   - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'Works on White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes, state both together ('Available in several colors spanning sizes S through 3XL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
+   - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'Works on White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
    - REAL-WORLD CATEGORY COMMON SENSE:
      • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
      • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
