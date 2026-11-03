@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.29</title>
+    <title>The CB Command Center v10.3.31</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.29 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.31 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -690,8 +690,11 @@
             .replace(/Delivery is complimentary for Prime members(\s+on\s+[A-Za-z]+)?\.?\s*/gi, '')
             .replace(/\b(a\s+)?(total\s+)?game changer\b/gi, 'a wonderful addition')
             // 9. Format regular price ranges, scrub redundant title appendages, and purge dangling comparative words
-            .replace(/\b(from|down from|previously|was|dropping from)\s+(\d+\s+\d{2})\s+(\d+\s+\d{2})\b/gi, '$1 $2 - $3')
-            .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)\.(\d{2})\b/gi, '$1 $2 $3')
+            .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)[.\s](\d{2})\s*[-–—]\s*\$?(\d+)[.\s](\d{2})\b/gi, '$1 $2 $3 - $4 $5')
+            .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)[.\s](\d{2})\b/gi, '$1 $2 $3')
+            // Scrub any stray $ signs or decimals remaining in regular price ranges
+            .replace(/(\b(?:from|down from|previously|was|dropping from)\s+\d+\s+\d{2}\s*[-–—]\s*)\$(\d+)/gi, '$1$2')
+            .replace(/(\b(?:from|down from|previously|was|dropping from)\s+\d+\s+\d{2}\s*[-–—]\s*\d+)\.(\d{2})/gi, '$1 $2')
             .replace(/,\s*(previously|was|down from|dropping from)\s*\./gi, '.')
             .replace(/,\s*featuring\s+[^\n.]*\./gi, '.')
             .replace(/\boasis\b/gi, 'retreat')
@@ -816,10 +819,13 @@
         eligibleIndices.sort(() => 0.5 - Math.random());
         
         let actualCount = Math.min(targetCount, eligibleIndices.length);
+        let usedEmojis = [];
         for (let e = 0; e < actualCount; e++) {
             let targetLineIdx = eligibleIndices[e];
-            let randEmoji = pool[Math.floor(Math.random() * pool.length)];
-            result[targetLineIdx] = Math.random() > 0.5 ? `${result[targetLineIdx]} ${randEmoji}` : `${randEmoji} ${result[targetLineIdx]}`;
+            let availablePool = pool.filter(em => !usedEmojis.includes(em));
+            let chosenEmoji = availablePool.length > 0 ? availablePool[Math.floor(Math.random() * availablePool.length)] : pool[Math.floor(Math.random() * pool.length)];
+            usedEmojis.push(chosenEmoji);
+            result[targetLineIdx] = Math.random() > 0.5 ? `${result[targetLineIdx]} ${chosenEmoji}` : `${chosenEmoji} ${result[targetLineIdx]}`;
         }
         return result;
     }
@@ -1033,7 +1039,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "b5_verification": (String. Extract specific shipping/pickup thresholds and memberships ONLY. If none, write "NONE"),
 "b8_verification": (String. If raw text explicitly mentions Subscribe & Save or S&S, write strictly 'YES'. If NOT in raw text, write 'NONE'!),
 "features_catchall": (String. EXTRA LINE VACUUM: Extract raw keywords/specs from extra lines ONLY. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): Do NOT extract specs that are ALREADY in the title! RETAILER HEADER BAN: Ignore slogans like 'Point Drop on Amazon'. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine.
+"post_variations": (Array of 3 strings. You are a polymorphic text engine. ZERO LINKS (NUCLEAR MANDATE): Post variations must be 100% text-only with ZERO links and ZERO URLs! You are strictly forbidden from putting any website, link, or URL in post_variations! Links belong ONLY in comments and the Daily Thread!
 DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
 • Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
@@ -1172,8 +1178,15 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const rawDollarCount = (rawText.match(/\$\d+(\.\d{2})?/g) || []).length;
             if (!hasRegKeyword && rawDollarCount <= 1) {
                 aiData.reg_price = "NONE";
+            } else if (aiData.reg_price && aiData.reg_price !== "NONE") {
+                // UNIVERSAL REGULAR PRICE CLEANER: Strip all $ signs and replace all decimals with spaces
+                aiData.reg_price = aiData.reg_price
+                    .replace(/\$/g, '')
+                    .replace(/\.(\d{2})/g, ' $1')
+                    .replace(/\s+/g, ' ')
+                    .trim();
             }
-
+            
             // DETERMINISTIC S&S FIREWALL:
             const hasSsKeyword = /\b(s&s|subscribe|auto[\s-]delivery|routine delivery|recurring|recurring shipment)\b/i.test(rawText);
             if (!hasSsKeyword) {
@@ -1214,12 +1227,13 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
 
             for(let i=0; i<3; i++) {
                 let rawPost = aiData.post_variations && aiData.post_variations[i] ? aiData.post_variations[i] : "";
+                // NUCLEAR POST LINK PURGE: Post variations must NEVER contain any URL or link!
                 if (typeof rawPost === 'string') {
-                    rawPost = rawPost.replace(/\[TARGET[^\]]*\]/gi, '').replace(/\[URL\]/gi, '').trim();
+                    rawPost = rawPost.replace(/https?:\/\/[^\s]+/gi, '').replace(/\[TARGET[^\]]*\]/gi, '').replace(/\[URL\]/gi, '').trim();
                 } else if (Array.isArray(rawPost)) {
-                    rawPost = rawPost.map(s => String(s).replace(/\[TARGET[^\]]*\]/gi, '').replace(/\[URL\]/gi, '').trim());
+                    rawPost = rawPost.map(s => String(s).replace(/https?:\/\/[^\s]+/gi, '').replace(/\[TARGET[^\]]*\]/gi, '').replace(/\[URL\]/gi, '').trim());
                 }
-
+                
                 let postLines = [];
                 if (Array.isArray(rawPost)) {
                     postLines = rawPost.map(s => String(s).trim()).filter(s => s.length > 0);
@@ -1254,8 +1268,8 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 let emojifiedPost = applyEmojiDensity(postLines, 0, 4, finalEmojis);
                 let rawFinalPost = dealType === 'run' ? emojifiedPost.join(' ') : joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
-                // PASS THROUGH UNIVERSAL JAVASCRIPT FIREWALL
-                let scrubbedPost = sanitizeDealCopy(rawFinalPost);
+                // PASS THROUGH UNIVERSAL JAVASCRIPT FIREWALL & GUARANTEE ZERO LINKS
+                let scrubbedPost = sanitizeDealCopy(rawFinalPost).replace(/https?:\/\/[^\s]+/gi, '').trim();
                 
                 // DETERMINISTIC LIMIT SHIELD: If raw text has NO limit, purge any hallucinated limit sentences!
                 if (!/\b(limit|max|maximum|capped|threshold)\b/i.test(rawText)) {
@@ -1392,7 +1406,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.29]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.31]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
