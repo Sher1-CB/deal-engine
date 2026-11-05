@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.32</title>
+    <title>The CB Command Center v10.3.34</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.32 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.34 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -780,6 +780,16 @@
             // Headline Colon Scrubber: Convert "Spotted on Amazon: The" -> "Amazon has the "
             .replace(/\b(spotted|found|seen)\s+on\s+(Amazon|Walmart|Woot|Walgreens|Target):\s*/gi, '$2 has the ')
             .replace(/:\s*([A-Z0-9])/g, ', $1')
+            // Retailer Exclamation Shield: Prevent "Woot! Is" and "Woot! Has" capitalization
+            .replace(/\bWoot!\s+Is\b/g, 'Woot! is')
+            .replace(/\bWoot!\s+Has\b/g, 'Woot! has')
+            // Double-talk & Ampersand Cleaner
+            .replace(/([A-Za-z])&([A-Za-z])/g, '$1 & $2')
+            .replace(/\bcomes with ([^.\n]+) included\b/gi, 'comes with $1')
+            .replace(/\bincludes ([^.\n]+) included\b/gi, 'includes $1')
+            // Retailer Exclamation Shield: Prevent "Woot! Is" and "Woot! Has" capitalization
+            .replace(/\bWoot!\s+Is\b/g, 'Woot! is')
+            .replace(/\bWoot!\s+Has\b/g, 'Woot! has')
             // Orphaned Punctuation Scrubber: Clean up periods detached by URL line breaks
             .replace(/(https?:\/\/[^\s]+)\s*\n+\s*\.\s*/gi, '$1\n\n')
             .replace(/\n+\s*\.\s*(?=[A-Z])/g, '\n\n')
@@ -1060,11 +1070,14 @@ MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra 
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
-• FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
-• APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling.
+• COSMETICS, LASHES, NAILS & MAKEUP: Talk strictly about achieving a salon or pro look at home without salon appointment prices, full fluttery lashes, flawless daily wear, weekend styling, or cutting down morning prep time! NEVER say false lashes or makeup are for relaxing baths, sleeping, or quiet meditation!
+• FOOD & PANTRY: Talk strictly about real dinner prep, quick school lunches, or avoiding an extra trip to the grocery store.
+• APPAREL & SHOES: Talk strictly about comfortable everyday outfits, staying warm, or daily styling.
 • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
-• HOME & HARDWARE: Talk about meal prep, kitchen counters, or clean organization.
-FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility! PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
+• HOME & HARDWARE: Talk about meal prep, kitchen counters, avoiding clutter, or clean organization.
+FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility!
+ANTI-GERUND & NATURAL HUMAN CADENCE LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund! Ban the repetitive formula: '[Doing X] makes [routine] feel so much [adjective]' (NEVER write 'Having fresh juice ready makes morning routines smoother' or 'Wrapping yourself in warmth makes stepping out of the shower relaxing')! Speak with concrete, punchy human realism (e.g., 'Cold hardwood floors are the worst this time of year, so you can never have too many fuzzy pairs around', 'Love that this includes the bond and seal so you don't have to buy anything extra', 'Such a win if you drink fresh juice daily without paying $9 at a juice bar')! Vary sentence lengths: mix punchy 5-word thoughts with casual observations. Stop bathing every post in soft spa adjectives like 'peaceful', 'delightful', or 'soothing'—talk about real life wins!
+INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the same closing sentence structure or scenario across Variation 1, 2, or 3! Every single post variation MUST explore a completely unique prospective thought (e.g. if Variation 1 talks about morning prep, Variation 2 MUST talk about hosting/gatherings, and Variation 3 MUST talk about weekend relaxation). Zero copy-paste variations!
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE, RETAILER & PRICE BAN: You are STRICTLY FORBIDDEN from using full product title, retailer name, or dollar amounts in comments! Use simple everyday product nouns like 'deodorant', 'soup', 'tumblers', or 'tools'. ZERO POINTER PHRASES (ABSOLUTE): Never write pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', or 'Check it out via')! The link [TARGET_SLOT] MUST stand completely alone on its own line without any leading prepositions! NEVER put a period after [TARGET_SLOT]! LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! Keep human statements lean and under 15 words. Follow assigned roles:
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
@@ -1410,7 +1423,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.32]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.34]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1854,10 +1867,13 @@ RULES:
    - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'Works on White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
    - REAL-WORLD CATEGORY COMMON SENSE:
      • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
-     • FOOD & PANTRY: Talk strictly about cozy dinners, quick lunches, or stocked pantry shelves.
+     • COSMETICS, LASHES, NAILS & MAKEUP: Talk strictly about achieving a salon look at home without salon appointment prices, full fluttery lashes, flawless daily wear, or quick morning prep. NEVER say false lashes or makeup are for relaxing baths, sleeping, or quiet meditation!
+     • FOOD & PANTRY: Talk strictly about real dinner prep, quick school lunches, or avoiding an extra trip to the grocery store.
      • APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling. NEVER say clothes look cute on a desk or vanity!
      • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
      • HOME & HARDWARE: Talk about meal prep, kitchen counters, or clean organization.
+   - ANTI-GERUND & NATURAL CADENCE: Ban the formula '[Doing X] makes [routine] so much [adjective]'! Speak like a real person talking about daily life wins (avoiding cold floors, saving salon money, busy mornings) instead of soft spa words.
+   - INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are strictly forbidden from repeating the same closing sentence structure across Variation 1, 2, or 3! Every variation must have a 100% unique lifestyle thought.
    - ROUTINE DELIVERY (S&S) MANDATE (CONDITIONAL ONLY): If and ONLY IF the raw text explicitly mentions Subscribe & Save or S&S, highlight recurring savings naturally. AUTO-DELIVERY PHRASING ENTROPY: NEVER use the word 'rates' and NEVER repeat the same auto-delivery sentence across variations! Rotate naturally: 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', or 'Adjusts down even further with recurring shipments.'. NEVER use 'Subscribe & Save' or 'S&S'! ABSOLUTE NEGATIVE PROHIBITION: If raw text does not mention S&S, you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, or recurring shipments!
    - LEAN DEAL BREVITY (ABSOLUTE): Never write long essays or stories! Every variation MUST be short, punchy, and direct (2 to 4 lines max). Structure: Quick practical context ➔ Price and Title sentence ➔ Essential specs (if present) ➔ Fast 1-line prospective sign-off. Zero fluff!
    - ANTI-ZEN & REAL UTILITY: Do NOT use abstract corporate yoga phrases like 'brings a quiet sense of peace/calm/satisfaction'! Speak about real, tangible daily wins.
