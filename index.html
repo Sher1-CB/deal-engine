@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.34</title>
+    <title>The CB Command Center v10.3.36</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.34 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.36 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -366,19 +366,9 @@
     let activeGenerationController = null;
     let isGenerationCancelled = false;
 
-    function stopGeneration() {
-        isGenerationCancelled = true;
-        if (activeGenerationController) {
-            try { activeGenerationController.abort(); } catch (e) {}
-        }
-        const stopBtn = document.getElementById('stopButton');
-        const apiBtn = document.getElementById('apiButton');
-        if (stopBtn) stopBtn.style.display = 'none';
-        if (apiBtn) {
-            apiBtn.disabled = false;
-            apiBtn.innerHTML = "✨ Generate Deal";
-        }
-    }
+    // INDEPENDENT PER-COMMENT CASCADING TIMER ENGINE (125-180s COUNTDOWN)
+    const commentTimers = { 1: null, 2: null, 3: null };
+    let currentDealBaseCooldown = 135; 
 
     const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbwv8hIADyHzC8lnTog_cFS61RexYB8aI4ANzqmtEmEmpDk4nxZEXTREZt570EfJpN36jQ/exec";
 
@@ -403,6 +393,148 @@
         checkServerForUpdates(); 
         setInterval(checkServerForUpdates, 3 * 60 * 1000);
     });
+
+    function stopGeneration() {
+        isGenerationCancelled = true;
+        if (activeGenerationController) {
+            try { activeGenerationController.abort(); } catch (e) {}
+        }
+        const stopBtn = document.getElementById('stopButton');
+        const apiBtn = document.getElementById('apiButton');
+        if (stopBtn) stopBtn.style.display = 'none';
+        if (apiBtn) {
+            apiBtn.disabled = false;
+            apiBtn.innerHTML = "✨ Generate Deal";
+        }
+    }
+
+    function resetAllCommentTimers() {
+        for (let i = 1; i <= 3; i++) {
+            if (commentTimers[i]) clearInterval(commentTimers[i]);
+            commentTimers[i] = null;
+            const pill = document.getElementById(`timer-pill-${i}`);
+            if (pill) {
+                pill.style.display = 'none';
+                pill.innerText = '';
+            }
+        }
+    }
+
+    function startCommentTimer(commentNum) {
+        const pill = document.getElementById(`timer-pill-${commentNum}`);
+        if (!pill) return;
+
+        if (commentTimers[commentNum]) clearInterval(commentTimers[commentNum]);
+
+        // CASCADING STOCHASTIC JITTER: Post 1 = Base (125-165s) | Post 2 & 3 = Base + (0 to 15s)
+        let remaining = currentDealBaseCooldown;
+        if (commentNum === 2 || commentNum === 3) {
+            remaining += Math.floor(Math.random() * 16);
+        }
+
+        pill.style.display = 'inline-block';
+        pill.style.background = '#fce8e6';
+        pill.style.border = '1px solid #ea4335';
+        pill.style.color = '#c5221f';
+
+        const updatePill = () => {
+            let m = Math.floor(remaining / 60);
+            let s = remaining % 60;
+            let timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+            if (remaining > 0) {
+                pill.style.background = '#fce8e6';
+                pill.style.border = '1px solid #ea4335';
+                pill.style.color = '#c5221f';
+                pill.innerText = `🔴 ${timeStr} left`;
+            } else {
+                clearInterval(commentTimers[commentNum]);
+                pill.style.background = '#e6f4ea';
+                pill.style.border = '1px solid #00a400';
+                pill.style.color = '#007a00';
+                pill.innerText = `🟢 Safe to drop!`;
+            }
+        };
+        updatePill();
+
+        commentTimers[commentNum] = setInterval(() => {
+            remaining--;
+            updatePill();
+        }, 1000);
+    }
+
+    // TOTAL STRUCTURAL CHAOS SHUFFLE ENGINE (4-MODE CLIENT-SIDE METAMORPHOSIS)
+    function shufflePostLines(varNum) {
+        const el = document.getElementById(`out-post${varNum}`);
+        if (!el) return;
+        let currentText = el.getAttribute('data-raw') || el.innerText;
+        if (!currentText || !currentText.trim()) return;
+
+        let rawParagraphs = currentText.split(/\n+/).map(s => s.trim()).filter(s => s.length > 0);
+        let sentences = [];
+
+        for (let para of rawParagraphs) {
+            let combinedMatch = para.match(/^(.*?available|.*?choices?|.*?colors?|.*?scents?|.*?options?)\s+(?:spanning|across|in sizes?|from)\s+(US\s+shoe\s+size|sizes?\s+.*|[0-9A-Za-z\-\s]+)$/i);
+            if (combinedMatch && combinedMatch[1] && combinedMatch[2]) {
+                let partColor = combinedMatch[1].trim();
+                if (!/[.!?]$/.test(partColor)) partColor += '.';
+                let partSize = 'Sizing spans ' + combinedMatch[2].trim();
+                if (!/[.!?]$/.test(partSize)) partSize += '.';
+                sentences.push(partColor);
+                sentences.push(partSize);
+            } else {
+                let sArr = para.split(/(?<=[.!?])\s+(?=[A-Z0-9\u{1F300}-\u{1F9FF}])/gu).map(s => s.trim()).filter(s => s.length > 0);
+                sentences.push(...sArr);
+            }
+        }
+
+        if (sentences.length <= 1) return;
+
+        let colorIdx = sentences.findIndex(s => /\b(colors?|shades?|scents?)\b/i.test(s) && !/\b(sizes?|shoe)\b/i.test(s));
+        let sizeIdx = sentences.findIndex(s => /\b(sizes?|shoe|XS|XXL|XL|3XL|S -)\b/i.test(s) && !/\b(colors?|scents?)\b/i.test(s));
+
+        if (colorIdx !== -1 && sizeIdx !== -1 && Math.random() > 0.5) {
+            let cleanColor = sentences[colorIdx].replace(/[.!?]/g, '').trim();
+            let cleanSize = sentences[sizeIdx].replace(/^(sizing\s+(spans|runs|fits)|sizes?\s+(span|run|fit))\s+/i, '').replace(/[.!?]/g, '').trim();
+            let merged = `${cleanColor} spanning ${cleanSize}.`;
+            let highIdx = Math.max(colorIdx, sizeIdx);
+            let lowIdx = Math.min(colorIdx, sizeIdx);
+            sentences.splice(highIdx, 1);
+            sentences.splice(lowIdx, 1, merged);
+        }
+
+        let priceIdx = sentences.findIndex(s => /\$\d+(\.\d{2})?\s+(Shipped|Total|Pickup)/i.test(s));
+        let priceSentence = priceIdx !== -1 ? sentences.splice(priceIdx, 1)[0] : null;
+
+        sentences.sort(() => 0.5 - Math.random());
+
+        if (priceSentence) {
+            let targetPos = Math.floor(Math.random() * (sentences.length + 1));
+            sentences.splice(targetPos, 0, priceSentence);
+        }
+
+        let geometryRoll = Math.floor(Math.random() * 4);
+        let newText = "";
+
+        if (geometryRoll === 0) {
+            newText = sentences.join(' ');
+        } else if (geometryRoll === 1 && sentences.length >= 3) {
+            let p1 = sentences.slice(0, 2).join(' ');
+            let p2 = sentences.slice(2).join(' ');
+            newText = p1 + '\n\n' + p2;
+        } else if (geometryRoll === 2 && sentences.length >= 3) {
+            let p1 = sentences[0];
+            let p2 = sentences.slice(1, sentences.length - 1).join(' ');
+            let p3 = sentences[sentences.length - 1];
+            newText = p1 + '\n\n' + p2 + '\n\n' + p3;
+        } else {
+            newText = joinWithSpaceChaos(sentences, 1, 2);
+        }
+
+        newText = sanitizeDealCopy(newText);
+        el.innerText = newText;
+        el.setAttribute('data-raw', newText);
+    }
 
     async function checkServerForUpdates(manualClick = false) {
         try {
@@ -448,9 +580,7 @@
             if (!row[0] || !row[2] || !row[3]) continue;
             
             let rowTimestampMs = new Date(row[0]).getTime();
-            if (!isNaN(rowTimestampMs) && rowTimestampMs < sevenDaysAgoMs) {
-                continue;
-            }
+            if (!isNaN(rowTimestampMs) && rowTimestampMs < sevenDaysAgoMs) continue;
 
             let rowUrl = row[3].replace(/\/$/, '');
             let rowTitle = row[2];
@@ -545,10 +675,10 @@
             const stableLite = textModels.filter(m => m.name.includes("lite") && !m.name.includes("preview"));
             const numberedFlash = textModels.filter(m => m.name.includes("flash") && !m.name.includes("lite") && !m.name.includes("latest") && !m.name.includes("preview"));
 
-            const secondLite = (stableLite.length >= 2) ? stableLite[1].name.replace('models/', '') : 'gemini-2.0-flash-lite';
-            const thirdLite = (stableLite.length >= 3) ? stableLite[2].name.replace('models/', '') : (stableLite[0] ? stableLite[0].name.replace('models/', '') : 'gemini-1.5-flash');
-            const latestLite = (stableLite.length > 0) ? stableLite[0].name.replace('models/', '') : 'gemini-2.0-flash';
-            const secondFlash = (numberedFlash.length >= 2) ? numberedFlash[1].name.replace('models/', '') : 'gemini-1.5-flash';
+            const secondLite = (stableLite.length >= 2) ? stableLite[1].name.replace('models/', '') : (stableLite[0] ? stableLite[0].name.replace('models/', '') : 'gemini-flash-lite-latest');
+            const thirdLite = (stableLite.length >= 3) ? stableLite[2].name.replace('models/', '') : (stableLite[0] ? stableLite[0].name.replace('models/', '') : 'gemini-flash-lite-latest');
+            const latestLite = (stableLite.length > 0) ? stableLite[0].name.replace('models/', '') : 'gemini-flash-lite-latest';
+            const secondFlash = (numberedFlash.length >= 2) ? numberedFlash[1].name.replace('models/', '') : (numberedFlash[0] ? numberedFlash[0].name.replace('models/', '') : 'gemini-flash-latest');
 
             window.modelWaterfall = [secondLite, thirdLite, latestLite, secondFlash];
 
@@ -558,7 +688,7 @@
                 select.value = textModels[0].name.replace('models/', '');
             }
         } catch (err) {
-            select.innerHTML = '<option value="gemini-1.5-flash">gemini-1.5-flash (Fallback)</option>';
+            select.innerHTML = '<option value="gemini-flash-lite-latest">gemini-flash-lite-latest (Active Lite Fallback)</option>';
         }
     }
 
@@ -610,7 +740,6 @@
         document.getElementById('priceWarning').style.display = 'none';
         document.getElementById('outputSection').style.display = 'none';
         document.getElementById('emergencyFallbackBtn').style.display = 'none';
-        // Reset and hide all 3 per-comment timers for the next deal
         resetAllCommentTimers();
         fetchCloudHistory(); 
         checkServerForUpdates(); 
@@ -670,12 +799,6 @@
             .replace(/\boffered\b/gi, 'featured')
             .replace(/\b(this|the|an|great|special|massive|good|nice|solid)\s+(offer|discount|markdown|promotion|promo|reduction|deal|steal|bargain|doorbuster|blowout|voucher|coupon|closeout)s?\b/gi, '$1 find')
             .replace(/\b(discounts?|markdowns?|promotions?|promos?|reductions?|steals?|bargains?|doorbusters?|blowouts?|vouchers?|coupons?|closeouts?)\b/gi, 'find')
-            .replace(/\b(unbeatable|cheapest|fraction\s+of\s+the\s+cost|pennies\s+on\s+the\s+dollar)\b/gi, 'wonderful value')
-            // Meta 2026 Engagement Bait & Directional Pointer Scrubber
-            .replace(/\b(drop\s+(your\s+)?(thoughts|comments?|take)|share\s+your\s+thoughts|tell\s+(us|me)\s+below|who\s+(else\s+)?needs\s+this|anyone\s+need\s+this|sound\s+off(\s+below)?|leave\s+a\s+comment|save\s+for\s+later)\b/gi, '')
-            .replace(/\b(link\s+in\s+(the\s+)?comments?|first\s+comment|1st\s+comment|check\s+(the\s+)?(thread|comments?|below)|pinned\s+comment|direct\s+link|drop\s+the\s+link)\b\.?\s*/gi, '')
-            // Meta 2026 Glitch & Scarcity Scrubber
-            .replace(/\b(system\s+glitch|price\s+glitch|pricing\s+error|price\s+mistake|pricing\s+mistake|loophole|glitches?)\b\.?\s*/gi, '')
             // 6. Scrutinize financial & particulate commercial tokens
             .replace(/\b(shopping|purchasing|ordering)\b/gi, 'getting')
             .replace(/\bpriced\s+at\b/gi, 'sitting at')
@@ -696,7 +819,6 @@
             // 9. Format regular price ranges, scrub redundant title appendages, and purge dangling comparative words
             .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)[.\s](\d{2})\s*[-–—]\s*\$?(\d+)[.\s](\d{2})\b/gi, '$1 $2 $3 - $4 $5')
             .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)[.\s](\d{2})\b/gi, '$1 $2 $3')
-            // Scrub any stray $ signs or decimals remaining in regular price ranges
             .replace(/(\b(?:from|down from|previously|was|dropping from)\s+\d+\s+\d{2}\s*[-–—]\s*)\$(\d+)/gi, '$1$2')
             .replace(/(\b(?:from|down from|previously|was|dropping from)\s+\d+\s+\d{2}\s*[-–—]\s*\d+)\.(\d{2})/gi, '$1 $2')
             .replace(/,\s*(previously|was|down from|dropping from)\s*\./gi, '.')
@@ -737,14 +859,10 @@
             .replace(/\|\|/g, '')
             .replace(/\bLayout\s+[A-E]:?\s*/gi, '')
             .replace(/\b(record\s+low|all[\s-]time\s+low|historic(al)?\s+low|point\s+drop|price\s+drop|top\s+score|best\s+seller|good\s+pick|solid\s+find|great\s+find|solid\s+catch|solid\s+dip)\s+(on|in|at)\s+(Amazon|Walmart|Woot|Walgreens|Target)\.?\s*/gi, '')
-            // Standalone Header Slogan Scrubber: Purge leaked slogans like "TOP SCORE."
             .replace(/\b(top\s+score|record\s+low|best\s+seller|good\s+drop|solid\s+catch|solid\s+dip)\b\.?\s*/gi, '')
-            // Meta-Instruction Scrubber: Erase leaked prompt directives like "ON ITS OWN LINE"
-            .replace(/\bON\s+ITS\s+OWN\s+LINE\b\.?\s*/gi, '')
-            // Variant Range Cleaner: Remove awkward trailing "choice/selection" on complex size ranges
-            .replace(/(Large Plus up to [\dX]+-Large Plus)\s+(choice|selection|version)\b/gi, '$1')
             .replace(/\[(Price\/Title|Lifestyle hook|TARGET_SLOT)\]/gi, '')
             .replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '')
+            .replace(/\bON\s+ITS\s+OWN\s+LINE\b\.?\s*/gi, '')
             // Grammatical Upgrade Handler: Noun -> addition, Verb -> refreshing
             .replace(/\b(a|an|the|this)\s+upgrade\b/gi, '$1 addition')
             .replace(/\bupgrades\b/gi, 'additions')
@@ -756,9 +874,7 @@
             .replace(/\bavailable\s+via\s*/gi, '')
             // Detach slang from price sentences (e.g. 'is probs $23' -> 'is $23')
             .replace(/\b(is|for)\s+(fr|ngl|tbf|tbh|imo|lowkey|legit|probs|kinda|super|highkey)\s+\$/gi, '$1 $')
-            // Scrub awkward slang wedged between retailer and verbs (e.g. "Amazon highkey is" -> "Amazon is")
             .replace(/\b(Amazon|Walmart|Woot|Target)\s+(highkey|lowkey|fr|ngl|tbf|tbh|imo|legit|probs|kinda)\s+(is|has)\b/gi, '$1 $3')
-            // Scrub awkward slang tacked onto factual specs (e.g. "sizes S to XXL, imo." -> "sizes S to XXL.")
             .replace(/,\s*(imo|tbf|tbh|fr|ngl|lowkey|highkey)\s*([.!?])/gi, '$2')
             // Purge corporate "rate applies" jargon and awkward variant combinations
             .replace(/\bthis\s+rate\s+applies\b/gi, 'this applies')
@@ -766,31 +882,34 @@
             .replace(/\brates?\s+shift\s+quickly\b/gi, 'listings shift quickly')
             .replace(/\bcolor\s+size\s+choice\b/gi, 'option')
             .replace(/\bcolor\s+size\s+option\b/gi, 'option')
-            // Restriction Stutter Shield: De-duplicate 'works on the works on' collisions
-            .replace(/\b(applies|works|featured|valid)\s+(specifically\s+|strictly\s+|exclusively\s+)?(to|on)\s+the\s+works\s+on\s+/gi, '$1 $2$3 ')
-            .replace(/\bworks\s+on\s+the\s+works\s+on\s+/gi, 'works on ')
-            .replace(/\bthe\s+works\s+on\s+/gi, '')
-            // Multi-Color Syntax Cleaner: Fixes "Featured on the Several colors choice" -> "Available in several colors"
-            .replace(/\b(featured on|applies exclusively to|works strictly on|applies specifically to)\s+the\s+several\s+colors?\s+(choice|version|selection|option)\b/gi, 'available in several colors')
-            .replace(/\bthe\s+several\s+colors?\s+(choice|version|selection|option)\b/gi, 'several colors')
-            // Universal Variant Cleaner: Fixes "applies specifically to all colors" -> "works across all colors"
+            .replace(/(Large Plus up to [\dX]+-Large Plus)\s+(choice|selection|version)\b/gi, '$1')
+            // Multi-Option Syntax Cleaner
+            .replace(/\b(featured on|applies exclusively to|works strictly on|applies specifically to)\s+the\s+several\s+(scents?|fragrances?|flavors?|colors?|prints?|styles?|options?)\s+(design|choice|version|selection|option|style)\b/gi, 'available in several $2')
+            .replace(/\bthe\s+several\s+(scents?|fragrances?|flavors?|colors?|prints?|styles?)\s+(design|choice|version|selection|option|style)\b/gi, 'several $1')
             .replace(/\b(applies specifically to|featured on|works strictly on|applies exclusively to)\s+the\s+all\s+(colors?|sizes?|options?|choices?)\s*(option|choice|version|selection)?\b/gi, 'works across all $2')
             .replace(/\b(applies specifically to|featured on|works strictly on)\s+the\s+both\s+pictured\s+options?\s*(choice|selection|version|option)?\b/gi, 'works on both pictured options')
             .replace(/\bthe\s+both\s+pictured\s+options?\s*(choice|selection|version|option)?\b/gi, 'both pictured options')
-            // Headline Colon Scrubber: Convert "Spotted on Amazon: The" -> "Amazon has the "
+            .replace(/\bfind\s+applies\b/gi, 'applies')
+            // Restriction Stutter Shield
+            .replace(/\b(applies|works|featured|valid)\s+(specifically\s+|strictly\s+|exclusively\s+)?(to|on)\s+the\s+works\s+on\s+/gi, '$1 $2$3 ')
+            .replace(/\bworks\s+on\s+the\s+works\s+on\s+/gi, 'works on ')
+            .replace(/\bthe\s+works\s+on\s+/gi, '')
+            // Headline Colon Scrubber
             .replace(/\b(spotted|found|seen)\s+on\s+(Amazon|Walmart|Woot|Walgreens|Target):\s*/gi, '$2 has the ')
             .replace(/:\s*([A-Z0-9])/g, ', $1')
-            // Retailer Exclamation Shield: Prevent "Woot! Is" and "Woot! Has" capitalization
+            // Retailer Exclamation Shield: Prevent "Woot! Is" and "Woot! Has"
             .replace(/\bWoot!\s+Is\b/g, 'Woot! is')
             .replace(/\bWoot!\s+Has\b/g, 'Woot! has')
             // Double-talk & Ampersand Cleaner
             .replace(/([A-Za-z])&([A-Za-z])/g, '$1 & $2')
             .replace(/\bcomes with ([^.\n]+) included\b/gi, 'comes with $1')
             .replace(/\bincludes ([^.\n]+) included\b/gi, 'includes $1')
-            // Retailer Exclamation Shield: Prevent "Woot! Is" and "Woot! Has" capitalization
-            .replace(/\bWoot!\s+Is\b/g, 'Woot! is')
-            .replace(/\bWoot!\s+Has\b/g, 'Woot! has')
-            // Orphaned Punctuation Scrubber: Clean up periods detached by URL line breaks
+            // Meta 2026 Engagement Bait & Directional Pointer Scrubber
+            .replace(/\b(drop\s+(your\s+)?(thoughts|comments?|take)|share\s+your\s+thoughts|tell\s+(us|me)\s+below|who\s+(else\s+)?needs\s+this|anyone\s+need\s+this|sound\s+off(\s+below)?|leave\s+a\s+comment|save\s+for\s+later)\b/gi, '')
+            .replace(/\b(link\s+in\s+(the\s+)?comments?|first\s+comment|1st\s+comment|check\s+(the\s+)?(thread|comments?|below)|pinned\s+comment|direct\s+link|drop\s+the\s+link)\b\.?\s*/gi, '')
+            .replace(/\b(system\s+glitch|price\s+glitch|pricing\s+error|price\s+mistake|pricing\s+mistake|loophole|glitches?)\b\.?\s*/gi, '')
+            .replace(/\b(unbeatable|cheapest|fraction\s+of\s+the\s+cost|pennies\s+on\s+the\s+dollar)\b/gi, 'wonderful value')
+            // Orphaned Punctuation Scrubber
             .replace(/(https?:\/\/[^\s]+)\s*\n+\s*\.\s*/gi, '$1\n\n')
             .replace(/\n+\s*\.\s*(?=[A-Z])/g, '\n\n')
             .replace(/\n+\s*\.\s*$/g, '')
@@ -806,9 +925,8 @@
             .replace(/\b(truly|so|really|absolutely)\s+essential\b/gi, '$1 fantastic')
             .replace(/\bessentials\b/gi, 'supplies')
             .replace(/\bessential\b/gi, 'a staple')
-            // Strip any accidental #ad hashtags from copy
             .replace(/\s*#ad\b/gi, '')
-            // 15. Final Emoji-Aware Auto-Capitalizer: Capitalize sentence starters even when preceded by emojis
+            // 15. Final Emoji-Aware Auto-Capitalizer
             .replace(/(^\s*[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]*\s*|[.!?]\s+[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]*\s*)(?!https?:\/\/)([a-z])/giu, (m, p1, p2) => p1 + p2.toUpperCase());
     }
 
@@ -962,13 +1080,11 @@
         document.getElementById('priceWarning').style.display = 'none';
         currentRawOutput = ""; 
         isGenerationCancelled = false;
-        // Reveal STOP button during generation
+        resetAllCommentTimers();
+        currentDealBaseCooldown = Math.floor(Math.random() * (165 - 125 + 1)) + 125;
+
         const stopBtn = document.getElementById('stopButton');
         if (stopBtn) stopBtn.style.display = 'inline-flex';
-        // Reset all 3 per-comment timers so the new deal starts fresh
-        resetAllCommentTimers();
-        // Roll brand-new Base Cooldown Anchor (125-165s) for this specific deal generation!
-        currentDealBaseCooldown = Math.floor(Math.random() * (165 - 125 + 1)) + 125;
 
         let pronounInstruction = pronounStyle === "subject" 
             ? "PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, IMAGINING USE, and HOW HANDY IT WILL BE ONCE IT ARRIVES (e.g., 'This would be so nice for...', 'Such a fun find if you need...', 'Could definitely see this making mornings easier...', 'Imagine having a full set ready for...'). FALSE OWNERSHIP BAN (ABSOLUTE): You are STRICTLY FORBIDDEN from pretending you already physically own, received, or tested the item! NEVER say 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'." 
@@ -989,19 +1105,18 @@
         const selectedDtLayout = dtLayoutOptions[Math.floor(Math.random() * dtLayoutOptions.length)];
 
         // 100% UNFORCED ORGANIC CONVERSATIONAL ENGINE
-        // Slang is strictly optional seasoning — NEVER forced by quota!
         const slangDirective = `TONE: RELAXED, ORGANIC & UNFORCED CONVERSATIONAL. Write like a real person casually chatting with friends about a great find. ZERO FORCED SLANG (ABSOLUTE): You are strictly forbidden from forcing slang words to meet a quota! If a post sounds warm, natural, and friendly without slang, KEEP IT CLEAN! You may occasionally use a mild conversational word (like 'honestly', 'hands down', 'super', or 'ngl') ONLY in a personal lifestyle reaction if it flows 100% effortlessly. SLANG PLACEMENT FIREWALL: Never wedge slang into price statements (NEVER write 'Amazon highkey is available' or 'is fr $7.49') and NEVER attach slang to factual specs (NEVER write 'sizes S to XXL, imo')! Keep Variation 3 100% clean (The Breather).`;
 
         // STRUCTURED ACTIVE-SIGNALS COMMENT MATRIX
         const commentRoleA = [
-            "Role 1A (Product Utility Micro-Tip): Line 1 State a concrete practical tip under 12 words specific to using THIS EXACT PRODUCT in daily life (NEVER invent unrelated items) || Line 2 Link [TARGET_SLOT] at the end (NO question).",
-            "Role 1B (Shopper Heads-Up): Line 1 Quick shopping note under 12 words that popular online listings tend to shift quickly || Line 2 Link [TARGET_SLOT] at the end (NO question).",
-            "Role 1C (Everyday Convenience Note): Line 1 Brief realistic thought under 12 words about how handy this item is to have around the house || Line 2 Link [TARGET_SLOT] at the end (NO question)."
+            "Role 1A (Product Utility Micro-Tip): Line 1 State a concrete practical tip under 12 words specific to using THIS EXACT PRODUCT in daily life (NEVER invent unrelated items) || Line 2 [TARGET_SLOT] (NO question).",
+            "Role 1B (Shopper Heads-Up): Line 1 Quick shopping note under 12 words that popular online listings tend to shift quickly || Line 2 [TARGET_SLOT] (NO question).",
+            "Role 1C (Everyday Convenience Note): Line 1 Brief realistic thought under 12 words about how handy this item is to have around the house || Line 2 [TARGET_SLOT] (NO question)."
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleB = [
-            "Role 2A (Preference Question Drop): Line 1 Prospective observation about how fun or handy this item would be under 12 words || Line 2 Link [TARGET_SLOT] || Line 3 Open-ended question asking what favorite flavor, color, or daily routine they would pair with this item.",
-            "Role 2B (Everyday Habit Query): Line 1 Practical thought about how helpful this would be to have on hand under 12 words || Line 2 Link [TARGET_SLOT] || Line 3 Open-ended question asking how or where in their home they would use this item most."
+            "Role 2A (Preference Question Drop): Line 1 Prospective observation about how fun or handy this item would be under 12 words || Line 2 [TARGET_SLOT] || Line 3 Open-ended question asking what favorite flavor, color, or daily routine they would pair with this item.",
+            "Role 2B (Everyday Habit Query): Line 1 Practical thought about how helpful this would be to have on hand under 12 words || Line 2 [TARGET_SLOT] || Line 3 Open-ended question asking how or where in their home they would use this item most."
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleC = [
@@ -1026,7 +1141,6 @@
         let varietyAuditTag = "STYLE: Classic";
 
         if (isVarietyDeal) {
-            // Roll intensity: 1 in 3 (60% chance), 2 in 3 (30% chance), all 3 (10% jackpot)
             const roll = Math.random();
             const punchyCount = roll < 0.60 ? 1 : (roll < 0.90 ? 2 : 3);
             const pickedVars = [1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, punchyCount);
@@ -1037,23 +1151,23 @@
         let prompt = "";
 
         if (dealType === 'regular') {
-            prompt = `SUPREME ZERO-TOLERANCE BAN: Before writing anything, note that you are STRICTLY FORBIDDEN from using any commercial, retail, or transaction words anywhere in your output: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. Always substitute them with safe words (e.g. use 'find', 'complimentary', 'get', 'total').
+            prompt = `SUPREME ZERO-TOLERANCE BAN: Before writing anything, note that you are STRICTLY FORBIDDEN from using any commercial, retail, or transaction words anywhere in your output: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Who else needs this, Anyone need this, Sound off, Sound off below, Drop your take, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. Always substitute them with safe words (e.g. use 'find', 'complimentary', 'get', 'total').
 Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): Return pure JSON only with zero conversational filler.
-"retailer_name": (String. Extract the FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. If mentions 'Woot', must be Woot!),
+"retailer_name": (String. Extract FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. If mentions 'Woot', must be Woot!),
 "sale_price": (String. Extract the sale price. PRICE RANGE MANDATE: If raw text shows a range (e.g. '$15.99 - $17.99 Shipped'), preserve the FULL range! Ensure '$' sign is included, then ADD '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'),
 "reg_price": (String. Extract ONLY numbers/digits of regular price. ZERO-GUESS MANDATE (ABSOLUTE): If raw text does NOT explicitly state an original, was, or regular price, you MUST write 'NONE'! Guessing is strictly forbidden! Strip $ signs, replace decimals with spaces, connect ranges with hyphen, e.g. "23 99 - 26 99". NEVER include the word 'regular'!),
-"cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the title line!),
+"cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. ZERO-GUESS MANDATE: If raw text does NOT explicitly state a limit (e.g. 'Limit of 5' or 'max 3'), write strictly 'NONE'! You are STRICTLY FORBIDDEN from assuming or guessing a limit! Extract ONLY the raw digit if explicitly written.),
-  "variant": (String. TITLE-DEDUPLICATION MANDATE: If attribute is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract the clean attribute, model, style, theme, color, or size itself (e.g. 'White - Art Book Store', 'all colors', 'Pink', 'Large')! Strip introductory words like 'works on' or 'only works on'. NEVER drop kit themes or style models! Extract from additional lines only.),
+  "variant": (String. TITLE-DEDUPLICATION MANDATE: If attribute is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract the clean attribute, model, style, theme, color, or size itself (e.g. 'White - Art Book Store', 'all colors', 'several scents', 'Pink', 'Large')! Strip introductory words like 'works on' or 'only works on'. NEVER drop kit themes or style models!),
   "size": (String. TITLE-DEDUPLICATION MANDATE: If size or dimensions like '20oz' are ALREADY in title, write 'NONE'.),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
 "b5_verification": (String. Extract specific shipping/pickup thresholds and memberships ONLY. If none, write "NONE"),
 "b8_verification": (String. If raw text explicitly mentions Subscribe & Save or S&S, write strictly 'YES'. If NOT in raw text, write 'NONE'!),
 "features_catchall": (String. EXTRA LINE VACUUM: Extract raw keywords/specs from extra lines ONLY. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): Do NOT extract specs that are ALREADY in the title! RETAILER HEADER BAN: Ignore slogans like 'Point Drop on Amazon'. If none, write "NONE"),
-"post_variations": (Array of 3 strings. You are a polymorphic text engine. ZERO LINKS (NUCLEAR MANDATE): Post variations must be 100% text-only with ZERO links and ZERO URLs! You are strictly forbidden from putting any website, link, or URL in post_variations! Links belong ONLY in comments and the Daily Thread!
+"post_variations": (Array of 3 strings. You are a polymorphic text engine. ZERO LINKS (NUCLEAR MANDATE): Post variations must be 100% text-only with ZERO links and ZERO URLs! Links belong ONLY in comments and the Daily Thread!
 DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
 • Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
@@ -1062,31 +1176,32 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 ${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & RESTRICTION MANDATE:
-• SINGLE RESTRICTION / THEME / MODEL: If raw text restricts to a specific color, size, model, style, or theme (e.g. 'White - Art Book Store', 'Pink', 'Large'), you are STRICTLY FORBIDDEN from omitting it! Rotate naturally: 'This applies specifically to the [variant] design.', 'Featured on the [variant] option.', or 'Works strictly on the [variant] style.'.
-• MULTI-COLOR, SIZING & ENTROPY: If raw text states multiple colors are available (e.g. 'Several colors'), state naturally: 'Available in several colors.' or 'Multiple color choices are available.'. If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both, but you can freely choose whether to combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.'). Rotate between combined and separate phrasing across variations!
-• UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', you are STRICTLY FORBIDDEN from phrasing it as an exclusive restriction (NEVER write 'Applies specifically to the all colors option')! State it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
-APPAREL SIZING & COLOR PAIRING MANDATE (ABSOLUTE): If raw text contains BOTH colors and size ranges (e.g. 'several colors, S - 3XL' or 'multiple shades, sizes S to XXL'), you are STRICTLY FORBIDDEN from dropping the sizes! You MUST state both the colors AND the size range together in your spec sentence across variations (e.g. 'Available in several colors spanning sizes S through 3XL.', 'Multiple color choices are available across sizes S to 3XL.', or 'Sizing runs from S up to 3XL with several colors to choose from.').
-MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs or accessories in features_catchall (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you MUST weave a clean sentence stating these features into EVERY variation (with varied phrasing)! ZERO EXTRA BULLET CONDITIONAL: If features_catchall is 'NONE' (meaning no extra bullet points exist in the raw text), you are STRICTLY FORBIDDEN from chopping up the product title to create a redundant spec sentence! In that case, do NOT repeat the title specs—simply transition directly from the price sentence to the prospective lifestyle thought! Rotate the phrasing naturally across variations (e.g., 'Equipped with a built-in LED light and 5 coarseness settings.', 'Features 5 grind options along with an illuminated LED base.', 'Includes 5 coarseness levels and a handy LED light.').
-ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! You MUST rotate completely unique phrasing across every variation: rotate between 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', and 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, recurring shipments, or recurring savings!
+• SINGLE RESTRICTION / THEME / MODEL: If raw text restricts to a specific color, size, model, style, or theme (e.g. 'White - Art Book Store', 'Pink', 'Large', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Rotate naturally: 'This applies specifically to the [variant] design.', 'Featured on the [variant] option.', or 'Works strictly on the [variant] style.'. Never dump raw bullet fragments like 'Works on medium.'!
+• MULTI-OPTION AVAILABILITY (COLORS, SCENTS, FLAVORS, PRINTS): If raw text states multiple choices are available (e.g. 'several scents', 'several colors', 'multiple flavors', 'several prints'), you are STRICTLY FORBIDDEN from treating it as a single restricted name (NEVER write 'Featured on the several scents option')! State it naturally: 'Available in several scents.', 'Multiple scent options are available.', or 'You can pick from several fragrances.'.
+• UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', state it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
+• APPAREL SIZING & COLOR ENTROPY (COMBINED OR SEPARATED): If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely choose whether to combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.').
+MANDATORY SPECS, CAPACITY & SERVING SIZES (ABSOLUTE): If raw text contains extra specs, features, capacities, serving yields, or headcounts (e.g. 'Serves 10-14', 'feeds 8-10', 'makes 12 cups', 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence stating these exact specs into EVERY single variation (with varied phrasing)! NEVER paraphrase away the numbers (if text says 'Serves 10-14', rotate naturally: 'Generously serves 10 to 14 guests.', 'Sized to easily feed 10-14 people.', or 'Perfect for serving 10 to 14.'). ZERO EXTRA BULLET CONDITIONAL: If no extra bullet points exist in raw text, do NOT repeat title specs—transition directly from price to lifestyle thought!
+ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! Rotate naturally: 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', or 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, or recurring shipments!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
 • COSMETICS, LASHES, NAILS & MAKEUP: Talk strictly about achieving a salon or pro look at home without salon appointment prices, full fluttery lashes, flawless daily wear, weekend styling, or cutting down morning prep time! NEVER say false lashes or makeup are for relaxing baths, sleeping, or quiet meditation!
-• FOOD & PANTRY: Talk strictly about real dinner prep, quick school lunches, or avoiding an extra trip to the grocery store.
+• FOOD & PANTRY: Talk strictly about real dinner prep, quick school lunches, feeding a crowd, or avoiding an extra trip to the grocery store.
 • APPAREL & SHOES: Talk strictly about comfortable everyday outfits, staying warm, or daily styling.
 • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
 • HOME & HARDWARE: Talk about meal prep, kitchen counters, avoiding clutter, or clean organization.
 FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility!
-ANTI-GERUND & NATURAL HUMAN CADENCE LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund! Ban the repetitive formula: '[Doing X] makes [routine] feel so much [adjective]' (NEVER write 'Having fresh juice ready makes morning routines smoother' or 'Wrapping yourself in warmth makes stepping out of the shower relaxing')! Speak with concrete, punchy human realism (e.g., 'Cold hardwood floors are the worst this time of year, so you can never have too many fuzzy pairs around', 'Love that this includes the bond and seal so you don't have to buy anything extra', 'Such a win if you drink fresh juice daily without paying $9 at a juice bar')! Vary sentence lengths: mix punchy 5-word thoughts with casual observations. Stop bathing every post in soft spa adjectives like 'peaceful', 'delightful', or 'soothing'—talk about real life wins!
-INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the same closing sentence structure or scenario across Variation 1, 2, or 3! Every single post variation MUST explore a completely unique prospective thought (e.g. if Variation 1 talks about morning prep, Variation 2 MUST talk about hosting/gatherings, and Variation 3 MUST talk about weekend relaxation). Zero copy-paste variations!
+ANTI-GERUND & NATURAL HUMAN CADENCE LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund! Ban the repetitive formula: '[Doing X] makes [routine] feel so much [adjective]'! Speak with concrete, punchy human realism (e.g., 'Cold hardwood floors are the worst this time of year, so you can never have too many fuzzy pairs around', 'Love that this includes the bond and seal so you don't have to buy anything extra', 'Planning a turkey dinner for a crowd usually means a chaotic grocery trip, but having one delivered makes holiday prep so much easier')! Vary sentence lengths. Stop bathing every post in soft spa adjectives like 'peaceful', 'delightful', or 'soothing'—talk about real life wins!
+INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the same closing sentence structure or scenario across Variation 1, 2, or 3! Every single post variation MUST explore a completely unique prospective thought. Zero copy-paste variations!
+PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE, RETAILER & PRICE BAN: You are STRICTLY FORBIDDEN from using full product title, retailer name, or dollar amounts in comments! Use simple everyday product nouns like 'deodorant', 'soup', 'tumblers', or 'tools'. ZERO POINTER PHRASES (ABSOLUTE): Never write pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', or 'Check it out via')! The link [TARGET_SLOT] MUST stand completely alone on its own line without any leading prepositions! NEVER put a period after [TARGET_SLOT]! LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! Keep human statements lean and under 15 words. Follow assigned roles:
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
 • Comment 3 Role: ${activeCommentBlueprints[2]}
 MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each contain a distinct, open-ended question ending with a question mark (?) designed to elicit 5+ word responses! Never ask Yes/No questions. ENGAGEMENT BAIT BAN: Never use 'let me know', 'tell me below', 'thoughts?', or 'comment below'. DELIMITER LOCK: Separate sentences with ' || ' and end human sentences with a period.),
-"daily_thread": (String. DAILY THREAD ORDER LOCK: Use this exact sentence order: ${selectedDtLayout} (ABSOLUTE: The link [TARGET_SLOT] MUST ALWAYS sit on its own completely separate line!). PRICE PAIRING: 'The [Title] on [Retailer] is [sale_price], dropping from [reg_price].' (If reg_price is 'NONE', just say '[sale_price]'). DAILY THREAD ANTI-PARROT LAW: You are STRICTLY FORBIDDEN from copying or paraphrasing opening or closing sentences from Variations 1, 2, or 3! Open with a natural conversational observation or gerund. NEVER start with 'I [verb]' or 'We [verb]'. RESTRICTION LOCK: State any variant restrictions or limits conversationally. ZERO POINTER PHRASES: Never use pointers before the link! DELIMITER LOCK: End every sentence with a period and separate with ' || '.),
+"daily_thread": (String. DAILY THREAD ORDER LOCK: Use this exact sentence order: ${selectedDtLayout} (ABSOLUTE: The link [TARGET_SLOT] MUST ALWAYS sit on its own completely separate line!). PRICE PAIRING: 'The [Title] on [Retailer] is [sale_price], dropping from [reg_price].' (If reg_price is 'NONE', just say '[sale_price]'). DAILY THREAD ANTI-PARROT LAW: You are STRICTLY FORBIDDEN from copying or paraphrasing opening or closing sentences from Variations 1, 2, or 3! Open with a natural conversational observation or gerund. NEVER start with 'I [verb]' or 'We [verb]'. RESTRICTION LOCK: State any variant restrictions, serving sizes, or limits conversationally. ZERO POINTER PHRASES: Never use pointers before the link! DELIMITER LOCK: End every sentence with a period and separate with ' || '.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
-GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Drop your thoughts, Share your thoughts, Drop a comment, Tell us below, Tell me below, Who needs this, Who else needs this, Anyone need this, Sound off, Sound off below, Drop your take, Leave a comment, Save for later, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
+GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Who else needs this, Anyone need this, Sound off, Sound off below, Drop your take, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
         } else {
             prompt = `Analyze this deal: "${rawText}"
 Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double quotes. NO NOTES/COMMENTS (NUCLEAR): Return pure JSON only.
@@ -1101,7 +1216,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "daily_thread": (String. Weave sale_price, reg_price, cleaned_title, retailer_name, features_catchall, and '[TARGET_SLOT]' into single natural message. QUANTITY RULE: Say 'add [X] to your delivery'. DELIMITER LOCK: Separate sentences with ' || ' and end with a period.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
-GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Drop your thoughts, Share your thoughts, Drop a comment, Tell us below, Tell me below, Who needs this, Who else needs this, Anyone need this, Sound off, Sound off below, Drop your take, Leave a comment, Save for later, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
+GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan every string you wrote. Replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. ZERO BANNED WORDS MUST REACH THE OUTPUT!`;
         }
 
         try {
@@ -1114,7 +1229,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             let attempts = 0;
             const maxAttempts = 3;
 
-            // 100% RESPECT SELECTION & DYNAMIC WATERFALL (NO PREMATURE ABORTS)
             while (attempts < maxAttempts) {
                 attempts++;
                 try {
@@ -1122,10 +1236,8 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     btn.innerHTML = `⏳ Compiling on ${selectedModel}...`;
                     
                     try {
-                        // Give the selected model a full 15s runway so it finishes cleanly on the 1st try!
                         data = await fetchWithRetry(prompt, selectedModel, 15000);
                     } catch (primaryErr) {
-                        // If selected model is busy/rate-limited, seamlessly fall back to dynamic waterfall models
                         const w = window.modelWaterfall || [];
                         const fallbackModel = w.find(m => m !== selectedModel) || selectedModel;
                         console.log(`Primary model busy (${primaryErr.message}). Failing over to: ${fallbackModel}...`);
@@ -1134,7 +1246,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     }
 
                     let aiText = data.candidates[0].content.parts[0].text;
-                    
                     aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
                     const startIndex = aiText.indexOf('{');
                     const endIndex = aiText.lastIndexOf('}');
@@ -1181,8 +1292,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 aiData.sale_price = '$' + aiData.sale_price.trim();
             }
 
-            // DETERMINISTIC FULFILLMENT ENFORCER:
-            // Guarantee sale_price always ends with the mandatory fulfillment status (Shipped, Total, or Pickup)
+            // DETERMINISTIC FULFILLMENT ENFORCER
             if (aiData.sale_price && aiData.sale_price !== "???") {
                 let cleanP = aiData.sale_price.trim();
                 if (!/\b(Shipped|Pickup|Total)\b/i.test(cleanP)) {
@@ -1190,21 +1300,20 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 }
             }
 
-            // DETERMINISTIC REGULAR PRICE FIREWALL:
+            // DETERMINISTIC REGULAR PRICE FIREWALL
             const hasRegKeyword = /\b(regular|was|orig|original|list|retail|msrp|originally|down from|dropping from)\b/i.test(rawText);
             const rawDollarCount = (rawText.match(/\$\d+(\.\d{2})?/g) || []).length;
             if (!hasRegKeyword && rawDollarCount <= 1) {
                 aiData.reg_price = "NONE";
             } else if (aiData.reg_price && aiData.reg_price !== "NONE") {
-                // UNIVERSAL REGULAR PRICE CLEANER: Strip all $ signs and replace all decimals with spaces
                 aiData.reg_price = aiData.reg_price
                     .replace(/\$/g, '')
                     .replace(/\.(\d{2})/g, ' $1')
                     .replace(/\s+/g, ' ')
                     .trim();
             }
-            
-            // DETERMINISTIC S&S FIREWALL:
+
+            // DETERMINISTIC S&S FIREWALL
             const hasSsKeyword = /\b(s&s|subscribe|auto[\s-]delivery|routine delivery|recurring|recurring shipment)\b/i.test(rawText);
             if (!hasSsKeyword) {
                 if (aiData.b8_verification) aiData.b8_verification = "NONE";
@@ -1215,7 +1324,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 cleanTitle = extractTitleFromRawText(rawText);
             } 
 
-            // TITLE PURITY SHIELD: If raw text does NOT contain 'ADD [X]', scrub hallucinated 'ADD [X] QTY' from title
+            // TITLE PURITY SHIELD
             if (!/\bADD\s+\d+/i.test(rawText)) {
                 cleanTitle = cleanTitle.replace(/\s*ADD\s+\d+(\s+QTY)?\b/gi, '').trim();
                 if (aiData.cleaned_title) {
@@ -1235,22 +1344,21 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}\u{2B06}\u{2B05}\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23F0}\u{23F3}\u{23E9}-\u{23EC}\u{25FD}\u{25FE}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{200D}\u{FE0F}\u{2640}\u{2642}\u{1F4A8}]/gu;
             let rawEmojis = Array.isArray(aiData.emoji_pool) ? aiData.emoji_pool : [];
             let cleanEmojis = rawEmojis.map(item => String(item).match(emojiRegex)).filter(Boolean).map(m => m[0]);
-            const fallbackEmojis = ["✨","🔥","📦","👇","🌿","🧼","🧴","🛁","🌸","💧","🫧","🧺","☕"];
+            const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.36 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
             for(let i=0; i<3; i++) {
                 let rawPost = aiData.post_variations && aiData.post_variations[i] ? aiData.post_variations[i] : "";
-                // NUCLEAR POST LINK PURGE: Post variations must NEVER contain any URL or link!
                 if (typeof rawPost === 'string') {
                     rawPost = rawPost.replace(/https?:\/\/[^\s]+/gi, '').replace(/\[TARGET[^\]]*\]/gi, '').replace(/\[URL\]/gi, '').trim();
                 } else if (Array.isArray(rawPost)) {
                     rawPost = rawPost.map(s => String(s).replace(/https?:\/\/[^\s]+/gi, '').replace(/\[TARGET[^\]]*\]/gi, '').replace(/\[URL\]/gi, '').trim());
                 }
-                
+
                 let postLines = [];
                 if (Array.isArray(rawPost)) {
                     postLines = rawPost.map(s => String(s).trim()).filter(s => s.length > 0);
@@ -1268,7 +1376,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     postLines = postLines.filter(line => line.length > 0);
                 }
 
-                // AUTOMATED PUNCTUATION ENFORCER: Ensure every post line ends with proper punctuation (. ! ?)
                 postLines = postLines.map(line => {
                     let trimmed = line.trim();
                     if (!trimmed || trimmed.includes('http')) return trimmed;
@@ -1285,15 +1392,12 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 let emojifiedPost = applyEmojiDensity(postLines, 0, 4, finalEmojis);
                 let rawFinalPost = dealType === 'run' ? emojifiedPost.join(' ') : joinWithSpaceChaos(emojifiedPost, 1, 2);
                 
-                // PASS THROUGH UNIVERSAL JAVASCRIPT FIREWALL & GUARANTEE ZERO LINKS
                 let scrubbedPost = sanitizeDealCopy(rawFinalPost).replace(/https?:\/\/[^\s]+/gi, '').trim();
                 
-                // DETERMINISTIC LIMIT SHIELD: If raw text has NO limit, purge any hallucinated limit sentences!
                 if (!/\b(limit|max|maximum|capped|threshold)\b/i.test(rawText)) {
                     scrubbedPost = scrubbedPost.replace(/([^\n.]*?\b(capped at|limit of|maximum of|get up to|you can get|restricted to|\d+[\s-]unit limit)\b[^\n.]*\.?\s*)/gi, '');
                 }
 
-                // DETERMINISTIC S&S FIREWALL: If raw text has NO mention of S&S, purge hallucinated auto-delivery sentences!
                 if (!/\b(s&s|subscribe|auto[\s-]delivery|routine delivery|recurring|recurring shipment)\b/i.test(rawText)) {
                     scrubbedPost = scrubbedPost.replace(/([^\n.]*?\b(auto[\s-]delivery|routine deliveries|routine shipments|recurring deliveries|recurring shipments|auto-delivery)\b[^\n.]*\.?\s*)/gi, '');
                 }
@@ -1310,12 +1414,10 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 let rawComment = commentsList[i] || "";
                 let commentText = typeof rawComment === 'object' ? Object.values(rawComment).join(' ') : String(rawComment);
                 
-                // Universal Placeholder Matcher: Catches [TARGET_SLOT], target_slot, Target_slot., and [URL]
                 commentText = commentText.replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '\n\n' + cloaked + '\n\n');
                 
                 let commentLines = commentText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
 
-                // Deduplicate multiple link lines if AI generated extras
                 let foundLink = false;
                 commentLines = commentLines.filter(line => {
                     if (line.includes("http")) {
@@ -1325,7 +1427,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     return true;
                 });
 
-                // FAIL-SAFE LINK INJECTION: If the AI omitted the link, inject it cleanly on Line 2
                 if (!commentLines.some(l => l.includes(cloaked))) {
                     if (commentLines.length > 1) {
                         commentLines.splice(1, 0, cloaked);
@@ -1334,7 +1435,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     }
                 }
 
-                // LINE 1 SHIELD: If line 1 contains both text and a URL, decouple and push the URL to line 2
                 if (commentLines.length > 0 && commentLines[0].includes("http")) {
                     let match = commentLines[0].match(/^(https?:\/\/[^\s]+)\s+(.+)$/);
                     if (match) {
@@ -1343,7 +1443,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     }
                 }
 
-                // ABSOLUTE LINE 1 SWAP GUARD: Guarantees Line 1 is ALWAYS human conversational copy
                 if (commentLines.length > 1 && commentLines[0].includes("http")) {
                     let temp = commentLines[0];
                     commentLines[0] = commentLines[1];
@@ -1351,8 +1450,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 }
 
                 let emojifiedComment = applyEmojiDensity(commentLines, 0, 2, finalEmojis);
-                
-                // DYNAMIC CHAOS GEOMETRY ENFORCEMENT
                 let rawFinalComment = joinWithSpaceChaos(emojifiedComment, 1, 2);
                 let finalComment = sanitizeDealCopy(rawFinalComment);
 
@@ -1365,24 +1462,20 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             let rawDt = aiData.daily_thread ? aiData.daily_thread : "";
             let dtText = typeof rawDt === 'object' ? Object.values(rawDt).join(' ') : String(rawDt);
             
-            // Universal Daily Thread Placeholder Matcher: Catches [TARGET_SLOT], target_slot, Target_slot., and [URL]
             dtText = dtText.replace(/(\[?TARGET[-_ ]?SLOT\]?|\bTARGET[-_ ]?SLOT\b)\.?/gi, '\n\n' + dtCloaked + '\n\n');
 
             let dtLines = dtText.split(/\s*\|\|\s*|\n+/).map(s => s.trim()).filter(line => line.length > 0);
 
-            // FAIL-SAFE DAILY THREAD LINK INJECTION: Guarantee link is always present even if AI forgot placeholder
             if (!dtLines.some(l => l.includes(dtCloaked))) {
                 dtLines.push(dtCloaked);
             }
 
-            // DAILY THREAD NAKED TITLE PURGE: If a line is just the naked product title by itself, drop it!
             dtLines = dtLines.filter(line => {
                 let cleanLine = line.replace(/[.!?]/g, '').trim().toLowerCase();
                 let cleanT = cleanTitle.toLowerCase().trim();
                 return cleanLine !== cleanT;
             });
 
-            // AUTOMATED PUNCTUATION ENFORCER FOR DAILY THREAD:
             dtLines = dtLines.map(line => {
                 let trimmed = line.trim();
                 if (!trimmed || trimmed.includes('http')) return trimmed;
@@ -1398,22 +1491,17 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
 
             let emojifiedDt = applyEmojiDensity(dtLines, 0, 3, finalEmojis);
             let rawFinalDt = joinWithSpaceChaos(emojifiedDt, 1, 2);
-            
-            // PASS THROUGH UNIVERSAL JAVASCRIPT FIREWALL
             let scrubbedDt = sanitizeDealCopy(rawFinalDt);
             
-            // DETERMINISTIC TITLE INJECTOR: If Daily Thread starts with a bare price without the title, inject it!
             if (!scrubbedDt.toLowerCase().includes(cleanTitle.toLowerCase().slice(0, 15))) {
                 let retailer = aiData.retailer_name || "Amazon";
                 scrubbedDt = scrubbedDt.replace(/(^\s*|\n+)(\$\d+[^\n.]*?\bdropping from\b[^\n.]*\.?)/gi, `$1The ${cleanTitle} on ${retailer} is $2`);
             }
-            // DETERMINISTIC LIMIT SHIELD FOR DAILY THREAD: If raw text has NO limit, purge hallucinated limits!
             if (!/\b(limit|max|maximum|capped|threshold)\b/i.test(rawText)) {
                 scrubbedDt = scrubbedDt.replace(/([^\n.]*?\b(capped at|limit of|maximum of|get up to|you can get|restricted to|\d+[\s-]unit limit)\b[^\n.]*\.?\s*)/gi, '');
                 scrubbedDt = scrubbedDt.replace(/\s+(with|and)\s+a\s+\d+[\s-]unit\s+limit\b/gi, '');
             }
 
-            // DETERMINISTIC S&S FIREWALL FOR DAILY THREAD: If raw text has NO mention of S&S, purge hallucinated auto-delivery!
             if (!/\b(s&s|subscribe|auto[\s-]delivery|routine delivery|recurring|recurring shipment)\b/i.test(rawText)) {
                 scrubbedDt = scrubbedDt.replace(/([^\n.]*?\b(auto[\s-]delivery|routine deliveries|routine shipments|recurring deliveries|recurring shipments|auto-delivery)\b[^\n.]*\.?\s*)/gi, '');
             }
@@ -1423,7 +1511,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.34]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.36 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1505,7 +1593,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('emergencyFallbackBtn').style.display = 'none';
 
         } catch (error) {
-            // If user clicked STOP, exit silently with zero error alerts!
             if (isGenerationCancelled || error.message === "GENERATION_CANCELLED" || error.name === "AbortError") {
                 console.log("Generation stopped by user.");
                 return;
@@ -1529,7 +1616,6 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         } finally {
             btn.innerHTML = "✨ Generate Deal";
             btn.disabled = false;
-            // Hide STOP button when generation completes or stops
             const stopBtn = document.getElementById('stopButton');
             if (stopBtn) stopBtn.style.display = 'none';
             activeGenerationController = null;
@@ -1588,167 +1674,11 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         document.body.removeChild(textArea);
     }
 
-    // INDEPENDENT PER-COMMENT CASCADING TIMER ENGINE
-    const commentTimers = { 1: null, 2: null, 3: null };
-    let currentDealBaseCooldown = 135; // Anchored base per generation (125-180s window)
-
-    function resetAllCommentTimers() {
-        for (let i = 1; i <= 3; i++) {
-            if (commentTimers[i]) clearInterval(commentTimers[i]);
-            commentTimers[i] = null;
-            const pill = document.getElementById(`timer-pill-${i}`);
-            if (pill) {
-                pill.style.display = 'none';
-                pill.innerText = '';
-            }
-        }
-    }
-
-    function startCommentTimer(commentNum) {
-        const pill = document.getElementById(`timer-pill-${commentNum}`);
-        if (!pill) return;
-
-        if (commentTimers[commentNum]) clearInterval(commentTimers[commentNum]);
-
-        // CASCADING STOCHASTIC JITTER:
-        // Post 1 = Base Anchor (e.g. 100s)
-        // Post 2 = Base Anchor + (0 to 15s)
-        // Post 3 = Base Anchor + (0 to 15s)
-        let remaining = currentDealBaseCooldown;
-        if (commentNum === 2) {
-            remaining += Math.floor(Math.random() * 16); // +0 to 15s
-        } else if (commentNum === 3) {
-            remaining += Math.floor(Math.random() * 16); // +0 to 15s
-        }
-
-        pill.style.display = 'inline-block';
-        pill.style.background = '#fce8e6';
-        pill.style.border = '1px solid #ea4335';
-        pill.style.color = '#c5221f';
-
-        const updatePill = () => {
-            let m = Math.floor(remaining / 60);
-            let s = remaining % 60;
-            let timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-
-            if (remaining > 0) {
-                pill.style.background = '#fce8e6';
-                pill.style.border = '1px solid #ea4335';
-                pill.style.color = '#c5221f';
-                pill.innerText = `🔴 ${timeStr} left`;
-            } else {
-                // Countdown hits 00:00 -> Turns green!
-                clearInterval(commentTimers[commentNum]);
-                pill.style.background = '#e6f4ea';
-                pill.style.border = '1px solid #00a400';
-                pill.style.color = '#007a00';
-                pill.innerText = `🟢 Safe to drop!`;
-            }
-        };
-        updatePill();
-
-        commentTimers[commentNum] = setInterval(() => {
-            remaining--;
-            updatePill();
-        }, 1000);
-    }
-
-    // TOTAL STRUCTURAL CHAOS SHUFFLE ENGINE (0 API CALLS / ZERO TOKENS)
-    // Mutates post geometry: splits combined specs, merges separate lines, flips line counts (2, 3, or 4 lines), and randomizes price position!
-    function shufflePostLines(varNum) {
-        const el = document.getElementById(`out-post${varNum}`);
-        if (!el) return;
-        let currentText = el.getAttribute('data-raw') || el.innerText;
-        if (!currentText || !currentText.trim()) return;
-
-        // 1. EXTRACT ALL ATOMIC SENTENCES & INTELLIGENTLY SPLIT COMBINED SPECS
-        let rawParagraphs = currentText.split(/\n+/).map(s => s.trim()).filter(s => s.length > 0);
-        let sentences = [];
-
-        for (let para of rawParagraphs) {
-            // DETECT COMBINED COLOR + SIZE: If a sentence combines colors and sizes, split it into 2 separate sentences!
-            let combinedMatch = para.match(/^(.*?available|.*?choices?|.*?colors?|.*?options?)\s+(?:spanning|across|in sizes?|from)\s+(US\s+shoe\s+size|sizes?\s+.*|[0-9A-Za-z\-\s]+)$/i);
-            if (combinedMatch && combinedMatch[1] && combinedMatch[2]) {
-                let partColor = combinedMatch[1].trim();
-                if (!/[.!?]$/.test(partColor)) partColor += '.';
-                let partSize = 'Sizing spans ' + combinedMatch[2].trim();
-                if (!/[.!?]$/.test(partSize)) partSize += '.';
-                sentences.push(partColor);
-                sentences.push(partSize);
-            } else {
-                // Split multi-sentence paragraphs cleanly
-                let sArr = para.split(/(?<=[.!?])\s+(?=[A-Z0-9\u{1F300}-\u{1F9FF}])/gu).map(s => s.trim()).filter(s => s.length > 0);
-                sentences.push(...sArr);
-            }
-        }
-
-        if (sentences.length <= 1) return;
-
-        // 2. 50% CHANCE TO MERGE SEPARATE SPECS (Combine what was separated!)
-        let colorIdx = sentences.findIndex(s => /\b(colors?|shades?)\b/i.test(s) && !/\b(sizes?|shoe)\b/i.test(s));
-        let sizeIdx = sentences.findIndex(s => /\b(sizes?|shoe|XS|XXL|XL|3XL|S -)\b/i.test(s) && !/\b(colors?)\b/i.test(s));
-
-        if (colorIdx !== -1 && sizeIdx !== -1 && Math.random() > 0.5) {
-            let cleanColor = sentences[colorIdx].replace(/[.!?]/g, '').trim();
-            let cleanSize = sentences[sizeIdx].replace(/^(sizing\s+(spans|runs|fits)|sizes?\s+(span|run|fit))\s+/i, '').replace(/[.!?]/g, '').trim();
-            let merged = `${cleanColor} spanning ${cleanSize}.`;
-            let highIdx = Math.max(colorIdx, sizeIdx);
-            let lowIdx = Math.min(colorIdx, sizeIdx);
-            sentences.splice(highIdx, 1);
-            sentences.splice(lowIdx, 1, merged);
-        }
-
-        // 3. ISOLATE PRICE SENTENCE & RANDOMIZE ITS POSITION
-        let priceIdx = sentences.findIndex(s => /\$\d+(\.\d{2})?\s+(Shipped|Total|Pickup)/i.test(s));
-        let priceSentence = priceIdx !== -1 ? sentences.splice(priceIdx, 1)[0] : null;
-
-        // Shuffle all non-price thoughts
-        sentences.sort(() => 0.5 - Math.random());
-
-        // Re-inject price sentence at random: 0 (Line 1 Price-First), 1 (Line 2 Classic), or end!
-        if (priceSentence) {
-            let targetPos = Math.floor(Math.random() * (sentences.length + 1));
-            sentences.splice(targetPos, 0, priceSentence);
-        }
-
-        // 4. RANDOMIZE MACRO GEOMETRY (Single Paragraph vs 2-Line Punchy vs 3-Line vs 4-Line Airy)
-        let geometryRoll = Math.floor(Math.random() * 4); // 0, 1, 2, or 3
-        let newText = "";
-
-        if (geometryRoll === 0) {
-            // MODE 1: THE SINGLE FLUID PARAGRAPH (Zero Line Breaks / Flowing Block)
-            newText = sentences.join(' ');
-        } else if (geometryRoll === 1 && sentences.length >= 3) {
-            // MODE 2: THE ULTRA-PUNCHY 2-LINER (2 tight lines)
-            let p1 = sentences.slice(0, 2).join(' ');
-            let p2 = sentences.slice(2).join(' ');
-            newText = p1 + '\n\n' + p2;
-        } else if (geometryRoll === 2 && sentences.length >= 3) {
-            // MODE 3: THE BALANCED 3-LINER
-            let p1 = sentences[0];
-            let p2 = sentences.slice(1, sentences.length - 1).join(' ');
-            let p3 = sentences[sentences.length - 1];
-            newText = p1 + '\n\n' + p2 + '\n\n' + p3;
-        } else {
-            // MODE 4: FULL AIRY 4-LINER (Every sentence on its own separate line, splitting specs!)
-            newText = joinWithSpaceChaos(sentences, 1, 2);
-        }
-
-        newText = sanitizeDealCopy(newText);
-
-        el.innerText = newText;
-        el.setAttribute('data-raw', newText);
-    }
-
     function copyToClipboard(elementId, btnElement) {
         const el = document.getElementById(elementId);
         const textToCopy = el.getAttribute('data-raw') || el.innerText;
         if (!textToCopy) { alert("Nothing to copy yet!"); return; }
 
-        // Start specific timer matching the copied post:
-        // Copy Post 1 -> Starts Timer on Comment 1!
-        // Copy Post 2 -> Starts Timer on Comment 2!
-        // Copy Post 3 -> Starts Timer on Comment 3!
         if (elementId === 'out-post1') startCommentTimer(1);
         if (elementId === 'out-post2') startCommentTimer(2);
         if (elementId === 'out-post3') startCommentTimer(3);
@@ -1841,7 +1771,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
         const emergencyPrompt = `SYSTEM ROLE: You are an advanced polymorphic deal-formatting engine for The Coupon Boutique®. You will receive raw deal text containing a product, pricing, retailer, specifications, and a link. You will output EXACTLY 3 Post Variations, 3 Comments, and 1 Daily Thread Comment. Do NOT output any conversational filler, introductory remarks, or concluding notes. Output pure deal text only following the exact required format.
 
 RULES:
-1. GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Group comments and the Daily Thread must output clean, plain canonical URLs without any '#ad' or commercial hashtags to clear Meta's Content Credibility filters. Post variations must have ZERO links and ZERO hashtags! Before outputting, scan every single word you wrote: replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' or 'offer' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. Everything MUST be positive, cheerful, and deal-elevating! You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Drop your thoughts, Share your thoughts, Drop a comment, Tell us below, Tell me below, Who needs this, Who else needs this, Anyone need this, Sound off, Sound off below, Drop your take, Leave a comment, Save for later, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!
+1. GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Group comments and the Daily Thread must output clean, plain canonical URLs without any '#ad' or commercial hashtags to clear Meta's Content Credibility filters. Post variations must have ZERO links and ZERO hashtags! Before outputting, scan every single word you wrote: replace 'purchase' with 'get', 'purchased' with 'got', 'purchasing' with 'getting', 'order' with 'get', 'ordered' with 'got', 'ordering' with 'getting', 'deal' or 'offer' with 'find', 'free' with 'complimentary', and 'grab' with 'get'. Everything MUST be positive, cheerful, and deal-elevating! You are STRICTLY FORBIDDEN from using any of these banned words or their variations: Buy, Order, Ordered, Ordering, Purchase, Purchased, Purchasing, Shop, Shopping, Checkout, Cart, Basket, Price, Prices, Pricing, Priced, Cost, Costs, Costing, Budget, Spend, Spending, Payment, Payments, Fee, Fees, Charge, Charges, USD, Cents, Sale, Sales, Deal, Deals, Save, Saving, Savings, Discount, Discounts, Markdown, Markdowns, marked down, Clearance, Offer, Offers, Promo, Promos, Promotion, Promotions, %, Percentage off, Coupon, Coupons, Voucher, Vouchers, Claim, Redeem, Code, Codes, Free, F.R.E.E, Hurry, Hurry up, Act fast, Act now, Today only, Ending soon, Ends soon, Limited time, Limited drop, Limited offer, Flash sale, Doors close, Last chance, Sold out, Selling out, Going fast, Moving fast, Miss out, Missing out, Rare, Exclusive, Restock, Restocked, Restocking, In-stock, Out of stock, Gone, While supplies last, Run, Run alert, Grab it now, Don't wait, Like, Share, Tag, Tag a friend, Tag someone, Comment, Comment YES, Say YES, Type YES, React, Vote, Drop an emoji, Thoughts?, Agree?, Like if you agree, Share to win, Let me know below, Tell me below, Who needs this, Who else needs this, Anyone need this, Sound off, Sound off below, Drop your take, Leave a comment, Comment below, Save for later, Bump, Following, Link, URL, Website, Pathway, Access, Click, Click here, Tap, Tap here, Check the bio, Bio, Redirect, Inbox me, DM me, Send a message, Check your notifications, Locate it via, Find it via, Check it out via, Available via, See it via, Access it via, Alert, Restock alert, Price drop, Price drops, Price cut, Price slash, Lowest price, Bargain, Steal, Doorbuster, Doorbusters, Blowout, Must see, BOGO, Liquidation, Overstock, Closeout, Closeouts, Unbeatable, Cheapest, Fraction of the cost, Pennies on the dollar, Black Friday, Cyber Monday, Link in comments, In the comments, First comment, 1st comment, Link in reply, Drop the link, Check the thread, Check comments, Check below, Pinned comment, Direct link, Grab yours, Where to get, Giveaway, Prize, Cash, Money, Affiliate, Commission, Sponsored, Glitch, System glitch, Price glitch, Pricing error, Price mistake, Loophole, You won't believe, Shocking, Mind-blowing, Secret, Hack, algorithm hack, growth hack, viral, Passive income, Be your own boss, Miracle, Cure, Guaranteed, Proven, 100% effective, elevate, transform, seamless, oasis, upgrade, must-have, ESSENTIAL, essentials, seriously, breeze, vessel, vessels, game changer, perfect addition. ZERO BANNED WORDS MUST REACH THE OUTPUT!
 
 2. DATA INTEGRITY & ZERO-GUESS PRICING:
    - SALE PRICE: You MUST include the exact sale price with a '$' sign and fulfillment status (e.g., '$12.00 Shipped' or '$7.57 Total'). If raw text shows a price range for the sale price (e.g. '$45.59 - $47.99 Shipped'), you MUST keep the full range! NEVER collapse it to a single number! ALWAYS keep the '$' sign on the sale price.
@@ -1849,8 +1779,8 @@ RULES:
    - REGULAR PRICE FORMATTING: If explicitly present in raw text, strip the '$' signs and replace decimals with spaces (e.g., '23 99' or '75 99 - 79 99'). Never write 'regular' before the number!
    - PRICE PAIRING: When a regular price is present, you MUST weave the sale price and regular price side-by-side in the EXACT SAME SENTENCE. Keep the price statement as its own distinct sentence ending with a period. Do NOT glue the opening hook and price together using 'with' or 'and'.
    - DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): Rotate the sentence structure of the price across variations so they do not open identically:
-     • Variation 1: Open with the product title or retailer, pairing the price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].' or '[Retailer] has the [Title] for [sale_price], down from [reg_price].').
-     • Variation 2: Open with retailer context or a situational routine in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].' or 'Just spotted the [Title] on [Retailer] for [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
+     • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
+     • Variation 2: Open with retailer context in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
      • Variation 3: Sentence 1 MUST be a calm personal reflection with ZERO pricing and ZERO slang. Sentence 2 introduces the item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
    - Full product title verbatim. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!
@@ -1861,65 +1791,63 @@ RULES:
 
 3. POST VARIATIONS (1, 2, 3) & CURATOR PERSPECTIVE:
    - PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, PROSPECTIVE UTILITY, and IMAGINING USE (e.g., 'This would be so nice for...', 'Such a fun find for...', 'Imagine having a warm bowl ready...', 'Could definitely see this making mornings easier...').
-   - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', 'My pantry feels so tidy with these', or 'I always keep a backup pack in my cabinet'.
-   - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title! If the title already says 'Moisture Hydrating Shampoo 28 oz 3 Count', the feature line must NOT repeat '28 oz' or '3 Count'! Extract only genuinely new specs from the bullet points.
-   - MANDATORY SPECS & FEATURES INJECTION (ABSOLUTE): If the raw text contains extra physical specs, features, or accessories (e.g. 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence describing these features into EVERY single post variation with varied phrasing!
-   - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'Works on White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'. MULTI-COLOR, SIZING & UNIVERSAL OPTIONS: If text says 'Several colors', state naturally: 'Available in several colors.'. If raw text contains BOTH colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.'). UNIVERSAL OPTIONS: If text says 'works on all colors' or 'works on all sizes', NEVER phrase it as an exclusive restriction! State it universally: 'Works across all colors.', 'Valid on all color options.', or 'All sizes are included in this drop.'.
+   - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'.
+   - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title!
+   - MANDATORY SPECS, SERVING SIZES & CAPACITY (ABSOLUTE): If raw text contains extra specs, serving yields, headcounts, or capacities (e.g. 'Serves 10-14', 'feeds 8-10', 'makes 12 cups', 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence stating these exact specs into EVERY single post variation (e.g. 'Generously serves 10 to 14 guests.', 'Sized to feed 10-14 people.'). Never drop the numbers!
+   - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'.
+   - MULTI-COLOR, SCENTS & FLAVORS: If text says 'Several colors' or 'Several scents', state naturally: 'Available in several colors.' or 'Available in several scents.'. NEVER write 'Works on the several scents style'!
+   - APPAREL SIZING & COLOR ENTROPY: If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.').
    - REAL-WORLD CATEGORY COMMON SENSE:
-     • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo or body wash looks cute on a vanity or is for road trips!
+     • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
      • COSMETICS, LASHES, NAILS & MAKEUP: Talk strictly about achieving a salon look at home without salon appointment prices, full fluttery lashes, flawless daily wear, or quick morning prep. NEVER say false lashes or makeup are for relaxing baths, sleeping, or quiet meditation!
-     • FOOD & PANTRY: Talk strictly about real dinner prep, quick school lunches, or avoiding an extra trip to the grocery store.
-     • APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling. NEVER say clothes look cute on a desk or vanity!
+     • FOOD & PANTRY: Talk strictly about real dinner prep, quick school lunches, feeding a crowd, or avoiding an extra trip to the grocery store.
+     • APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling.
      • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
-     • HOME & HARDWARE: Talk about meal prep, kitchen counters, or clean organization.
+     • HOME & HARDWARE: Talk about meal prep, kitchen counters, avoiding clutter, or clean organization.
    - ANTI-GERUND & NATURAL CADENCE: Ban the formula '[Doing X] makes [routine] so much [adjective]'! Speak like a real person talking about daily life wins (avoiding cold floors, saving salon money, busy mornings) instead of soft spa words.
    - INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are strictly forbidden from repeating the same closing sentence structure across Variation 1, 2, or 3! Every variation must have a 100% unique lifestyle thought.
    - ROUTINE DELIVERY (S&S) MANDATE (CONDITIONAL ONLY): If and ONLY IF the raw text explicitly mentions Subscribe & Save or S&S, highlight recurring savings naturally. AUTO-DELIVERY PHRASING ENTROPY: NEVER use the word 'rates' and NEVER repeat the same auto-delivery sentence across variations! Rotate naturally: 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', or 'Adjusts down even further with recurring shipments.'. NEVER use 'Subscribe & Save' or 'S&S'! ABSOLUTE NEGATIVE PROHIBITION: If raw text does not mention S&S, you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, or recurring shipments!
-   - LEAN DEAL BREVITY (ABSOLUTE): Never write long essays or stories! Every variation MUST be short, punchy, and direct (2 to 4 lines max). Structure: Quick practical context ➔ Price and Title sentence ➔ Essential specs (if present) ➔ Fast 1-line prospective sign-off. Zero fluff!
-   - ANTI-ZEN & REAL UTILITY: Do NOT use abstract corporate yoga phrases like 'brings a quiet sense of peace/calm/satisfaction'! Speak about real, tangible daily wins.
+   - LEAN DEAL BREVITY (ABSOLUTE): Every variation MUST be short, punchy, and direct (2 to 4 lines max).
    - ZERO LINKS: You are STRICTLY FORBIDDEN from putting any link or website name in post variations!
-   - BUNDLE/PIECE COUNT FIREWALL: Do NOT confuse a multi-pack, set, or piece count in the title (e.g., '16 Pcs', '2 Pack', '12 Pack') with a cart quantity! A '12 Pack' is ONE single box. Never tell the user to 'add 12 to your delivery'.
+   - BUNDLE/PIECE COUNT FIREWALL: Do NOT confuse a multi-pack, set, or piece count in the title (e.g., '16 Pcs', '2 Pack', '12 Pack') with a cart quantity!
    - QUANTITY RULE: ONLY if a specific cart quantity is explicitly required in raw text (e.g. 'ADD 3'), say 'add [X] to your delivery'. LIMIT CONFUSION FIREWALL: A purchase limit (e.g., 'Limit 5') is a RESTRICTION, not a cart requirement! Rephrase limits naturally: 'Capped at 5 per household.', 'There is a 5-unit limit allowed.', 'You can get up to 5 per customer.', or 'Restricted to 5 per customer.'. NEVER use the word 'rate' and NEVER make the limit the final sentence!
-   - NATURAL CONVERSATIONAL TONE (ZERO FORCED SLANG): Write in a warm, relaxed, friendly human voice. ZERO SLANG QUOTAS: You are strictly forbidden from forcing slang words into sentences! If a post reads naturally without slang, KEEP IT CLEAN! You may occasionally use a mild conversational word (like 'honestly', 'hands down', 'super', or 'ngl') in a lifestyle thought ONLY if it flows 100% effortlessly. NEVER put slang into price statements (NEVER write 'Amazon highkey is available') and NEVER attach slang to factual specs (NEVER write 'sizes S to XXL, imo')! Variation 3 MUST be 100% clean with ZERO slang (The Breather).
-   - EMOJI DENSITY: Include 1 to 3 contextual emojis per post. Distribute them across separate lines (maximum 1 emoji per line). NEVER stack emojis into clusters like '🌈 🔥 ❄'!
+   - NATURAL CONVERSATIONAL TONE (ZERO FORCED SLANG): Write in a warm, relaxed, friendly human voice. ZERO SLANG QUOTAS: You are strictly forbidden from forcing slang words into sentences! If a post reads naturally without slang, KEEP IT CLEAN! You may occasionally use a mild conversational word (like 'honestly', 'hands down', 'super', or 'ngl') in a lifestyle thought ONLY if it flows 100% effortlessly. NEVER put slang into price statements and NEVER attach slang to factual specs! Variation 3 MUST be 100% clean with ZERO slang (The Breather).
+   - EMOJI DENSITY: Include 1 to 3 contextual emojis per post. Distribute them across separate lines. NEVER stack emojis into clusters!
 
 4. COMMENTS (1, 2, 3) & ACTIVE SIGNALS ARCHITECTURE:
    - ZERO POINTER PHRASES (ABSOLUTE): You are strictly forbidden from writing pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', 'Check it out via', 'Grab it via', or 'Access it via')!
    - LINK ISOLATION & DOUBLE-NEWLINE BUFFER (ABSOLUTE): Every link MUST stand completely alone on its own line with blank lines above and below. NEVER put a period after the URL and NEVER write the words 'ON ITS OWN LINE'!
    - LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human copy under 15 words. NEVER put a URL on Line 1!
-   - PLAIN ENGLISH PRODUCT NOUNS: Do NOT copy-paste the full 60-character title or retailer name in comments. Use simple, natural everyday nouns like 'shampoo', 'soup', 'tumblers', or 'tools'! NEVER invent clinical robot jargon like 'duplicate personal care items' or 'vessels'!
+   - PLAIN ENGLISH PRODUCT NOUNS: Do NOT copy-paste the full 60-character title or retailer name in comments. Use simple, natural everyday nouns like 'shampoo', 'soup', 'tumblers', or 'tools'!
    - MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each include an open-ended, positive question directly related to using the item in daily life to elicit 5+ word responses from group members. Never ask Yes/No questions!
-   - QUESTION FIREWALL: If the deal only works on one specific color or size, do NOT ask about colors or sizes! Ask about routines, recipes, or room setups.
    - ENGAGEMENT BAIT & POINTER BAN (ABSOLUTE): Never use 'let me know', 'tell me below', 'thoughts?', 'comment below', 'sound off', 'drop your thoughts', or 'who needs this'! Never use directional pointers like 'link in comments', 'check the thread', or 'pinned comment'!
    - THREE-ROLE STRUCTURE:
-     • Comment 1: Short shopping heads-up note under 12 words || Buffered Link (NO question).
-     • Comment 2: Positive prospective observation under 12 words || Buffered Link || Open-ended preference or routine question.
-     • Comment 3: Short lifestyle reaction under 12 words || Open-ended habit question || Buffered Link at the absolute end.
+     • Comment 1: Short shopping heads-up note under 12 words || [TARGET_SLOT] (NO question).
+     • Comment 2: Positive prospective observation under 12 words || [TARGET_SLOT] || Open-ended preference or routine question.
+     • Comment 3: Short lifestyle reaction under 12 words || Open-ended habit question || [TARGET_SLOT].
 
 5. DAILY THREAD COMMENT:
    - DAILY THREAD HOOK LAW (ABSOLUTE): Line 1 MUST ALWAYS be a warm, engaging conversational lifestyle observation or gerund! NEVER open the Daily Thread with a cold price or title sentence!
-   - DAILY THREAD ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copying OR PARAPHRASING the opening or closing sentences from Variation 1, 2, or 3! The Daily Thread MUST be 100% unique and open with a completely brand new thought or gerund!
+   - DAILY THREAD ANTI-PARROT LOCK: You are STRICTLY FORBIDDEN from copying OR PARAPHRASING the opening or closing sentences from Variation 1, 2, or 3!
    - PRONOUN OPENING BAN: NEVER start the thread with 'I [verb]' or 'We [verb]'. Open with a natural conversational observation.
-   - Weave the sale price (with '$' and fulfillment), regular price (no '$' or decimal, if present), full title, retailer, and verified specs.
+   - Weave the sale price (with '$' and fulfillment), regular price (no '$' or decimal, if present), full title, retailer, and verified specs (including serving sizes).
    - The link MUST sit completely buffered on its own line with double line breaks above and below. Zero '#ad', zero CTA pointers.
    - Conclude with a completely brand new prospective lifestyle thought.
 
 REQUIRED OUTPUT FORMAT (KEEP BLANK LINES BETWEEN THOUGHTS):
 === POST VARIATION 1 ===
-[Opening discovery hook with single slang token]
+[Opening discovery hook or pricing sentence]
 
-[Price and title sentence]
-
-[Specifications or auto-delivery details, if present]
+[Price and title sentence / Specifications]
 
 [Prospective utility sign-off]
 
 === POST VARIATION 2 ===
-[Opening scenario or routine hook with single slang token]
+[Opening scenario or retailer context]
 
 [Price and title sentence]
 
-[Specifications, auto-delivery, or purchase limit, if present]
+[Specifications, serving counts, or purchase limit, if present]
 
 [Prospective utility sign-off]
 
