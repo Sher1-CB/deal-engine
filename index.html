@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.36</title>
+    <title>The CB Command Center v10.3.37</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.36 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.37 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -850,6 +850,10 @@
             .replace(/\bvessel\b/gi, 'travel mug')
             // Contextual Semantic Shield: Prevent grocery idioms on skincare/beauty items
             .replace(/\b(my skin|face|complexion)[^.\n]*?\b(set for months|stocked up for months)\b/gi, '$1 feels so radiant and refreshed')
+            // Upbeat Tone Filter: Soften negative complaint phrasing into positive wins
+            .replace(/\b(can completely ruin a good night of sleep|ruins sleep)\b/gi, 'is an easy way to add cloud-soft comfort')
+            .replace(/\b(waking up with a sore back is never fun|prevent those morning aches)\b/gi, 'gives your bed that luxury hotel feel')
+            .replace(/\bfeel entirely chaotic\b/gi, 'feel so much more organized')
             // Rogue Emoji Scrubber: Remove bizarre bone/pet emojis from bath and personal care copy
             .replace(/🦴/g, '✨')
             // Clean up double fulfillment tags
@@ -1190,7 +1194,7 @@ CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective exciteme
 • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
 • HOME & HARDWARE: Talk about meal prep, kitchen counters, avoiding clutter, or clean organization.
 FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility!
-ANTI-GERUND & NATURAL HUMAN CADENCE LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund! Ban the repetitive formula: '[Doing X] makes [routine] feel so much [adjective]'! Speak with concrete, punchy human realism (e.g., 'Cold hardwood floors are the worst this time of year, so you can never have too many fuzzy pairs around', 'Love that this includes the bond and seal so you don't have to buy anything extra', 'Planning a turkey dinner for a crowd usually means a chaotic grocery trip, but having one delivered makes holiday prep so much easier')! Vary sentence lengths. Stop bathing every post in soft spa adjectives like 'peaceful', 'delightful', or 'soothing'—talk about real life wins!
+UPBEAT PRACTICAL WINS & ANTI-NEGATIVITY LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund! Ban the formula: '[Doing X] makes [routine] feel so much [adjective]'! 100% CHEERFUL & POSITIVE ENTHUSIASM (ABSOLUTE): Speak with sunny, upbeat warmth focusing on the smart upgrade, cozy comfort, daily time-saver, and the joy of a great find! You are STRICTLY FORBIDDEN from focusing on negative complaints, ruined sleep, physical aches, messy chaos, or daily annoyances (NEVER write 'lumpy mattress ruins sleep', 'waking up with a sore back is never fun', 'chaotic messy cabinets', or 'annoying bunching sweaters')! Keep concrete lifestyle realism, but package it in joyful, positive convenience (e.g., 'Adding a plush layer like this gives your bed that cloud-soft, luxury hotel feel!', 'Sleek bodysuits are an absolute staple for a smooth, tucked-in look with high-waisted denim', 'Love having nesting bowls with matching lids ready for effortless weeknight cooking')! Vary sentence lengths naturally.
 INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the same closing sentence structure or scenario across Variation 1, 2, or 3! Every single post variation MUST explore a completely unique prospective thought. Zero copy-paste variations!
 PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE, RETAILER & PRICE BAN: You are STRICTLY FORBIDDEN from using full product title, retailer name, or dollar amounts in comments! Use simple everyday product nouns like 'deodorant', 'soup', 'tumblers', or 'tools'. ZERO POINTER PHRASES (ABSOLUTE): Never write pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', or 'Check it out via')! The link [TARGET_SLOT] MUST stand completely alone on its own line without any leading prepositions! NEVER put a period after [TARGET_SLOT]! LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! Keep human statements lean and under 15 words. Follow assigned roles:
@@ -1347,7 +1351,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.36 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.37 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1511,7 +1515,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.36 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.37 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1804,7 +1808,7 @@ RULES:
      • APPAREL & SHOES: Talk strictly about comfortable outfits, staying warm, or daily styling.
      • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
      • HOME & HARDWARE: Talk about meal prep, kitchen counters, avoiding clutter, or clean organization.
-   - ANTI-GERUND & NATURAL CADENCE: Ban the formula '[Doing X] makes [routine] so much [adjective]'! Speak like a real person talking about daily life wins (avoiding cold floors, saving salon money, busy mornings) instead of soft spa words.
+   - UPBEAT PRACTICAL WINS & ANTI-NEGATIVITY: Ban the formula '[Doing X] makes [routine] so much [adjective]'! Speak with 100% cheerful, positive enthusiasm focusing on smart upgrades, cozy comfort, and daily time-savers! Never complain about ruined sleep, sore backs, aches, or messy chaos. Keep concrete details (high-waisted denim, luxury hotel bed comfort, nesting bowls) wrapped in joyful excitement!
    - INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are strictly forbidden from repeating the same closing sentence structure across Variation 1, 2, or 3! Every variation must have a 100% unique lifestyle thought.
    - ROUTINE DELIVERY (S&S) MANDATE (CONDITIONAL ONLY): If and ONLY IF the raw text explicitly mentions Subscribe & Save or S&S, highlight recurring savings naturally. AUTO-DELIVERY PHRASING ENTROPY: NEVER use the word 'rates' and NEVER repeat the same auto-delivery sentence across variations! Rotate naturally: 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', or 'Adjusts down even further with recurring shipments.'. NEVER use 'Subscribe & Save' or 'S&S'! ABSOLUTE NEGATIVE PROHIBITION: If raw text does not mention S&S, you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, or recurring shipments!
    - LEAN DEAL BREVITY (ABSOLUTE): Every variation MUST be short, punchy, and direct (2 to 4 lines max).
