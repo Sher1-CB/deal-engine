@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.37</title>
+    <title>The CB Command Center v10.3.38</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.37 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.38 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1175,8 +1175,12 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
 • Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
-• Variation 3: Sentence 1 MUST be a relaxed lifestyle or sensory reflection (zero price, zero slang). Sentence 2 introduces item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
+• Variation 3 (The Relaxed Breather - Zero Slang): Sentence structure MUST vary dynamically across deals so it never opens identically! Rotate how you introduce the item and price:
+  - Option A (Hook First): Relaxed lifestyle reflection first, then price: 'Currently down to [sale_price] on [Retailer], was [reg_price].' (or 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' - do NOT use 'Right now' on back-to-back deals!).
+  - Option B (Price First): Open cleanly with price and title: '[Retailer] has the [Title] down to [sale_price], was [reg_price].' followed by a calm lifestyle reflection.
+  - Option C (Conversational Intro): 'Just spotted the [Title] on [Retailer] for [sale_price], dropping from [reg_price].'
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
+ACTION & VERB ENTROPY LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the exact same physical action verb or phrase across variations of the same deal (e.g. NEVER repeat 'stepping onto', 'stepping out of', 'wiping down', or 'chopping' across multiple posts)! Every single variation MUST highlight a completely different physical action, room benefit, or daily moment.
 ${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & RESTRICTION MANDATE:
@@ -1351,7 +1355,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.37 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.38 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1515,7 +1519,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.37 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.38 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1785,7 +1789,8 @@ RULES:
    - DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): Rotate the sentence structure of the price across variations so they do not open identically:
      • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
      • Variation 2: Open with retailer context in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
-     • Variation 3: Sentence 1 MUST be a calm personal reflection with ZERO pricing and ZERO slang. Sentence 2 introduces the item: 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' (MANDATORY: Never start Sentence 1 with 'Right now'!).
+     • Variation 3: A calm personal reflection with ZERO slang (The Breather). Rotate sentence order and price phrasing naturally across deals: 'Currently down to [sale_price] on [Retailer], was [reg_price].', '[Retailer] has the [Title] for [sale_price], was [reg_price].', or 'Just spotted the [Title] on [Retailer] down to [sale_price], was [reg_price].' (Do NOT start with 'Right now' on every deal!).
+   - ACTION & VERB ENTROPY: NEVER repeat the exact same physical action phrase (e.g. 'stepping onto', 'wiping down') across variations of the same product! Highlight different daily moments.
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
    - Full product title verbatim. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!
    - Retailer explicitly stated in EVERY post (e.g. 'on Amazon', 'at Walmart', 'at Walgreens', 'at Woot').
