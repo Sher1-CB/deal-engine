@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.38</title>
+    <title>The CB Command Center v10.3.40</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.38 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.40 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -817,8 +817,9 @@
             .replace(/Delivery is complimentary for Prime members(\s+on\s+[A-Za-z]+)?\.?\s*/gi, '')
             .replace(/\b(a\s+)?(total\s+)?game changer\b/gi, 'a wonderful addition')
             // 9. Format regular price ranges, scrub redundant title appendages, and purge dangling comparative words
-            .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)[.\s](\d{2})\s*[-–—]\s*\$?(\d+)[.\s](\d{2})\b/gi, '$1 $2 $3 - $4 $5')
-            .replace(/\b(from|down from|previously|was|dropping from)\s+\$?(\d+)[.\s](\d{2})\b/gi, '$1 $2 $3')
+            .replace(/\b(from|down from|previously|was|dropping from)(\s+listed\s+at|\s+priced\s+at|\s+originally\s+at)?\s+\$?(\d+)[.\s](\d{2})\s*[-–—]\s*\$?(\d+)[.\s](\d{2})\b/gi, '$1 $3 $4 - $5 $6')
+            .replace(/\b(from|down from|previously|was|dropping from)(\s+listed\s+at|\s+priced\s+at|\s+originally\s+at)?\s+\$?(\d+)[.\s](\d{2})\b/gi, '$1 $3 $4')
+            .replace(/\bpreviously\s+listed\s+at\b/gi, 'previously')
             .replace(/(\b(?:from|down from|previously|was|dropping from)\s+\d+\s+\d{2}\s*[-–—]\s*)\$(\d+)/gi, '$1$2')
             .replace(/(\b(?:from|down from|previously|was|dropping from)\s+\d+\s+\d{2}\s*[-–—]\s*\d+)\.(\d{2})/gi, '$1 $2')
             .replace(/,\s*(previously|was|down from|dropping from)\s*\./gi, '.')
@@ -1176,15 +1177,15 @@ DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
 • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
 • Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
 • Variation 3 (The Relaxed Breather - Zero Slang): Sentence structure MUST vary dynamically across deals so it never opens identically! Rotate how you introduce the item and price:
-  - Option A (Hook First): Relaxed lifestyle reflection first, then price: 'Currently down to [sale_price] on [Retailer], was [reg_price].' (or 'Right now, the [Title] on [Retailer] is [sale_price], was [reg_price].' - do NOT use 'Right now' on back-to-back deals!).
+  - Option A (Hook First): Relaxed lifestyle reflection first, then price: 'The [Title] on [Retailer] is currently down to [sale_price], was [reg_price].' (or 'Currently, the [Title] on [Retailer] is down to [sale_price], was [reg_price].').
   - Option B (Price First): Open cleanly with price and title: '[Retailer] has the [Title] down to [sale_price], was [reg_price].' followed by a calm lifestyle reflection.
   - Option C (Conversational Intro): 'Just spotted the [Title] on [Retailer] for [sale_price], dropping from [reg_price].'
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
-ACTION & VERB ENTROPY LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the exact same physical action verb or phrase across variations of the same deal (e.g. NEVER repeat 'stepping onto', 'stepping out of', 'wiping down', or 'chopping' across multiple posts)! Every single variation MUST highlight a completely different physical action, room benefit, or daily moment.
+MANDATORY TITLE INCLUSION (ABSOLUTE): Every single post variation MUST clearly include the full cleaned_title in the price sentence! You are STRICTLY FORBIDDEN from outputting a bare price sentence without the product name!
 ${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & RESTRICTION MANDATE:
-• SINGLE RESTRICTION / THEME / MODEL: If raw text restricts to a specific color, size, model, style, or theme (e.g. 'White - Art Book Store', 'Pink', 'Large', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Rotate naturally: 'This applies specifically to the [variant] design.', 'Featured on the [variant] option.', or 'Works strictly on the [variant] style.'. Never dump raw bullet fragments like 'Works on medium.'!
+• SINGLE RESTRICTION / THEME / FIT: If raw text restricts to a specific color, size, fit, model, style, or theme (e.g. 'select Adult or Oversize', 'White - Art Book Store', 'Pink', 'Large', 'medium'), you are STRICTLY FORBIDDEN from omitting it! FIT & SIZING RULE: Words like 'Adult', 'Oversize', 'Kids', or 'Plus Size' are SIZES and FITS (NEVER call them 'designs' or 'styles')! If raw text says 'select', you MUST keep 'select' (e.g. 'Valid on select Adult or Oversize sizes.', 'Applies to select Adult and Oversize options.'). For single colors/themes, rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'.
 • MULTI-OPTION AVAILABILITY (COLORS, SCENTS, FLAVORS, PRINTS): If raw text states multiple choices are available (e.g. 'several scents', 'several colors', 'multiple flavors', 'several prints'), you are STRICTLY FORBIDDEN from treating it as a single restricted name (NEVER write 'Featured on the several scents option')! State it naturally: 'Available in several scents.', 'Multiple scent options are available.', or 'You can pick from several fragrances.'.
 • UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', state it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
 • APPAREL SIZING & COLOR ENTROPY (COMBINED OR SEPARATED): If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely choose whether to combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.').
@@ -1308,11 +1309,18 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 }
             }
 
-            // DETERMINISTIC REGULAR PRICE FIREWALL
+            // DETERMINISTIC REGULAR PRICE FIREWALL:
             const hasRegKeyword = /\b(regular|was|orig|original|list|retail|msrp|originally|down from|dropping from)\b/i.test(rawText);
             const rawDollarCount = (rawText.match(/\$\d+(\.\d{2})?/g) || []).length;
             if (!hasRegKeyword && rawDollarCount <= 1) {
                 aiData.reg_price = "NONE";
+            } else if (aiData.reg_price && aiData.reg_price !== "NONE") {
+                // DATA-LEVEL PURGE: Strip all $ signs and replace decimals across single prices and ranges
+                aiData.reg_price = aiData.reg_price
+                    .replace(/\$/g, '')
+                    .replace(/\.(\d{2})/g, ' $1')
+                    .replace(/\s+/g, ' ')
+                    .trim();
             } else if (aiData.reg_price && aiData.reg_price !== "NONE") {
                 aiData.reg_price = aiData.reg_price
                     .replace(/\$/g, '')
@@ -1355,7 +1363,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.38 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.40 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1410,6 +1418,16 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     scrubbedPost = scrubbedPost.replace(/([^\n.]*?\b(auto[\s-]delivery|routine deliveries|routine shipments|recurring deliveries|recurring shipments|auto-delivery)\b[^\n.]*\.?\s*)/gi, '');
                 }
                 let finalPost = scrubbedPost;
+
+                // DETERMINISTIC POST TITLE ENFORCER:
+                let titleCheckSnippet = cleanTitle.toLowerCase().slice(0, 12);
+                if (!finalPost.toLowerCase().includes(titleCheckSnippet)) {
+                    let retailer = aiData.retailer_name || "Amazon";
+                    finalPost = finalPost.replace(/(\b(?:Currently\s+down\s+to|Just\s+dropped\s+to)\s+\$\d+)/i, `The ${cleanTitle} on ${retailer} is $1`);
+                    if (!finalPost.toLowerCase().includes(titleCheckSnippet)) {
+                        finalPost = finalPost.replace(/(\$\d+(\.\d{2})?\s+(?:Shipped|Total|Pickup))/i, `the ${cleanTitle} on ${retailer} for $1`);
+                    }
+                }
 
                 document.getElementById(`out-post${i+1}`).innerText = finalPost;
                 document.getElementById(`out-post${i+1}`).setAttribute('data-raw', finalPost);
@@ -1519,7 +1537,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.38 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.40 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1789,7 +1807,8 @@ RULES:
    - DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): Rotate the sentence structure of the price across variations so they do not open identically:
      • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
      • Variation 2: Open with retailer context in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
-     • Variation 3: A calm personal reflection with ZERO slang (The Breather). Rotate sentence order and price phrasing naturally across deals: 'Currently down to [sale_price] on [Retailer], was [reg_price].', '[Retailer] has the [Title] for [sale_price], was [reg_price].', or 'Just spotted the [Title] on [Retailer] down to [sale_price], was [reg_price].' (Do NOT start with 'Right now' on every deal!).
+     • Variation 3: A calm personal reflection with ZERO slang (The Breather). Rotate sentence order and price phrasing naturally across deals: 'The [Title] on [Retailer] is currently down to [sale_price], was [reg_price].', '[Retailer] has the [Title] for [sale_price], was [reg_price].', or 'Just spotted the [Title] on [Retailer] down to [sale_price], was [reg_price].' MANDATORY: Every variation MUST clearly state the product title! Never output a price without the product name.
+   - FIT & SIZING: Words like 'Adult', 'Oversize', 'Kids' are SIZES and FITS (never call them 'designs'). If text says 'select', keep 'select' (e.g. 'Valid on select Adult or Oversize sizes.').
    - ACTION & VERB ENTROPY: NEVER repeat the exact same physical action phrase (e.g. 'stepping onto', 'wiping down') across variations of the same product! Highlight different daily moments.
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
    - Full product title verbatim. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!
