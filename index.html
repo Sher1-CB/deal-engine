@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.40</title>
+    <title>The CB Command Center v10.3.41</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.40 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.41 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1165,7 +1165,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. ZERO-GUESS MANDATE: If raw text does NOT explicitly state a limit (e.g. 'Limit of 5' or 'max 3'), write strictly 'NONE'! You are STRICTLY FORBIDDEN from assuming or guessing a limit! Extract ONLY the raw digit if explicitly written.),
-  "variant": (String. TITLE-DEDUPLICATION MANDATE: If attribute is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract the clean attribute, model, style, theme, color, or size itself (e.g. 'White - Art Book Store', 'all colors', 'several scents', 'Pink', 'Large')! Strip introductory words like 'works on' or 'only works on'. NEVER drop kit themes or style models!),
+  "variant": (String. TITLE-DEDUPLICATION MANDATE: If attribute is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract the clean attribute, model, theme, color, or size! COMPOUND RESTRICTION MANDATE: If a bullet combines qualifiers, sizes, and colors (e.g. 'most sizes on Sandy Beige', 'select sizes in Black', 'most colors in Queen'), you MUST extract the FULL compound condition! NEVER strip out qualifiers like 'most sizes' or 'select sizes'!),
   "size": (String. TITLE-DEDUPLICATION MANDATE: If size or dimensions like '20oz' are ALREADY in title, write 'NONE'.),
   "math": (String. Extract per-item math, e.g., '$16.88 per jug')
 ),
@@ -1185,7 +1185,10 @@ MANDATORY TITLE INCLUSION (ABSOLUTE): Every single post variation MUST clearly i
 ${varietyInstruction}
 RETAILER LOCK: State retailer_name in EVERY variation!
 VARIANT & RESTRICTION MANDATE:
-• SINGLE RESTRICTION / THEME / FIT: If raw text restricts to a specific color, size, fit, model, style, or theme (e.g. 'select Adult or Oversize', 'White - Art Book Store', 'Pink', 'Large', 'medium'), you are STRICTLY FORBIDDEN from omitting it! FIT & SIZING RULE: Words like 'Adult', 'Oversize', 'Kids', or 'Plus Size' are SIZES and FITS (NEVER call them 'designs' or 'styles')! If raw text says 'select', you MUST keep 'select' (e.g. 'Valid on select Adult or Oversize sizes.', 'Applies to select Adult and Oversize options.'). For single colors/themes, rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'.
+• RESTRICTIONS, FITS & COMPOUND CONDITIONS:
+  - COMPOUND RESTRICTIONS (SIZE + COLOR): If raw text specifies both a size condition and a color (e.g. 'most sizes on Sandy Beige', 'select sizes in Black'), you are STRICTLY FORBIDDEN from dropping either half! Weave both naturally: 'Applies to most sizes in Sandy Beige.', 'Featured on most sizes in the Sandy Beige colorway.', or 'Valid on most sizes of Sandy Beige.'.
+  - COMPOUND RESTRICTIONS, FITS & SIZING: If raw text specifies a compound condition (e.g. 'most sizes on Sandy Beige'), NEVER drop either half! Weave both: 'Applies to most sizes in Sandy Beige.' or 'Valid on most sizes in the Sandy Beige option.'. If text says 'Adult' or 'Oversize', treat them as sizes/fits, and keep 'select' if present.
+  - SINGLE VARIANTS / THEMES: For single colors/themes (e.g. 'Pink', 'White - Art Book Store'), rotate naturally: 'This applies specifically to the [variant] option.', 'Featured on the [variant] choice.', or 'Works strictly on the [variant] selection.'.
 • MULTI-OPTION AVAILABILITY (COLORS, SCENTS, FLAVORS, PRINTS): If raw text states multiple choices are available (e.g. 'several scents', 'several colors', 'multiple flavors', 'several prints'), you are STRICTLY FORBIDDEN from treating it as a single restricted name (NEVER write 'Featured on the several scents option')! State it naturally: 'Available in several scents.', 'Multiple scent options are available.', or 'You can pick from several fragrances.'.
 • UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', state it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
 • APPAREL SIZING & COLOR ENTROPY (COMBINED OR SEPARATED): If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely choose whether to combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.').
@@ -1363,7 +1366,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.40 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.41 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1537,7 +1540,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.40 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.41 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1808,7 +1811,7 @@ RULES:
      • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
      • Variation 2: Open with retailer context in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
      • Variation 3: A calm personal reflection with ZERO slang (The Breather). Rotate sentence order and price phrasing naturally across deals: 'The [Title] on [Retailer] is currently down to [sale_price], was [reg_price].', '[Retailer] has the [Title] for [sale_price], was [reg_price].', or 'Just spotted the [Title] on [Retailer] down to [sale_price], was [reg_price].' MANDATORY: Every variation MUST clearly state the product title! Never output a price without the product name.
-   - FIT & SIZING: Words like 'Adult', 'Oversize', 'Kids' are SIZES and FITS (never call them 'designs'). If text says 'select', keep 'select' (e.g. 'Valid on select Adult or Oversize sizes.').
+   - COMPOUND RESTRICTIONS, FITS & SIZING: If raw text specifies a compound condition (e.g. 'most sizes on Sandy Beige'), NEVER drop either half! Weave both: 'Applies to most sizes in Sandy Beige.' or 'Valid on most sizes in the Sandy Beige option.'. If text says 'Adult' or 'Oversize', treat them as sizes/fits, and keep 'select' if present.
    - ACTION & VERB ENTROPY: NEVER repeat the exact same physical action phrase (e.g. 'stepping onto', 'wiping down') across variations of the same product! Highlight different daily moments.
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
    - Full product title verbatim. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!
