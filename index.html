@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.41</title>
+    <title>The CB Command Center v10.3.42</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.41 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.42 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1193,6 +1193,7 @@ VARIANT & RESTRICTION MANDATE:
 • UNIVERSAL OPTIONS (ALL COLORS / ALL SIZES / ALL CHOICES): If raw text states it works on 'all colors', 'all sizes', 'all options', or 'all choices', state it universally: 'Works across all colors.', 'Valid on all color options.', 'All sizes are included in this drop.', or 'Discount applies across all available choices.'.
 • APPAREL SIZING & COLOR ENTROPY (COMBINED OR SEPARATED): If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely choose whether to combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.').
 MANDATORY SPECS, CAPACITY & SERVING SIZES (ABSOLUTE): If raw text contains extra specs, features, capacities, serving yields, or headcounts (e.g. 'Serves 10-14', 'feeds 8-10', 'makes 12 cups', 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence stating these exact specs into EVERY single variation (with varied phrasing)! NEVER paraphrase away the numbers (if text says 'Serves 10-14', rotate naturally: 'Generously serves 10 to 14 guests.', 'Sized to easily feed 10-14 people.', or 'Perfect for serving 10 to 14.'). ZERO EXTRA BULLET CONDITIONAL: If no extra bullet points exist in raw text, do NOT repeat title specs—transition directly from price to lifestyle thought!
+FLUID SPEC POSITIONING (SHATTER THE MIDDLE TRAP): You are strictly forbidden from always trapping specs or colors in the dead-center middle! Rotate spec positions across variations: sometimes weave it into the price sentence, sometimes open with it, sometimes put it at the very end, and sometimes in the middle!
 ROUTINE DELIVERY MANDATE (CONDITIONAL ONLY): If and ONLY IF b8 is 'YES', weave an auto-delivery mention into copy. AUTO-DELIVERY PHRASING ENTROPY (ABSOLUTE): You are strictly forbidden from using the word 'rates' and strictly forbidden from repeating the same auto-delivery sentence across variations! Rotate naturally: 'Drops even lower with auto-delivery.', 'Even less when scheduled for recurring deliveries.', 'Adjusts down even further with recurring shipments.', or 'Drops lower when choosing recurring shipments.'. ABSOLUTE NEGATIVE PROHIBITION: If b8 is 'NONE', you are STRICTLY FORBIDDEN from mentioning auto-delivery, routine deliveries, or recurring shipments!
 CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective excitement about how wonderful this will be to use once delivered. ZERO-TEMPLATE LAW (ABSOLUTE): You are strictly forbidden from reusing memorized sign-off examples! Tailor closing reaction 100% to the REAL-WORLD PRODUCT CATEGORY:
 • BATH, BODY & HAIRCARE: Talk strictly about warm showers, soft hair, or stocked bathroom cabinets. NEVER say shampoo looks cute on a vanity or is for road trips!
@@ -1201,7 +1202,7 @@ CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective exciteme
 • APPAREL & SHOES: Talk strictly about comfortable everyday outfits, staying warm, or daily styling.
 • BEAUTY TOOLS (Light panels, rollers): Talk about relaxing evening self-care or vanity tables.
 • HOME & HARDWARE: Talk about meal prep, kitchen counters, avoiding clutter, or clean organization.
-FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! End on realistic prospective utility!
+FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! When the lifestyle thought opens the post, the spec or restriction may cleanly conclude the post.
 UPBEAT PRACTICAL WINS & ANTI-NEGATIVITY LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund! Ban the formula: '[Doing X] makes [routine] feel so much [adjective]'! 100% CHEERFUL & POSITIVE ENTHUSIASM (ABSOLUTE): Speak with sunny, upbeat warmth focusing on the smart upgrade, cozy comfort, daily time-saver, and the joy of a great find! You are STRICTLY FORBIDDEN from focusing on negative complaints, ruined sleep, physical aches, messy chaos, or daily annoyances (NEVER write 'lumpy mattress ruins sleep', 'waking up with a sore back is never fun', 'chaotic messy cabinets', or 'annoying bunching sweaters')! Keep concrete lifestyle realism, but package it in joyful, positive convenience (e.g., 'Adding a plush layer like this gives your bed that cloud-soft, luxury hotel feel!', 'Sleek bodysuits are an absolute staple for a smooth, tucked-in look with high-waisted denim', 'Love having nesting bowls with matching lids ready for effortless weeknight cooking')! Vary sentence lengths naturally.
 INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the same closing sentence structure or scenario across Variation 1, 2, or 3! Every single post variation MUST explore a completely unique prospective thought. Zero copy-paste variations!
 PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
@@ -1366,7 +1367,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.41 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.42 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1540,7 +1541,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.41 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.42 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1824,7 +1825,7 @@ RULES:
    - PERSPECTIVE (DEAL CURATOR & PROSPECTIVE EXCITEMENT): Write as a savvy deal hunter who just spotted an exciting find online and is sharing the discovery! Focus on ANTICIPATION, PROSPECTIVE UTILITY, and IMAGINING USE (e.g., 'This would be so nice for...', 'Such a fun find for...', 'Imagine having a warm bowl ready...', 'Could definitely see this making mornings easier...').
    - FALSE OWNERSHIP BAN (ABSOLUTE): You are strictly forbidden from pretending you already physically own, received, or tested the item! NEVER write 'My skin feels radiant now', 'We keep these on our counter', 'I used this today', or 'My pantry feels so tidy with these'.
    - TITLE-FEATURE SEPARATION LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating any spec, color count, ounce size, or pack quantity (e.g. '7 Colors', '20oz', '12 Pack', '3 Count') in your feature sentence if it already appears in the product title!
-   - MANDATORY SPECS, SERVING SIZES & CAPACITY (ABSOLUTE): If raw text contains extra specs, serving yields, headcounts, or capacities (e.g. 'Serves 10-14', 'feeds 8-10', 'makes 12 cups', 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence stating these exact specs into EVERY single post variation (e.g. 'Generously serves 10 to 14 guests.', 'Sized to feed 10-14 people.'). Never drop the numbers!
+   - MANDATORY SPECS, SERVING SIZES & CAPACITY (ABSOLUTE): If raw text contains extra specs, serving yields, headcounts, or capacities (e.g. 'Serves 10-14', 'feeds 8-10', 'makes 12 cups', 'with LED light, 5 coarseness levels', 'stainless steel'), you are STRICTLY FORBIDDEN from omitting them! You MUST weave a clean sentence stating these exact specs into EVERY single post variation (e.g. 'Generously serves 10 to 14 guests.', 'Sized to feed 10-14 people.'). Never drop the numbers! Rotate where the spec sits across variations: sometimes weave it into the price sentence, sometimes open with it, sometimes put it in the middle, and sometimes end with it!
    - VARIANT, THEME & RESTRICTION MANDATE: If raw text states a restriction, model, style, or theme (e.g. 'White - Art Book Store', 'only works on pink', 'medium'), you are STRICTLY FORBIDDEN from omitting it! Weave it into natural sentences: 'This applies specifically to the [variant] option.', 'Featured on the [variant] design.', or 'Works strictly on the [variant] style.'.
    - MULTI-COLOR, SCENTS & FLAVORS: If text says 'Several colors' or 'Several scents', state naturally: 'Available in several colors.' or 'Available in several scents.'. NEVER write 'Works on the several scents style'!
    - APPAREL SIZING & COLOR ENTROPY: If raw text contains both colors and sizes (e.g. 'several colors, XS - XXL'), you must include both! You can freely combine them into 1 sentence ('Available in several colors spanning sizes XS through XXL.') or split them into 2 separate sentences ('Available in several colors. Sizing spans from XS up to XXL.').
