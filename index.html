@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.44</title>
+    <title>The CB Command Center v10.3.45</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.44 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.45 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -810,6 +810,9 @@
             .replace(/\byou\s+can\s+order\b/gi, 'you can get')
             .replace(/\borders\s+are\s+restricted\b/gi, 'strictly limited')
             .replace(/\bat\s+this\s+rate\b/gi, 'per customer')
+            // Purge commercial cart/checkout references
+            .replace(/\b(to|in)\s+your\s+cart\b/gi, 'to your delivery')
+            .replace(/\bat\s+checkout\b/gi, 'at the final step')
             // 8. Purge marketing clichés ('breeze' -> 'effortless', 'game changer' -> 'wonderful addition')
             .replace(/\b(feels\s+like\s+an?\s+(absolute\s+|total\s+)?|an?\s+(absolute\s+|total\s+)?)breeze\b/gi, 'completely effortless')
             .replace(/\belevates?\b/gi, 'enhances')
@@ -903,6 +906,8 @@
             .replace(/\b(applies|works|featured|valid)\s+(specifically\s+|strictly\s+|exclusively\s+)?(to|on)\s+the\s+works\s+on\s+/gi, '$1 $2$3 ')
             .replace(/\bworks\s+on\s+the\s+works\s+on\s+/gi, 'works on ')
             .replace(/\bthe\s+works\s+on\s+/gi, '')
+            // Orphaned Number Title Cleaner: Fixes "The 2 Liquid Dish Soap" -> "ADD 2 Liquid Dish Soap"
+            .replace(/\bThe\s+(\d+)\s+([A-Z][a-z]+\s+(?:Dish\s+Soap|Body\s+Wash|Shampoo|Lotion|Soap|Deodorant))\b/g, 'ADD $1 $2')
             // Headline Colon Scrubber
             .replace(/\b(spotted|found|seen)\s+on\s+(Amazon|Walmart|Woot|Walgreens|Target):\s*/gi, '$2 has the ')
             .replace(/:\s*([A-Z0-9])/g, ', $1')
@@ -1166,7 +1171,7 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "retailer_name": (String. Extract FULL retailer name, e.g., "Amazon", "Walmart", "Woot", "Walgreens". Fix leetspeak. If mentions 'Woot', must be Woot!),
 "sale_price": (String. Extract the sale price. PRICE RANGE MANDATE: If raw text shows a range (e.g. '$15.99 - $17.99 Shipped'), preserve the FULL range! Ensure '$' sign is included, then ADD '${fulfillmentStatus}'. Example: '$5.99 ${fulfillmentStatus}'),
 "reg_price": (String. Extract ONLY numbers/digits of regular price. ZERO-GUESS MANDATE (ABSOLUTE): If raw text does NOT explicitly state an original, was, or regular price, you MUST write 'NONE'! Guessing is strictly forbidden! Strip $ signs, replace decimals with spaces, connect ranges with hyphen, e.g. "23 99 - 26 99". NEVER include the word 'regular'!),
-"cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!),
+"cleaned_title": (String. MANDATORY TITLE LOCK: Copy the primary product name line EXACTLY as written. VERBATIM ADD/BUY TITLE LAW: If the raw title line starts with 'ADD' or 'BUY' (e.g. 'ADD 2 Liquid Dish Soap 52 fl oz'), you MUST keep 'ADD [X]' in the title! You are strictly forbidden from stripping 'ADD' and leaving a broken orphaned number like 'The 2 Liquid Dish Soap'!),
 "b2_verification": (JSON Object. Extract facts strictly from ADDITIONAL bullet points. If none, write "NONE".
   "limit": (String. ZERO-GUESS MANDATE: If raw text does NOT explicitly state a limit (e.g. 'Limit of 5' or 'max 3'), write strictly 'NONE'! You are STRICTLY FORBIDDEN from assuming or guessing a limit! Extract ONLY the raw digit if explicitly written.),
   "variant": (String. TITLE-DEDUPLICATION MANDATE: If attribute is ALREADY in cleaned_title, write 'NONE'! CLEAN EXTRACTION LAW: Extract the clean attribute, model, theme, color, or size! COMPOUND RESTRICTION MANDATE: If a bullet combines qualifiers, sizes, and colors (e.g. 'most sizes on Sandy Beige', 'select sizes in Black', 'most colors in Queen'), you MUST extract the FULL compound condition! NEVER strip out qualifiers like 'most sizes' or 'select sizes'!),
@@ -1209,7 +1214,8 @@ CONVERSATIONAL SIGN-OFF (ABSOLUTE): Conclude naturally with prospective exciteme
 FALSE OWNERSHIP BAN (ABSOLUTE): Never claim you already own it or used it yesterday! When the lifestyle thought opens the post, the spec or restriction may cleanly conclude the post.
 UPBEAT PRACTICAL WINS & DIRECT SENTENCE LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from opening every sentence with a stiff -ing gerund (NEVER start lines with 'Having...', 'Keeping...', 'Adding...', or 'Stepping...')! Use direct, natural conversational subjects ('You can throw this over...', 'This runner brings...', 'Love having backup pairs ready...'). Speak with 100% cheerful enthusiasm focusing on smart upgrades, comfort, and daily time-savers! Never complain about ruined sleep, sore backs, or messy chaos. COZY DIET: Stop repeating the word 'cozy' on every single deal! Use varied sensory words: soft, plush, warm, breathable, comfortable, relaxed, inviting. Ban the formula: '[Doing X] makes [routine] feel so much [adjective]'! 100% CHEERFUL & POSITIVE ENTHUSIASM (ABSOLUTE): Speak with sunny, upbeat warmth focusing on the smart upgrade, cozy comfort, daily time-saver, and the joy of a great find! You are STRICTLY FORBIDDEN from focusing on negative complaints, ruined sleep, physical aches, messy chaos, or daily annoyances (NEVER write 'lumpy mattress ruins sleep', 'waking up with a sore back is never fun', 'chaotic messy cabinets', or 'annoying bunching sweaters')! Keep concrete lifestyle realism, but package it in joyful, positive convenience (e.g., 'Adding a plush layer like this gives your bed that cloud-soft, luxury hotel feel!', 'Sleek bodysuits are an absolute staple for a smooth, tucked-in look with high-waisted denim', 'Love having nesting bowls with matching lids ready for effortless weeknight cooking')! Vary sentence lengths naturally.
 INTER-VARIATION ANTI-PARROT LAW (ABSOLUTE): You are STRICTLY FORBIDDEN from repeating the same closing sentence structure or scenario across Variation 1, 2, or 3! Every single post variation MUST explore a completely unique prospective thought. Zero copy-paste variations!
-PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
+PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} Variation 3 is MANDATORY The Breather (zero slang). MANDATORY CART QUANTITY MANDATE (ABSOLUTE): If raw text explicitly requires adding multiple quantities to get the deal (e.g. 'make sure to add 2 qty', 'ADD 2', 'buy 2'), you are STRICTLY FORBIDDEN from omitting it! State it using SAFE, non-commercial words: rotate between 'Make sure to add [X] to your delivery to get this total.', 'Add [X] to your delivery to see this drop.', or 'Be sure to add [X] to your delivery.'. NEVER use the words 'cart', 'checkout', or 'discount'!
+LIMIT PHRASING ENTROPY: Rotate between 'Capped at 1 per household.', 'There is a 1-unit limit allowed.', 'You can get 1 per customer.', and 'Restricted to 1 per customer.'. NEVER use the word 'order' and NEVER use the word 'rate'! DELIMITER LOCK: Separate every sentence with ' || ' and use proper punctuation ending every sentence with a period.),
 "comments": (Array of 3 strings. Write 3 casual, organic comments. TITLE, RETAILER & PRICE BAN: You are STRICTLY FORBIDDEN from using full product title, retailer name, or dollar amounts in comments! Use simple everyday product nouns like 'deodorant', 'soup', 'tumblers', or 'tools'. ZERO POINTER PHRASES (ABSOLUTE): Never write pointer phrases before the link (NEVER write 'You can locate it via', 'Find it via', 'Available via', or 'Check it out via')! The link [TARGET_SLOT] MUST stand completely alone on its own line without any leading prepositions! NEVER put a period after [TARGET_SLOT]! LINE 1 HUMAN TEXT PROTECTION: Line 1 of EVERY comment MUST be human text, NEVER a link! Keep human statements lean and under 15 words. Follow assigned roles:
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
@@ -1354,8 +1360,17 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                 if (aiData.cleaned_title) {
                     aiData.cleaned_title = aiData.cleaned_title.replace(/\s*ADD\s+\d+(\s+QTY)?\b/gi, '').trim();
                 }
+            } else {
+                // VERBATIM ADD/BUY RESTORATION: If raw text starts with ADD [X], restore it if AI stripped it!
+                let addMatch = rawText.match(/\b(ADD\s+\d+)\b/i);
+                if (addMatch && !cleanTitle.toLowerCase().includes('add')) {
+                    cleanTitle = addMatch[1].toUpperCase() + ' ' + cleanTitle.replace(/^\d+\s+/, '');
+                    if (aiData.cleaned_title) {
+                        aiData.cleaned_title = cleanTitle;
+                    }
+                }
             }
-
+            
             const cleanAiPrice = aiData.sale_price ? aiData.sale_price.replace('$', '').replace(fulfillmentStatus, '').trim() : "???";
             if (cleanAiPrice !== "???") {
                 const priceParts = cleanAiPrice.split(/[-–—]/).map(p => p.trim()).filter(p => p.length > 0);
@@ -1371,7 +1386,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.44 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.45 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1571,7 +1586,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.44 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.45 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1845,7 +1860,8 @@ RULES:
    - COMPOUND RESTRICTIONS, FITS & SIZING: If raw text specifies a compound condition (e.g. 'most sizes on Sandy Beige'), NEVER drop either half! Weave both: 'Applies to most sizes in Sandy Beige.' or 'Valid on most sizes in the Sandy Beige option.'. If text says 'Adult' or 'Oversize', treat them as sizes/fits, and keep 'select' if present.
    - ACTION & VERB ENTROPY: NEVER repeat the exact same physical action phrase (e.g. 'stepping onto', 'wiping down') across variations of the same product! Highlight different daily moments.
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
-   - Full product title verbatim. NEVER invent or append quantity instructions like 'ADD 3 QTY' unless those exact words are physically written in the raw title line!
+   - Full product title verbatim. If the title starts with 'ADD [X]' (e.g. 'ADD 2 Liquid Dish Soap'), KEEP IT! Never strip 'ADD' and leave an orphaned number.
+   - MANDATORY CART QUANTITY: If raw text requires adding multiple items (e.g. 'make sure to add 2 qty'), you MUST tell buyers in every post: 'Make sure to add [X] to your delivery to get this total.'.
    - Retailer explicitly stated in EVERY post (e.g. 'on Amazon', 'at Walmart', 'at Walgreens', 'at Woot').
    - PROMO, CHECKOUT & RETAILER HEADER SCRUB: Ignore promotional slogans ('Point Drop', 'Solid Dip', 'Solid Catch', 'Good Find', 'Top Score', 'Best Seller') and cart instructions. Whatever phrase is placed before the retailer name is a DEAL HEADER, NOT a product feature! Extract ONLY physical product specs! NEVER output robotic phrases like 'verify the total' or 'Point Drop on Amazon'.
    - UNIVERSAL 'FREE' BAN: You are STRICTLY FORBIDDEN from writing 'free shipping', 'free pickup', or 'free store pickup'! Say 'delivery is included', 'complimentary delivery', or 'store pickup applies once your total hits 10'.
