@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.46</title>
+    <title>The CB Command Center v10.3.47</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.46 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.47 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1162,6 +1162,22 @@
             varietyInstruction = `PUNCHY VARIETY INJECTION: For Variation ${pickedVars.join(' and ')}, format as an ultra-lean, punchy 2-liner! Line 1: Short practical context under 8 words paired with the price and title sentence. Line 2: Fast prospective sign-off under 12 words. Keep it super short, energetic, and clean (2 lines only!). The other variations remain full and classic.`;
         }
 
+        // DYNAMIC OPENER PERMUTATION MATRIX (INFINITE VERTICAL ENTROPY)
+        // Shuffles 7 distinct opening angles so posts never open identically across deals!
+        const openerPool = [
+            "Hook First (No price on line 1): Start with a vivid everyday lifestyle observation, morning/evening routine, or problem-solver. Place the price and title on Line 2.",
+            "Discovery Share: Open with an organic find discovery: 'Just spotted the [Title] on [Retailer] for [sale_price]...'",
+            "Retailer Direct: Open with retailer context: '[Retailer] has the [Title] down to [sale_price]...'",
+            "Product First: Open with the item directly: 'The [Title] on [Retailer] is available for [sale_price]...'",
+            "Value/Drop Opener: Open with the price drop: 'Down to [sale_price] on [Retailer], the [Title] is was [reg_price]...'",
+            "Curator Anticipation First: Open with prospective excitement: 'Imagine having [Title] ready for [scenario]... [Retailer] has it for [sale_price]...'",
+            "Spec/Color Opener: Lead with the specific option or capacity: 'If you need [spec/color], the [Title] on [Retailer] is [sale_price]...'"
+        ].sort(() => 0.5 - Math.random());
+
+        const openerVar1 = openerPool[0];
+        const openerVar2 = openerPool[1];
+        const openerVar3 = openerPool[2];
+
         let prompt = "";
 
         if (dealType === 'regular') {
@@ -1182,13 +1198,16 @@ Return ONLY a valid JSON object. Do NOT use markdown. Escape all internal double
 "b8_verification": (String. If raw text explicitly mentions Subscribe & Save or S&S, write strictly 'YES'. If NOT in raw text, write 'NONE'!),
 "features_catchall": (String. EXTRA LINE VACUUM: Extract raw keywords/specs from extra lines ONLY. TITLE-DEDUPLICATION MANDATE (ABSOLUTE): Do NOT extract specs that are ALREADY in the title! RETAILER HEADER BAN: Ignore slogans like 'Point Drop on Amazon'. If none, write "NONE"),
 "post_variations": (Array of 3 strings. You are a polymorphic text engine. ZERO LINKS (NUCLEAR MANDATE): Post variations must be 100% text-only with ZERO links and ZERO URLs! Links belong ONLY in comments and the Daily Thread!
-DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING):
-• Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g. 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
-• Variation 2: Open with retailer context in a flowing sentence (e.g. '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): You are strictly forbidden from outputting two price sentences in the same post! State the price and title ONLY ONCE! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
-• Variation 3 (The Relaxed Breather - Zero Slang): Sentence structure MUST vary dynamically across deals so it never opens identically! Rotate how you introduce the item and price:
-  - Option A (Hook First): Relaxed lifestyle reflection first, then price: 'The [Title] on [Retailer] is currently down to [sale_price], was [reg_price].' (or 'Currently, the [Title] on [Retailer] is down to [sale_price], was [reg_price].').
-  - Option B (Price First): Open cleanly with price and title: '[Retailer] has the [Title] down to [sale_price], was [reg_price].' followed by a calm lifestyle reflection.
-  - Option C (Conversational Intro): 'Just spotted the [Title] on [Retailer] for [sale_price], dropping from [reg_price].'
+DYNAMIC OPENERS & INFINITE STRUCTURAL VARIETY:
+You MUST follow the assigned opening angle for each variation:
+• Variation 1 Opening Angle: ${openerVar1}
+• Variation 2 Opening Angle: ${openerVar2}
+• Variation 3 Opening Angle (The Breather - Zero Slang): ${openerVar3}
+SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): State the price and title ONLY ONCE per variation! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
+SPEC & SIZING INTEGRATION CHAOS (SHATTER THE MIDDLE TRAP): You are strictly forbidden from always trapping specs or colors in the middle!
+- In 1 variation: Weave the color or size DIRECTLY into the price/title sentence (e.g. 'Amazon has the 2-Slice Toaster in Oatmilk down to $14.99 Shipped...').
+- In another variation: Give the spec its own line (e.g. 'Featured on the Oatmilk choice.').
+- In another variation: Let the spec land cleanly at the end!
 (CONDITIONAL 'NONE' RULE: If reg_price is 'NONE', state sale price cleanly ending with a period and drop 'down from', 'previously', and 'was' completely!)
 MANDATORY TITLE INCLUSION (ABSOLUTE): Every single post variation MUST clearly include the full cleaned_title in the price sentence! You are STRICTLY FORBIDDEN from outputting a bare price sentence without the product name!
 ${varietyInstruction}
@@ -1387,7 +1406,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.46 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.47 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1431,22 +1450,33 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
 
                 let emojifiedPost = applyEmojiDensity(postLines, 0, 4, finalEmojis);
                 
-                // ZERO-QUOTA INDEPENDENT MACRO GEOMETRY (TRUE UNFORCED CHAOS)
+                // INFINITE MACRO-GEOMETRY ENGINE (5 DISTINCT VISUAL SHAPES)
                 let rawFinalPost = "";
                 if (dealType === 'run') {
                     rawFinalPost = emojifiedPost.join(' ');
                 } else {
                     let shapeRoll = Math.random();
-                    if (shapeRoll < 0.22 && emojifiedPost.length >= 2) {
-                        // Shape A (~22%): Single Fluid Paragraph (Zero blank line breaks!)
+                    if (shapeRoll < 0.25 && emojifiedPost.length >= 2) {
+                        // Shape 1 (~25%): The Single Fluid Paragraph (Zero blank lines! Flowing block)
                         rawFinalPost = emojifiedPost.join(' ');
-                    } else if (shapeRoll < 0.55 && emojifiedPost.length >= 3) {
-                        // Shape B (~33%): 2-Block Hybrid (2 sentences grouped, 1 separated)
+                    } else if (shapeRoll < 0.50 && emojifiedPost.length >= 3) {
+                        // Shape 2 (~25%): 2-Block Hybrid (Sub-type A: 2 sentences grouped, 1 solo)
                         let p1 = emojifiedPost.slice(0, 2).join(' ');
                         let p2 = emojifiedPost.slice(2).join(' ');
                         rawFinalPost = p1 + '\n\n' + p2;
+                    } else if (shapeRoll < 0.70 && emojifiedPost.length >= 3) {
+                        // Shape 3 (~20%): 2-Block Hybrid (Sub-type B: 1 solo sentence, 2 grouped at end)
+                        let p1 = emojifiedPost[0];
+                        let p2 = emojifiedPost.slice(1).join(' ');
+                        rawFinalPost = p1 + '\n\n' + p2;
+                    } else if (shapeRoll < 0.85 && emojifiedPost.length >= 4) {
+                        // Shape 4 (~15%): 3-Block Dynamic (1 solo, 2 grouped, 1 solo)
+                        let p1 = emojifiedPost[0];
+                        let p2 = emojifiedPost.slice(1, emojifiedPost.length - 1).join(' ');
+                        let p3 = emojifiedPost[emojifiedPost.length - 1];
+                        rawFinalPost = p1 + '\n\n' + p2 + '\n\n' + p3;
                     } else {
-                        // Shape C (~45%): Classic Airy Spaced Layout
+                        // Shape 5 (~15%): Full Airy Spaced Layout
                         rawFinalPost = joinWithSpaceChaos(emojifiedPost, 1, 2);
                     }
                 }
@@ -1589,7 +1619,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.46 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.47 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1856,10 +1886,10 @@ RULES:
    - REGULAR PRICE ZERO-GUESS MANDATE (ABSOLUTE): If the raw text does NOT explicitly state an original, regular, or was price (e.g. 'Regular $79.99' or 'was $18.99'), you are STRICTLY FORBIDDEN from guessing, estimating, or inventing a regular price! If no regular price is present in the raw text, state the sale price cleanly as its own complete sentence ending with a period (e.g. 'The Condensed Cheddar Cheese Soup, 10.5 oz. Can 12 Pack on Amazon is $12.00 Shipped.') and omit all comparative words like 'down from', 'was', or 'previously'!
    - REGULAR PRICE FORMATTING: If explicitly present in raw text, strip the '$' signs and replace decimals with spaces (e.g., '23 99' or '75 99 - 79 99'). Never write 'regular' before the number!
    - PRICE PAIRING: When a regular price is present, you MUST weave the sale price and regular price side-by-side in the EXACT SAME SENTENCE. Keep the price statement as its own distinct sentence ending with a period. Do NOT glue the opening hook and price together using 'with' or 'and'.
-   - DYNAMIC SENTENCE CHAOS (ANTI-FINGERPRINTING): Rotate the sentence structure of the price across variations so they do not open identically:
-     • Variation 1: Open with product title or retailer, pairing price and regular price naturally (e.g., 'The [Title] on [Retailer] is [sale_price], down from [reg_price].').
-     • Variation 2: Open with retailer context in a flowing sentence (e.g., '[Retailer] has the [Title] sitting at [sale_price], previously [reg_price].'). NEVER use headline colons like 'Spotted on Amazon:'!
-     • Variation 3: A calm personal reflection with ZERO slang (The Breather). Rotate sentence order and price phrasing naturally across deals: 'The [Title] on [Retailer] is currently down to [sale_price], was [reg_price].', '[Retailer] has the [Title] for [sale_price], was [reg_price].', or 'Just spotted the [Title] on [Retailer] down to [sale_price], was [reg_price].' MANDATORY: Every variation MUST clearly state the product title! Never output a price without the product name.
+   - DYNAMIC OPENERS & INFINITE STRUCTURAL VARIETY: Rotate the opening angle across variations so no two posts start with the same pattern!
+     • Rotate between: Hook First (lifestyle moment on line 1, price on line 2), Discovery First ('Just spotted the [Title] on [Retailer] for [sale_price]...'), Retailer Context ('[Retailer] has the [Title] down to [sale_price]...'), Product First ('The [Title] on [Retailer] is [sale_price]...'), and Problem-Solver openers.
+     • SPEC INTEGRATION: In some posts, weave the color/size directly into the price line (e.g. 'Amazon has the Toaster in Oatmilk for $14.99 Shipped'). In others, give specs their own line, or put them at the end. Never trap specs in the middle on every post!
+     • NEVER use headline colons like 'Spotted on Amazon:'! State price and title ONLY ONCE per variation.
    - COMPOUND RESTRICTIONS, FITS & SIZING: If raw text specifies a compound condition (e.g. 'most sizes on Sandy Beige'), NEVER drop either half! Weave both: 'Applies to most sizes in Sandy Beige.' or 'Valid on most sizes in the Sandy Beige option.'. If text says 'Adult' or 'Oversize', treat them as sizes/fits, and keep 'select' if present.
    - ACTION & VERB ENTROPY: NEVER repeat the exact same physical action phrase (e.g. 'stepping onto', 'wiping down') across variations of the same product! Highlight different daily moments.
      (If regular price is missing, drop 'down from', 'previously', and 'was' completely!).
