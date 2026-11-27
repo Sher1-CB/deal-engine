@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.48</title>
+    <title>The CB Command Center v10.3.49</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.48 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.49 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -1166,13 +1166,13 @@
         // DYNAMIC OPENER PERMUTATION MATRIX (INFINITE VERTICAL ENTROPY)
         // Shuffles 7 distinct opening angles so posts never open identically across deals!
         const openerPool = [
-            "Hook First (No price on line 1): Start with a vivid everyday lifestyle observation, morning/evening routine, or problem-solver. Place the price and title on Line 2.",
-            "Discovery Share: Open with an organic find discovery: 'Just spotted the [Title] on [Retailer] for [sale_price]...'",
-            "Retailer Direct: Open with retailer context: '[Retailer] has the [Title] down to [sale_price]...'",
-            "Product First: Open with the item directly: 'The [Title] on [Retailer] is available for [sale_price]...'",
-            "Value/Drop Opener: Open with the price drop: 'Down to [sale_price] on [Retailer], the [Title] is was [reg_price]...'",
-            "Curator Anticipation First: Open with prospective excitement: 'Imagine having [Title] ready for [scenario]... [Retailer] has it for [sale_price]...'",
-            "Spec/Color Opener: Lead with the specific option or capacity: 'If you need [spec/color], the [Title] on [Retailer] is [sale_price]...'"
+            "Hook First (No price on line 1): Start with a vivid everyday lifestyle observation, morning/evening routine, or problem-solver on Line 1. Place the price on Line 2: 'The [Title] on [Retailer] is [sale_price], was [reg_price].'",
+            "Discovery Share: Open with an organic find discovery: 'Just spotted the [Title] on [Retailer] for [sale_price], previously [reg_price].'",
+            "Retailer Direct: Open with retailer context: '[Retailer] has the [Title] down to [sale_price], down from [reg_price].'",
+            "Product First: Open with the item directly: 'The [Title] on [Retailer] is available for [sale_price], previously [reg_price].'",
+            "Value/Drop Opener: Open with the price drop: 'Down to [sale_price] on [Retailer] (was [reg_price]), the [Title] is a wonderful find...'",
+            "Curator Anticipation First: Open with prospective excitement on Line 1, then price on Line 2: '[Retailer] has the [Title] for [sale_price], down from [reg_price].'",
+            "Spec/Capacity Opener: Lead with the specific option or capacity: 'If you need [spec/color], the [Title] on [Retailer] is [sale_price], was [reg_price].'"
         ].sort(() => 0.5 - Math.random());
 
         const openerVar1 = openerPool[0];
@@ -1204,6 +1204,7 @@ You MUST follow the assigned opening angle for each variation:
 • Variation 1 Opening Angle: ${openerVar1}
 • Variation 2 Opening Angle: ${openerVar2}
 • Variation 3 Opening Angle (The Breather - Zero Slang): ${openerVar3}
+MANDATORY PRICE PAIRING LAW (ABSOLUTE): Whenever a regular price exists (reg_price is NOT 'NONE'), you are STRICTLY FORBIDDEN from omitting it! You MUST weave the sale_price and reg_price side-by-side in the exact same sentence across EVERY SINGLE VARIATION (e.g. 'is [sale_price], down from [reg_price]', 'sitting at [sale_price], previously [reg_price]', or 'for [sale_price], was [reg_price]')! ONLY if reg_price is 'NONE' do you omit the regular price!
 SINGLE PRICE STATEMENT MANDATE (ABSOLUTE): State the price and title ONLY ONCE per variation! ZERO HEADLINE COLONS: Never use colons like 'Spotted on Amazon:'!
 SPEC & SIZING INTEGRATION CHAOS (SHATTER THE MIDDLE TRAP): You are strictly forbidden from always trapping specs or colors in the middle!
 - In 1 variation: Weave the color or size DIRECTLY into the price/title sentence (e.g. 'Amazon has the 2-Slice Toaster in Oatmilk down to $14.99 Shipped...').
@@ -1407,7 +1408,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.48 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.49 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1492,6 +1493,13 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
                     scrubbedPost = scrubbedPost.replace(/([^\n.]*?\b(auto[\s-]delivery|routine deliveries|routine shipments|recurring deliveries|recurring shipments|auto-delivery)\b[^\n.]*\.?\s*)/gi, '');
                 }
                 let finalPost = scrubbedPost;
+
+                // DETERMINISTIC REGULAR PRICE PAIRING ENFORCER:
+                // If a regular price was extracted but a variation omitted it, auto-pair it next to the sale price!
+                if (aiData.reg_price && aiData.reg_price !== "NONE" && !/\b(was|previously|down from|dropping from)\b/i.test(finalPost)) {
+                    let compWord = ['down from', 'previously', 'was'][i % 3];
+                    finalPost = finalPost.replace(/(\$\d+(\.\d{2})?\s+(?:Shipped|Total|Pickup))/i, `$1, ${compWord} ${aiData.reg_price}`);
+                }
 
                 // DETERMINISTIC POST TITLE ENFORCER:
                 let titleCheckSnippet = cleanTitle.toLowerCase().slice(0, 12);
@@ -1620,7 +1628,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.48 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.49 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
