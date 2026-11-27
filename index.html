@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The CB Command Center v10.3.50</title>
+    <title>The CB Command Center v10.3.52</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -115,7 +115,7 @@
             <p>Polymorphic Engine & Shift Manager</p>
         </div>
     </div>
-    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.50 🔄</span>
+    <span class="version-tag" style="cursor:pointer;" onclick="checkServerForUpdates(true)" title="Click to check for updates">v10.3.52 🔄</span>
 </div>
 
 <div class="main-grid">
@@ -903,9 +903,10 @@
             // Routine Collision Shield: Fix accidental "find" substitutions in beauty/daily routines
             .replace(/\bdaily\s+find\s+routines?\b/gi, 'daily styling routine')
             .replace(/\bsleek\s+find\b/gi, 'sleek look')
-            // Comment Opener De-Cloner: Purge repetitive "Such a handy find" template
-            .replace(/\bSuch\s+a\s+handy\s+find\s+for\b/gi, 'Love having this ready for')
-            .replace(/\bSuch\s+a\s+handy\s+(set|box|item|tool|device|resting spot)\b/gi, 'Great $1')
+            // Comment Opener De-Cloner: Purge repetitive comment templates
+            .replace(/\bSuch\s+a\s+(handy|helpful|classic|neat|cute|lovely)\s+(find|setup|set|box|item|tool|device|resting spot|addition|organizational setup)\b/gi, 'Great $2')
+            .replace(/\bCould\s+definitely\s+use\s+this\s+(for|during|to)\b/gi, 'Super helpful $1')
+            .replace(/\bAlways\s+(nice|great|wonderful)\s+(to\s+keep|to\s+have|having)\b/gi, 'Love having')
             // Restriction Stutter Shield
             .replace(/\b(applies|works|featured|valid)\s+(specifically\s+|strictly\s+|exclusively\s+)?(to|on)\s+the\s+works\s+on\s+/gi, '$1 $2$3 ')
             .replace(/\bworks\s+on\s+the\s+works\s+on\s+/gi, 'works on ')
@@ -1126,20 +1127,21 @@
         const slangDirective = `TONE: RELAXED, ORGANIC & UNFORCED CONVERSATIONAL. Write like a real person casually chatting with friends about a great find. ZERO FORCED SLANG (ABSOLUTE): You are strictly forbidden from forcing slang words to meet a quota! If a post sounds warm, natural, and friendly without slang, KEEP IT CLEAN! You may occasionally use a mild conversational word (like 'honestly', 'hands down', 'super', or 'ngl') ONLY in a personal lifestyle reaction if it flows 100% effortlessly. SLANG PLACEMENT FIREWALL: Never wedge slang into price statements (NEVER write 'Amazon highkey is available' or 'is fr $7.49') and NEVER attach slang to factual specs (NEVER write 'sizes S to XXL, imo')! Keep Variation 3 100% clean (The Breather).`;
 
         // STRUCTURED ACTIVE-SIGNALS COMMENT MATRIX
+        // PURE GOAL-ORIENTED COMMENT BLUEPRINTS (ZERO PRESET STARTERS + 100% BANNED WORD SHIELD)
         const commentRoleA = [
-            "Role 1A (Product Utility Micro-Tip): Line 1 State a concrete practical tip under 12 words specific to using THIS EXACT PRODUCT in daily life (NEVER invent unrelated items) || Line 2 [TARGET_SLOT] (NO question).",
-            "Role 1B (Shopper Heads-Up): Line 1 Quick shopping note under 12 words that popular online listings tend to shift quickly || Line 2 [TARGET_SLOT] (NO question).",
-            "Role 1C (Everyday Convenience Note): Line 1 Brief realistic thought under 12 words about how handy this item is to have around the house || Line 2 [TARGET_SLOT] (NO question)."
+            "Role 1A (Product Micro-Tip): Line 1 State a genuine practical tip under 12 words specific to using this item in daily life (NO starting templates) || Line 2 [TARGET_SLOT] (NO question).",
+            "Role 1B (Shopper Heads-Up): Line 1 Brief natural note under 12 words that popular online listings move fast || Line 2 [TARGET_SLOT] (NO question).",
+            "Role 1C (Casual Reaction): Line 1 Organic thought under 12 words on how handy this is for the house or upcoming plans || Line 2 [TARGET_SLOT] (NO question)."
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleB = [
-            "Role 2A (Direct Compliment / Routine): Line 1 Casual thought under 12 words starting with 'Love having...', 'These look great for...', 'Perfect for...', or 'Can never have too many...' (DO NOT start with 'Such a handy...') || Line 2 [TARGET_SLOT] || Line 3 Open-ended question asking what favorite flavor, color, or daily routine they would pair with this item.",
-            "Role 2B (Everyday Habit Query): Line 1 Personal observation under 12 words starting with 'Could definitely use this for...', 'Would be so nice when...', or 'Always great having...' (DO NOT start with 'Such a handy...') || Line 2 [TARGET_SLOT] || Line 3 Open-ended question asking how they use this item."
+            "Role 2A (Product Feature Observation): Line 1 Casual thought under 12 words highlighting a specific detail, material, or capacity of this item (NO starting templates) || Line 2 [TARGET_SLOT] || Line 3 Open-ended community preference question.",
+            "Role 2B (Everyday Habit Query): Line 1 Unconstrained personal observation under 12 words about using this in daily routines || Line 2 [TARGET_SLOT] || Line 3 Open-ended question about how they handle this routine."
         ].sort(() => 0.5 - Math.random())[0];
 
         const commentRoleC = [
-            "Role 3A (Conversational Lifestyle Drop): Line 1 Short lifestyle thought under 12 words || Line 2 [TARGET_SLOT] || Line 3 Open-ended question asking a fun preference or routine question.",
-            "Role 3B (Dialogue Drop): Line 1 Short personal reaction under 10 words || Line 2 Open-ended question asking how often they use this item || Line 3 [TARGET_SLOT]."
+            "Role 3A (Daily Life Win): Line 1 Natural thought under 12 words about how this saves time, mess, or hassle || Line 2 [TARGET_SLOT] || Line 3 Open-ended question on their favorite recipe, styling preference, or habit.",
+            "Role 3B (Dialogue Drop): Line 1 Short, organic personal reaction under 10 words || Line 2 Open-ended community question || Line 3 [TARGET_SLOT]."
         ].sort(() => 0.5 - Math.random())[0];
 
         const activeCommentBlueprints = [commentRoleA, commentRoleB, commentRoleC];
@@ -1245,8 +1247,10 @@ PRONOUNS: ${pronounInstruction} TONE & CONVERSATIONAL MATRIX: ${slangDirective} 
 • Comment 1 Role: ${activeCommentBlueprints[0]}
 • Comment 2 Role: ${activeCommentBlueprints[1]}
 • Comment 3 Role: ${activeCommentBlueprints[2]}
-MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each contain a distinct, open-ended question ending with a question mark (?) designed to elicit 5+ word responses! Never ask Yes/No questions. QUESTION DIVERSITY MANDATE (ABSOLUTE): You are strictly forbidden from asking 'Which room in your house...?' or 'In what room would you place this?' on every deal! You MUST diversify questions: ask about favorite family recipes, footwear styling, packing tricks, holiday traditions, or daily routines!
-COMMENT OPENER DIVERSITY (ABSOLUTE): You are strictly forbidden from starting Comment 2 or 3 with 'Such a handy...' or 'Such a helpful...' on every post! Rotate diverse conversational starters: 'Love having...', 'These look great for...', 'Can never have too many of these around...', 'Perfect for...', 'Could definitely use this when...', or 'Always nice to keep...'. Zero repetitive comment openers! ENGAGEMENT BAIT BAN: Never use 'let me know', 'tell me below', 'thoughts?', or 'comment below'. DELIMITER LOCK: Separate sentences with ' || ' and end human sentences with a period.),
+MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each contain a distinct, open-ended question ending with a question mark (?) designed to elicit 5+ word responses! Never ask Yes/No questions. QUESTION DIVERSITY MANDATE (ABSOLUTE): You are strictly forbidden from asking 'Which room in your house...?' on every deal! Break the 'What' vs 'How do you usually' pairing! Alternate question formats: 'Do you prefer [A] or [B] when...?', 'What is your go-to...?', 'Are you team [X] or team [Y] for...?', or 'How does your family handle...?'.
+ORGANIC COMMENT FREEDOM & INVIOLABLE BANNED WORD SHIELD (ABSOLUTE):
+1. ZERO PRESET STARTERS: You are strictly forbidden from following any preset formula or menu of starting words! Do NOT repeat template openers like 'Such a...', 'Could definitely use...', 'Perfect for...', or 'Always nice to...'! Construct sentences organically based strictly on the unique product itself!
+2. ABSOLUTE ZERO-TOLERANCE BANNED WORD SHIELD: Comments must NEVER contain any commercial, transaction, or marketing words: Buy, Order, Purchase, Price, Cost, Rate, Rates, Deal, Sale, Discount, Free, Grab, Steal, Bargain, Checkout, Cart, Chime in, Sound off, Link in comments, Pinned comment. Keep human statements 100% authentic, helpful, and natural! ENGAGEMENT BAIT BAN: Never use 'let me know', 'tell me below', 'thoughts?', or 'comment below'. DELIMITER LOCK: Separate sentences with ' || ' and end human sentences with a period.),
 "daily_thread": (String. DAILY THREAD ORDER LOCK: Use this exact sentence order: ${selectedDtLayout} (ABSOLUTE: The link [TARGET_SLOT] MUST ALWAYS sit on its own completely separate line!). PRICE PAIRING: 'The [Title] on [Retailer] is [sale_price], dropping from [reg_price].' (If reg_price is 'NONE', just say '[sale_price]'). DAILY THREAD ANTI-PARROT LAW: You are STRICTLY FORBIDDEN from copying or paraphrasing opening or closing sentences from Variations 1, 2, or 3! Open with a natural conversational observation or gerund. NEVER start with 'I [verb]' or 'We [verb]'. RESTRICTION LOCK: State any variant restrictions, serving sizes, or limits conversationally. ZERO POINTER PHRASES: Never use pointers before the link! DELIMITER LOCK: End every sentence with a period and separate with ' || '.),
 "emoji_pool": (Array of 10 literal Unicode emoji characters highly specific to the product. Do NOT use commercial/money emojis.),
 ${customLineInstruction}
@@ -1412,7 +1416,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             const fallbackEmojis = ["✨","🔥","📦","👇","🌿","☕","🧴","🛁","🌸","💧","🫧","🧺"];
             const finalEmojis = cleanEmojis.length >= 3 ? cleanEmojis : fallbackEmojis;
 
-            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.50 | ${varietyAuditTag}]\n${rawText}\n\n`;
+            currentRawOutput += `=== PHASE 0: TARGET LOCK ===\n[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.52 | ${varietyAuditTag}]\n${rawText}\n\n`;
 
             const extractedURL = extractURL(rawText);
 
@@ -1632,7 +1636,7 @@ GLOBAL SHIELD & PRE-FLIGHT SELF-AUDIT (ABSOLUTE): Before closing the JSON, scan 
             document.getElementById('out-dt').setAttribute('data-raw', finalDt);
             currentRawOutput += `=== DAILY THREAD COMMENT ===\n${finalDt}\n\n`;
 
-            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.50 | ${varietyAuditTag}]\n${rawText}`;
+            let phase0Text = `[DEAL: ${document.getElementById('dealNumber').value} | POSTER: ${posterName} | VER: v10.3.52 | ${varietyAuditTag}]\n${rawText}`;
             if (customLine) phase0Text += `\n[Custom Injection: ${customLine}]`;
             document.getElementById('out-phase0').innerText = phase0Text;
 
@@ -1945,9 +1949,11 @@ RULES:
    - PLAIN ENGLISH PRODUCT NOUNS: Do NOT copy-paste the full 60-character title or retailer name in comments. Use simple, natural everyday nouns like 'shampoo', 'soup', 'tumblers', or 'tools'!
    - MANDATORY ACTIVE SIGNALS QUESTIONS: Comments 2 and 3 MUST each include an open-ended, positive question directly related to using the item in daily life to elicit 5+ word responses from group members. Never ask Yes/No questions!
    - ENGAGEMENT BAIT & POINTER BAN (ABSOLUTE): Never use 'let me know', 'tell me below', 'thoughts?', 'comment below', 'sound off', 'chime in', 'drop your thoughts', or 'who needs this'! Never use directional pointers like 'link in comments', 'check the thread', or 'pinned comment'!
-   - THREE-ROLE STRUCTURE:
+   - THREE-ROLE STRUCTURE & ZERO PRESET FORMULAS:
+     • ZERO PRESET STARTERS: Construct comment statements organically based strictly on the unique product itself! Never follow preset formula menus (no 'Such a...', 'Could definitely use...', 'Perfect for...').
+     • NEVER use banned words: Buy, Order, Purchase, Price, Cost, Rate, Rates, Deal, Sale, Discount, Free, Grab, Steal, Bargain, Checkout, Cart, Chime in, Sound off!
      • Comment 1: Short shopping heads-up note under 12 words || [TARGET_SLOT] (NO question).
-     • Comment 2: Positive prospective observation under 12 words || [TARGET_SLOT] || Open-ended preference or routine question.
+     • Comment 2: Positive prospective observation under 12 words || [TARGET_SLOT] || Open-ended choice/preference question (e.g. 'Do you prefer [A] or [B] when...', 'What is your go-to...').
      • Comment 3: Short lifestyle reaction under 12 words || Open-ended habit question || [TARGET_SLOT].
 
 5. DAILY THREAD COMMENT:
